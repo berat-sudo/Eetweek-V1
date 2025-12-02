@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nieuws</title>
+
+    <!-- Pagina CSS -->
+    <link rel="stylesheet" href="/nieuws.css">
+</head>
+
+<body>
+
+    <!-- ===================== Sidebar ===================== -->
+    <aside class="sidebar">
+
+            <!-- Hamburger button -->
+<div class="hamburger" id="hamburger-btn">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+        <div class="profile">
+            <div class="profile-circle" id="profile-circle">U</div>
+            <span id="user-name-sidebar">Gebruiker</span>
+          </div>
+
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/mijnrecepten.html">Mijn Recepten</a></li>
+                <li><a href="/opgeslagenweekmenu.html">Opgeslagen Weekmenu’s</a></li>
+                <li class="active"><a href="/nieuws.html">Nieuws</a></li>
+                <li><a href="/logout">Uitloggen</a></li>
+            </ul>
+
+               <!-- ⬇️ LOGO LINKSONDER ⬇️ -->
+  <div class="sidebar-logo" style="
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+">
+  <img src="/Fotos/logo_.png" style="
+    width: 40px;
+    height: auto;
+    display: block;
+  ">
+</div>
+        </nav>
+    </aside>
+
+    <!-- ===================== Main Content ===================== -->
+    <main class="main-content">
+
+        <!-- Hero -->
+        <section class="hero">
+            <div class="hero-content">
+                <h2>Laatste Nieuws</h2>
+                <p>Blijf op de hoogte van de nieuwste updates en artikelen.</p>
+            </div>
+        </section>
+
+        <!-- Nieuws -->
+        <section class="news">
+            <div id="news-container"></div>
+        </section>
+
+    </main>
+
+    <!-- Page-specific script -->
+    <script type="module" src="/nieuws.js"></script>
+
+</body>
+</html>

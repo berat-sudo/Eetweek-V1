@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Over Ons – Mijn Weekmenu</title>
+  <link rel="stylesheet" href="overons.css">
+</head>
+<body>
+  <!-- Header / Navigatie -->
+  <header>
+    <nav>
+      <div class="nav-left">
+        <a href="homepage.html">
+          <img src="/Fotos/logo_.png" alt="Mijn Weekmenu Logo" class="logo">
+        </a>
+        
+      </div>
+
+      <ul class="nav-right">
+        <li><a href="homepage.html">Home</a></li>
+        <li><a href="index.html">Planner</a></li>
+        <li><a href="overons.html" class="active">Over Ons</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="login.html" class="login-btn">Login</a></li>
+      </ul>
+
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Overlay -->
+  
+
+  <!-- Hero sectie -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Over EetWeek</h1>
+      <p>Maak kennis met het team achter EetWeek en ontdek onze missie: jou helpen met het plannen van heerlijke, gevarieerde en gezonde maaltijden, zonder gedoe.</p>
+    </div>
+  </section>
+
+  <!-- Over secties -->
+  <main>
+    <!-- Onze Missie -->
+    <section class="info-section">
+      <div class="text">
+        <h2>Het begin</h2>
+        <h3>Verloren in de supermarkt</h3>
+        <p>Elke week stonden we in de supermarkt, duwend met onze kar door de gangpaden, en vroegen we ons af: “Wat eten we deze week?” Soms hadden we geen idee, soms wilden we iets nieuws proberen, maar wisten we niet waar te beginnen. Het leek telkens een grote puzzel: lekkere recepten bedenken, rekening houden met tijd, gezondheid en variatie. Vaak kozen we dan toch maar voor bekende maaltijden, simpelweg omdat het makkelijker was.</p>
+      </div>
+      <div class="image">
+        <img src="/Fotos/glazenBackground.jpg" alt="Onze Missie">
+      </div>
+    </section>
+
+    <!-- Ons Team -->
+    <section class="reverse-section">
+      <div class="image">
+        <img src="/Fotos/foodbackground.jpg" alt="Ons Team">
+      </div>
+      <div class="text">
+        <h2>Het probleem</h2>
+        <h3>Koken voelt als een uitdaging</h3>
+        <p>We realiseerden ons dat dit niet alleen ons probleem was. Veel mensen worstelen ermee om elke week gevarieerd, gezond en lekker te eten zonder uren te moeten nadenken of stress te hebben over wat er op tafel komt. Het plannen van een hele week aan maaltijden is tijdrovend, en het vinden van nieuwe, smakelijke recepten kan ontmoedigend zijn. Zo werd koken soms een verplichting in plaats van een plezier.</p>
+      </div>
+    </section>
+
+    <!-- Onze Visie -->
+    <section class="info-section">
+      <div class="text">
+        <h2>De oplossing</h2>
+        <h3>EetWeek maakt het makkelijk</h3>
+        <p>Uit deze frustratie ontstond EetWeek. We wilden een oplossing maken die het plannen van maaltijden eenvoudig, leuk en stressvrij maakt. Met EetWeek kun je in een paar klikken je voorkeuren invullen, en wij genereren een compleet weekmenu dat gezond, gevarieerd en afgestemd op jouw smaak is. Zo geniet je elke dag van heerlijke maaltijden, bespaar je tijd, en wordt koken weer leuk in plaats van lastig.</p>
+      </div>
+      <div class="image">
+        <img src="/Fotos/mockup1.jpg" alt="Onze Visie">
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-container">
+      <!-- Links: logo & copyright -->
+      <div class="footer-left">
+        <img src="/Fotos/logo_.png" alt="Mijn Weekmenu Logo" class="footer-logo">
+        <p>© 2025 eetweek</p>
+        <p>Gemaakt met liefde voor eten</p>
+      </div>
+  
+      <!-- Midden: pagina-links -->
+      <div class="footer-center">
+        <h4>Pagina's</h4>
+        <ul class="footer-links">
+          <li><a href="homepage.html">Home</a></li>
+          <li><a href="index.html">Planner</a></li>
+          <li><a href="Overons.html">Over Ons</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="login.html">Login</a></li>
+        </ul>
+      </div>
+  
+      <!-- Rechts: sociale iconen -->
+      <div class="footer-right">
+        <h4>Volg ons</h4>
+        <div class="social-icons">
+          <a href="#" aria-label="Facebook"><img src="/Fotos/facebookicon.png" alt="Facebook"></a>
+          <a href="#" aria-label="Instagram"><img src="/Fotos/instaicon.png" alt="Instagram"></a>
+          <a href="#" aria-label="Tiktok"><img src="/Fotos/tiktokicon.png" alt="Tiktok"></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script hamburger menu -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburger = document.querySelector('.hamburger');
+      const navRight = document.querySelector('.nav-right');
+      const overlay = document.querySelector('.drawer-overlay');
+
+      function toggleMenu(open) {
+        const willOpen = open === undefined ? !navRight.classList.contains('active') : !!open;
+
+        if (willOpen) {
+          navRight.classList.add('active');
+          hamburger.classList.add('active');
+          overlay.classList.add('active');
+        } else {
+          navRight.classList.remove('active');
+          hamburger.classList.remove('active');
+          overlay.classList.remove('active');
+        }
+      }
+
+      hamburger.addEventListener('click', () => toggleMenu());
+      overlay.addEventListener('click', () => toggleMenu(false));
+    });
+  </script>
+</body>
+</html>

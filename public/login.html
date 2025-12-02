@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inloggen</title>
+    <link rel="stylesheet" href="loginregister.css">
+</head>
+
+<body>
+    <a href="homepage.html" class="back-arrow">&#8592; Terug</a>
+
+    <div class="auth-wrapper">
+        <div class="auth-box">
+            <h2>Inloggen</h2>
+
+            <form action="/login" method="POST" id="login-form">
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Wachtwoord" required>
+                <button type="submit" class="auth-btn">Inloggen</button>
+
+                <!-- Foutmelding -->
+                <p id="error-message" class="error-message" style="display:none;"></p>
+
+                <!-- Wachtwoord vergeten -->
+                <p class="forgot-password">
+                    <a href="forgot-password.html">Wachtwoord vergeten?</a>
+                </p>
+            </form>
+
+            <p class="switch-text">
+                Nog geen account? <a href="register.html">Aanmelden</a>
+            </p>
+        </div>
+    </div>
+
+<script>
+    const errorMessage = document.getElementById("error-message");
+    const params = new URLSearchParams(window.location.search);
+
+    // Toon foutmelding afhankelijk van type
+    const errorCode = params.get("error");
+    if (errorCode === "email") {
+        showError("Email niet gevonden");
+    } else if (errorCode === "password") {
+        showError("Wachtwoord ongeldig");
+    }
+
+    function showError(msg) {
+        errorMessage.textContent = msg;
+        errorMessage.style.display = "block";
+        errorMessage.classList.add("fade-in");
+    }
+
+    function hideError() {
+        if (errorMessage.style.display === "block") {
+            errorMessage.classList.remove("fade-in");
+            errorMessage.classList.add("fade-out");
+            setTimeout(() => {
+                errorMessage.style.display = "none";
+                errorMessage.classList.remove("fade-out");
+            }, 300); // match CSS animatie
+        }
+    }
+
+    // Verdwijnt zodra je typt
+    document.querySelectorAll("#login-form input").forEach(input => {
+        input.addEventListener("input", hideError);
+    });
+</script>
+</body>
+</html>

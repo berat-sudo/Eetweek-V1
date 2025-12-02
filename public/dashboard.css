@@ -1,0 +1,1333 @@
+/* ===================== Variabelen ===================== */
+:root {
+    --sidebar-width: 230px;
+    --accent1: #ff7f50;
+    --accent2: #ffb347;
+    --radius-lg: 20px;
+    --radius-md: 14px;
+    --card-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    --card-hover-shadow: 0 12px 30px rgba(255,140,0,0.5);
+}
+
+/* ===================== Algemeen ===================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.menu h2 {
+    color: #1f2a36; /* jouw gewenste kleur */
+}
+
+
+body {
+    display: flex;
+    min-height: 100vh;
+    background: #f4f4f4;
+}
+
+html, body {
+    overflow-x: hidden;
+}
+
+.profile-circle {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #ff7f50, #ffb347);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.4rem;
+    border: 3px solid var(--accent2);
+    box-shadow: 0 0 10px rgba(255,179,71,0.5);
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.search-recipes-wrapper h2 {
+    margin-bottom: 0.8rem; /* ruimte tussen titel en zoekbalk */
+    color: #1f2a36;
+}
+
+
+
+/* ===================== Sidebar ===================== */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--sidebar-width);
+    height: 100vh;
+    background: linear-gradient(180deg, #2c3e50, #1f2a36);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1.2rem;
+    border-radius: 0 20px 20px 0;
+    box-shadow: 6px 0 20px rgba(0,0,0,0.2);
+    z-index: 100;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+.profile-pic {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--accent2);
+    box-shadow: 0 0 10px rgba(255,179,71,0.5);
+}
+
+#user-name-sidebar {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.7rem;
+}
+
+.sidebar-nav li { margin: 0; }
+
+.sidebar-nav a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.8rem 1rem;
+    border-radius: var(--radius-md);
+    display: block;
+    background: rgba(255,255,255,0.04);
+    transition: all 0.25s ease;
+    letter-spacing: 0.3px;
+}
+
+.sidebar-nav a:hover {
+    background: rgba(255,255,255,0.12);
+    transform: translateX(6px);
+}
+
+.sidebar-nav .active a {
+    background: linear-gradient(90deg, var(--accent1), var(--accent2));
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 0 12px rgba(255,179,71,0.6);
+    transform: translateX(6px);
+}
+
+/* ===================== Main content ===================== */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-left: var(--sidebar-width);
+}
+
+/* ===================== Hero sectie ===================== */
+.hero {
+    background: url('/Fotos/background2.jpg') no-repeat center/cover;
+    min-height: 30vh;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 3rem 4rem;
+    color: #fff;
+    position: relative;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    top:0; left:0; right:0; bottom:0;
+    background: rgba(0,0,0,0.3);
+    z-index:0;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+}
+
+/* ===================== Preferences + Menu layout ===================== */
+.preferences-menu-wrapper {
+    display: flex;
+    gap: 2rem;
+    padding: 2rem;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    background: #fff;
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    margin: 2rem;
+}
+
+.preferences {
+    background: linear-gradient(145deg, #ffffff, #ffffff);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    flex: 0 0 300px;
+}
+
+.preferences h2 {
+    text-align: left;
+    color: var(--accent1);
+    margin-bottom: 1rem;
+    margin-top: -0.8rem;
+}
+
+form#preferences-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+form#preferences-form label {
+    font-weight: bold;
+    color: #414141;
+}
+
+form#preferences-form input, 
+form#preferences-form select {
+    padding: 0.8rem;
+    border-radius: var(--radius-md);
+    border: 1px solid #ccc;
+    background-color: #fff;
+    color: #333;
+    font-size: 1rem;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+    transition: border 0.3s, box-shadow 0.3s;
+}
+
+form#preferences-form input:focus, 
+form#preferences-form select:focus {
+    border-color: #7cbeca;
+    box-shadow: 0 0 8px rgba(124,190,202,0.5);
+    outline: none;
+}
+
+form#preferences-form input::placeholder {
+    color: #aaa;
+}
+
+form#preferences-form button {
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    border: none;
+    background: linear-gradient(90deg, var(--accent1), var(--accent2));
+    color: #fff;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+form#preferences-form button:hover {
+    transform: scale(1.03);
+}
+
+/* ===================== Menu sectie ===================== */
+.menu {
+    background: linear-gradient(145deg, #b7d8d7, #f2f2f2);
+    padding: 1rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--card-shadow);
+    flex: 1;
+    min-width: 350px;
+}
+
+#menu-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.icon-button {
+    display: inline-flex;           /* icon en tekst naast elkaar */
+    align-items: center;
+    gap: 0.5rem;                    /* ruimte tussen icon en tekst */
+  }
+  
+  .icon-button .button-icon {
+    width: 20px;     /* grootte van het icoon */
+    height: 20px;
+    object-fit: contain;
+  }
+  
+
+/* ===================== Day cards ===================== */
+.day-card {
+    position: relative;
+    background: linear-gradient(145deg, #ffffff, #ffffff);
+    border-radius: var(--radius-md);
+    padding: 0.8rem;
+    text-align: center;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    color: #414141;
+}
+
+.day-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--card-hover-shadow);
+}
+
+.day-card h3 {
+    margin: 0 0 0.3rem 0;
+    color: #414141;
+    font-size: 1rem;
+}
+
+.day-card img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    margin-bottom: 0.5rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.day-card.dragging {
+    opacity: 0.6;
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(255,140,0,0.6);
+    z-index: 10;
+}
+
+.day-card.drag-over {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(255,140,0,0.4);
+    border: 2px dashed #ff8c00;
+}
+
+.remove-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(255,69,0,0.8);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.remove-btn:hover {
+    background: red;
+}
+
+.placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, #91c5c4, #7cbeca);
+    border-radius: var(--radius-md);
+    height: 140px;
+    flex-direction: column;
+    color: #fff;
+    box-shadow: var(--card-shadow);
+}
+
+.plus-container .plus {
+    font-size: 1.8rem;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.plus-container .plus-text {
+    font-size: 0.85rem;
+    color: #f0f0f0;
+    margin-top: 0.3rem;
+}
+
+/* ===================== Eigen recepten + favorieten ===================== */
+.custom-recipes-wrapper {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    padding: 2rem;
+    margin: 2rem;               /* zelfde marge als preferences */
+    max-width: auto;          /* zelfde max-width */
+    background: #fff;
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+
+    width: auto;                /* calc verwijderen */
+    box-sizing: border-box;
+    align-items: stretch;
+    margin-top: 0.5rem;
+}
+
+
+
+.own-recipes, .favorite-recipes {
+    position: relative; /* nodig voor absolute positionering van de badge */
+  }
+  
+  .section-badge {
+    position: absolute;
+    top: -15px;    /* buiten de sectie iets naar boven */
+    left: -15px;   /* buiten de linkerzijde */
+    width: 40px;   /* grootte van het cirkeltje */
+    height: 40px;
+    border-radius: 50%; /* maakt het rond */
+    border: 2px solid white; /* optioneel randje voor contrast */
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    object-fit: cover; /* zorgt dat de afbeelding mooi in het rond past */
+    z-index: 2;
+    background-color: white; /* voor lege plekken als je PNG met transparantie gebruikt */
+  }
+  
+
+
+.own-recipes, .favorite-recipes {
+    background: linear-gradient(145deg, #b7d8d7, #f2f2f2);
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--card-shadow);
+    flex: 1 1 300px;
+    min-width: 300px;
+}
+
+.own-recipes h2, .favorite-recipes h2 {
+    text-align: left;
+    color: #2d2d2d;
+    margin-bottom: 1rem;
+}
+
+#own-recipes-container, #favorite-recipes-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+/* ===================== Zoekbare recepten ===================== */
+.search-recipes-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    padding: 2rem;
+    margin: 2rem;               /* zelfde marge als de andere wrappers */
+    max-width: auto;          /* zelfde maximale breedte */
+    background: linear-gradient(145deg, #b7d8d7, #f2f2f2);
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+
+    width: auto;                /* breedte gelijk maken */
+    box-sizing: border-box;     /* consistent met de andere wrappers */
+}
+
+
+
+
+.grid-recipes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+
+    /* Scrollbaar na 3 rijen */
+    max-height: 420px;      /* ongeveer 3 lagen kaarten */
+    overflow-y: auto;
+    padding-right: 5px;     /* voorkomt dat scrollbar over de kaarten valt */
+}
+
+.search-recipes-wrapper {
+    position: relative; 
+    margin-top: 0.5rem;
+  }
+  
+  /* Badge alleen voor zoek recepten */
+  .search-recipes-wrapper .section-badge {
+    position: absolute;
+    top: -15px;    /* iets boven de sectie */
+    left: 25px;    /* verschuif het een beetje naar rechts */
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;  
+    border: 2px solid white; 
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    object-fit: cover; 
+    z-index: 2;
+    background-color: white; 
+  }
+  
+
+.grid-recipes .day-card {
+    cursor: pointer;
+    border-radius: var(--radius-md, 8px);
+    overflow: hidden;
+    background: #fefefe;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.grid-recipes .day-card:hover {
+    transform: translateY(-3px);
+}
+
+.grid-recipes .day-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+}
+
+#recipe-search-input {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 14px;
+    border: 1px solid #ccc;
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+}
+
+/* ===================== Nieuws sectie ===================== */
+
+/* Alleen voor de Sluiten-knop */
+.popup .close-popup-btn {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: linear-gradient(90deg, #ff7f50, #ffb347); /* oranje gradient */
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    transition: all 0.2s ease-in-out;
+}
+
+.popup .close-popup-btn:hover {
+    background: linear-gradient(90deg, #ff944d, #ffb84d);
+}
+
+/* Alle andere knoppen in de popup behouden groen */
+.popup-buttons {
+    display: flex;
+    justify-content: space-between; /* Sluiten links, toevoegen rechts */
+    margin-top: 15px;
+    gap: 10px;
+    align-items: flex-start; /* Zorg dat knoppen bovenaan beginnen */
+}
+
+/* Algemene knopstijl */
+.popup button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 6px 14px;
+    height: 30px;
+    box-sizing: border-box;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    transition: all 0.2s ease-in-out;
+}
+
+
+/* Groen voor Voeg toe aan weekmenu */
+.popup button:not(.close-popup-btn) {
+    background: #4CAF50;
+    margin-top: 15px; /* schuif iets omlaag */
+}
+
+.popup button:not(.close-popup-btn):hover {
+    background: #45a049;
+}
+
+/* Oranje voor Sluiten */
+.popup .close-popup-btn {
+    background: linear-gradient(90deg, #ff7f50, #ffb347);
+}
+
+.popup .close-popup-btn:hover {
+    background: linear-gradient(90deg, #ff944d, #ffb84d);
+}
+
+
+
+
+  
+  .popup button:active {
+    transform: translateY(1px);
+    box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+  }
+  
+
+  .news-wrapper,
+  .news {
+      padding: 2rem;                           /* consistent met andere wrappers */
+      margin: 2rem;                            /* zelfde marges */
+                         /* zelfde vaste breedte als de rest */
+      width: auto;
+      box-sizing: border-box;
+  
+      border-radius: 25px;                     /* zelfde afgeronde hoeken */
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15); /* zelfde schaduwstijl */
+  
+      background: linear-gradient(145deg, #222e3b, #f2f2f2); /* jouw gradient */
+  }
+  
+  .news {
+      padding-bottom: 2rem; /* blijft behouden */
+      margin-top: 0.5rem;
+  }
+  
+  
+
+
+.news h2 {
+    margin-top: 0.5rem; /* extra ruimte boven de titel */
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+    color: #f9f9f9;
+}
+
+.grid-news {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.news-item {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.news-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.news-item img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.news-content {
+    padding: 1rem;
+}
+
+.news-content h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
+    color: #222;
+}
+
+.news-content p {
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 1rem;
+}
+
+.news-btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(90deg, #32cd32, #7fff00);
+    color: #fff;
+    font-weight: bold;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.news-btn:hover {
+    background: linear-gradient(90deg, #28a428, #6fcf00);
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+    overflow-y: auto;
+  }
+  
+  .popup {
+    background: linear-gradient(145deg, #e4e4e4, #f2f2f2);
+    border-radius: 20px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 700px;
+    max-height: calc(90vh - 30px);
+    overflow-y: auto;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+    animation: fadeIn 0.3s ease-in-out;
+    position: relative;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .popup h2 {
+    margin-top: 0;
+    color: #333;
+  }
+  
+  .popup img {
+    margin-top: 10px;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 0.3rem;
+  }
+  
+  /* ===================== Recipe info: duration + macros ===================== */
+  .recipe-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: #555;
+    margin: 0.5rem 0 1rem 0;
+  }
+  
+  .recipe-info .duration {
+    font-style: italic;
+    color: #666;
+  }
+  
+  .recipe-info .macros {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+  
+  .recipe-info .macros span {
+    padding: 0.3rem 0.6rem;
+    border-radius: 12px;
+    color: white;
+    font-weight: bold;
+    font-size: 0.85rem;
+  }
+  
+  .recipe-info .macros span.protein { background-color: #4CAF50; }
+  .recipe-info .macros span.carbs { background-color: #FF9800; }
+  .recipe-info .macros span.fat { background-color: #F44336; }
+  
+  /* ===================== Ingrediënten ===================== */
+  .popup ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  
+  .popup ul li {
+    background: #ffffff;
+    margin: 0.4rem 0;
+    padding: 0.5rem 0.8rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .popup h4 {
+    margin-top: 30px; /* schuift “Ingrediënten:” naar beneden */
+  }
+  
+  .popup p {
+    margin-top: 20px; /* optioneel: ruimte tussen kop en de instructies */
+  }
+
+  
+  
+  .popup ul.ingredients-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding-left: 0;
+    margin-top: 15px;
+  }
+  
+  .popup ul.ingredients-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    margin: 0.2rem 0;
+    padding: 0.5rem 0.8rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  #copy-list-btn {
+    margin-left: auto;
+  }
+  
+  .popup ul.ingredients-list li span {
+    display: inline-block;
+  }
+  
+  .popup ul.ingredients-list li .macro-info {
+    text-align: right;
+    color: #666;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-left: 10px;
+  }
+
+/* Animatie fadeIn */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+
+/* Hamburger menu */
+.hamburger {
+    display: none; /* standaard verborgen */
+    flex-direction: column;
+    justify-content: space-between;
+    width: 28px;
+    height: 22px;
+    cursor: pointer;
+    z-index: 1100;
+}
+
+.hamburger span {
+    display: block;
+    height: 3px;
+    background: #fff;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+#copy-list-btn {
+    padding: 0.3rem 0.8rem;
+    border-radius: 8px;
+    background: #32cd32;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+
+/* -------- BUTTON STYLING -------- */
+.icon-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(90deg, #32cd32, #7fff00);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.icon-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.icon-button .button-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* -------- MOBIEL: ALLEEN ICON -------- */
+@media (max-width: 768px) {
+
+    /* Shopping list button alleen icoon */
+    #shopping-list-btn {
+        padding: 0.5rem;
+        width: 46px;
+        height: 46px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #shopping-list-btn .button-text {
+        display: none;  /* verberg tekst */
+    }
+
+    #shopping-list-btn .button-icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    
+#shopping-list-btn.icon-button2 {
+    padding: 0.5rem 1rem;                /* ruime padding */
+    border-radius: 12px;                 /* afgeronde hoeken */
+    background: linear-gradient(90deg, #32cd32, #7fff00); /* groen gradient */
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;                         /* ruimte tussen icoon en tekst */
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#shopping-list-btn.icon-button2:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+#shopping-list-btn.icon-button2 .button-icon {
+    width: 24px;                         /* formaat icoon passend bij tekst */
+    height: 24px;
+    object-fit: contain;
+}
+
+/* Zorg dat de tekst altijd zichtbaar is op web */
+#shopping-list-btn.icon-button2 .button-text {
+    display: inline;                     /* toon tekst naast icoon */
+}
+}
+
+
+/* Tablet modus */
+@media (max-width: 1024px) {
+
+    @media (max-width: 1024px) {
+
+        .preferences-menu-wrapper {
+            display: flex;
+            flex-wrap: wrap;              /* laat onderdelen afbreken */
+            justify-content: center;      /* center horizontaal */
+            align-items: flex-start;
+            gap: 1.5rem;                  /* ruimte tussen blocks */
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 1100px;            /* voorkomt dat hij te breed wordt */
+            margin: 1rem auto;            /* mooi in het midden */
+            box-sizing: border-box;
+        }
+    
+        .preferences {
+            flex: 1 1 320px;              /* altijd meeschalen, min. 320px */
+            max-width: 480px;
+            padding: 1.5rem;
+            box-sizing: border-box;
+        }
+    
+        .menu {
+            flex: 1 1 320px;
+            max-width: 480px;
+            padding: 1.5rem;
+            box-sizing: border-box;
+        }
+    
+        #menu-container {
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1rem;
+        }
+    }
+    
+    /* Topbar */
+    .sidebar {
+        display: flex;
+        flex-direction: row;
+        align-items: center; /* vertical center */
+        justify-content: flex-start; /* profiel + logo links, hamburger rechts */
+        width: 100%;
+        height: 60px;
+        padding: 0 1rem;
+        background: linear-gradient(180deg, #2c3e50, #1f2a36);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        border-radius: 0;
+    }
+
+    /* Profiel links en verticaal gecentreerd */
+    .profile {
+        border-bottom: none; /* verwijdert streepje */
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+
+    .profile-circle {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+        border-width: 2px;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+
+    #user-name-sidebar {
+        color: #fff;
+        font-weight: 500;
+        font-size: 0.95rem;
+        white-space: nowrap;
+    }
+
+    /* Logo rechts naast profiel */
+    .sidebar-logo {
+        display: none;
+    }
+
+    /* Hamburger rechts */
+    .hamburger {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 28px;
+        height: 22px;
+        cursor: pointer;
+        margin-left: auto; /* duwt hamburger helemaal naar rechts */
+        order: 3;
+    }
+    .hamburger span {
+        display: block;
+        height: 3px;
+        background: #fff;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+    }
+
+    /* Navigatie als slide-in menu */
+    .sidebar-nav {
+        position: fixed;
+        top: 60px; /* start onder topbar */
+        left: -100%;
+        width: 250px;
+        height: auto; /* niet meer 100vh */
+        max-height: 70vh; /* maximaal 70% van de viewport hoogte */
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem 1rem;
+        background: linear-gradient(180deg, #2c3e50, #1f2a36);
+        border-radius: 0 20px 20px 0;
+        transition: left 0.3s ease;
+        overflow-y: auto; /* scrollbaar indien te veel items */
+        z-index: 1050;
+    }
+    .sidebar-nav.open {
+        left: 0;
+    }
+
+    /* Hamburger animatie naar X */
+    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    /* Main content start direct onder topbar */
+    .main-content {
+        margin-left: 0;
+        margin-top: 60px;
+        padding: 0;
+    }
+
+    /* Hero volledig breed */
+    .hero {
+        padding: 3rem 1rem;
+        min-height: 25vh;
+        background-position: center;
+        background-size: cover;
+    }
+
+    .hero-content {
+        padding-left: 4.0rem; /* of 2rem voor nog verder naar rechts */
+    }
+
+    .grid-news {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+
+    
+ 
+}
+
+/* ===================== MOBIEL (≤ 768px) ===================== */
+@media (max-width: 768px) {
+
+    /* -------- SIDEBAR → compacte topbar -------- */
+    .sidebar {
+        height: 55px;
+        padding: 0 0.7rem;
+    }
+
+    .profile-circle {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+
+    #user-name-sidebar {
+        display: none; /* naam verbergen op mobiel → ruimte winnen */
+    }
+
+    .hamburger {
+        width: 25px;
+        height: 20px;
+    }
+    .hamburger span {
+        height: 3px;
+    }
+
+    .sidebar-nav {
+        width: 210px;
+        max-height: 65vh;
+    }
+
+    /* -------- MAIN CONTENT -------- */
+    .main-content {
+        margin-left: 0;
+        margin-top: 50px;
+        padding: 0;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* -------- HERO -------- */
+    .hero {
+        padding: 2rem 1rem;
+        min-height: 20vh;
+    }
+
+    .hero-content {
+        padding-left: 1rem !important;
+    }
+
+    .hero-content h2 {
+        font-size: 1.6rem;
+    }
+
+    .hero-content p {
+        font-size: 0.95rem;
+    }
+
+    /* -------- PREFERENCES + MENU -------- */
+
+    #copy-list-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 0.8rem;
+        font-size: 1.1rem;
+      }
+    
+
+    .preferences-menu-wrapper {
+        display: flex;
+        flex-wrap: wrap;        /* items naast elkaar op grotere schermen */
+        gap: 1rem;              /* ruimte tussen blocks */
+        padding: 0;             /* wrapper zelf geen padding */
+        margin: 1rem;           /* marge aan alle kanten */
+        width: calc(100% - 2rem); /* volledige breedte minus marge */
+        max-width: 1200px;      /* limiet voor grote schermen */
+        box-sizing: border-box;
+        justify-content: center; /* centreert de content op grote schermen */
+    }
+    
+    .preferences,
+    .menu {
+        flex: 1 1 300px;        /* minimaal 300px, groeit mee */
+        max-width: 480px;       /* voorkom te brede blokken op grote schermen */
+        width: 100%;             /* vult wrapper volledig */
+        padding: 1.5rem;        /* binnenruimte */
+        border-radius: 20px;
+        box-sizing: border-box;
+    }
+    
+    .preferences {
+        background: linear-gradient(145deg, #ffffff, #ffffff);
+    }
+    
+    .menu {
+        background: linear-gradient(145deg, #b7d8d7, #f2f2f2);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    #menu-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 1rem;
+    }
+
+    #copy-list-btn {
+        display: block;
+        margin: 10px 0 0 0; /* bovenmarge iets */
+        width: 100%;         /* optioneel: volle breedte */
+      }
+    
+
+    /* -------- CUSTOM RECIPES / FAVORITES -------- */
+    .custom-recipes-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1.5rem;
+        margin: 1rem;
+        width: auto;
+        max-width: 1200px;
+        box-sizing: border-box;
+        background: #fff;
+        border-radius: 25px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        align-items: stretch;
+    }
+
+    .own-recipes, .favorite-recipes {
+        flex: 1 1 300px;
+        min-width: 300px;
+        padding: 1.5rem;
+        box-sizing: border-box;
+        background: linear-gradient(145deg, #b7d8d7, #f2f2f2);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    #own-recipes-container,
+    #favorite-recipes-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+
+    /* -------- ZOEKBARE RECEPTEN -------- */
+    .search-recipes-wrapper {
+        padding: 1.5rem;
+        margin: 1rem;
+        width: auto;
+        max-width: 1200px;
+        box-sizing: border-box;
+        background: linear-gradient(145deg, #b7d8d7, #f2f2f2);
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .grid-recipes {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+        max-height: 420px;
+        overflow-y: auto;
+    }
+
+    .grid-recipes .day-card {
+        width: 100%;
+        height: auto;
+    }
+
+    .search-recipes-wrapper .section-badge {
+        top: -15px;
+        left: 0;
+        width: 40px;
+        height: 40px;
+    }
+
+    /* -------- NIEUWS -------- */
+    .news-wrapper,
+    .news {
+        padding: 1.5rem;
+        margin: 1rem;
+        width: auto;
+        max-width: 1200px;
+        box-sizing: border-box;
+        background: linear-gradient(145deg, #1f2a36, #f2f2f2);
+        border-radius: 15px;
+    }
+
+    .grid-news {
+        grid-template-columns: 1fr !important; /* 1 per rij mobiel */
+    }
+
+    .news-item img {
+        height: 140px;
+    }
+
+    /* -------- POPUP -------- */
+    .popup {
+        max-width: 95%;
+        padding: 1.2rem;
+    }
+
+    .popup img {
+        border-radius: 8px;
+    }
+
+    .search-recipes-wrapper h2 {
+        margin-top: 1rem;
+        margin-bottom: 0.8rem;
+    }
+
+    #shopping-list-btn.icon-button2 {
+        width: 46px;               /* compacte breedte */
+        height: 46px;              /* compacte hoogte */
+        padding: 0.5rem;           /* kleine padding */
+        border-radius: 12px;       /* afgeronde hoeken */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(90deg, #32cd32, #7fff00);
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    /* verberg de tekst */
+    #shopping-list-btn.icon-button2 .button-text {
+        display: none;
+    }
+
+    /* formaat van het icoon */
+    #shopping-list-btn.icon-button2 .button-icon {
+        width: 24px;
+        height: 24px;
+    }
+}

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="/admin.css">
+</head>
+<body>
+  <header>
+    <h1>Admin Dashboard</h1>
+    <a href="/dashboard" class="button">Terug naar Dashboard</a>
+    <a href="/logout" class="button logout">Uitloggen</a>
+  </header>
+
+  <main>
+    <!-- Gebruikers -->
+    <section id="user-section">
+      <h2>Gebruikersbeheer</h2>
+      <table id="users-table">
+        <thead>
+          <tr>
+            <th>Naam</th>
+            <th>Email</th>
+            <th>Admin</th>
+            <th>Acties</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+<!-- Nieuwsbeheer -->
+<section id="news-section">
+  <h2>Nieuwsbeheer</h2>
+  <table id="news-table">
+    <thead>
+      <tr>
+        <th>Titel</th>
+        <th>Afbeelding</th>
+        <th>Acties</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</section>
+
+<!-- Nieuw Nieuwsbericht -->
+<section id="add-news-section">
+  <h2>Voeg nieuw nieuwsbericht toe</h2>
+  <form id="add-news-form" enctype="multipart/form-data">
+    <input type="text" name="title" placeholder="Titel" required>
+    <textarea name="text" placeholder="Tekst" required></textarea>
+    <input type="text" name="link" placeholder="Link (optioneel)">
+    <input type="file" name="image" accept="image/*">
+    <button type="submit">Toevoegen</button>
+  </form>
+</section>
+
+
+    <!-- Recepten -->
+    <section id="recipe-section">
+      <h2>Receptenbeheer</h2>
+      <table id="recipes-table">
+        <thead>
+          <tr>
+            <th>Naam</th>
+            <th>Gebruiker</th>
+            <th>Foto</th>
+            <th>Acties</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- Nieuw Recept -->
+    <section id="add-recipe-section">
+      <h2>Voeg nieuw recept toe</h2>
+      <form id="add-recipe-form" enctype="multipart/form-data">
+        <input type="text" name="name" placeholder="Naam" required>
+        <input type="number" name="duration" placeholder="Duur (minuten)" required>
+        <input type="number" name="persons" placeholder="Aantal personen" required>
+
+        <textarea name="ingredients" placeholder='[{"item":"Tomaat","amount":"2"}]' required></textarea>
+        <textarea name="instructions" placeholder='["Stap 1","Stap 2"]' required></textarea>
+        <input type="text" name="tags" placeholder="Tags, gescheiden door komma">
+        <input type="text" name="macros" placeholder='{"protein":10,"carbs":20,"fat":5}'>
+        <small>Voer macro's in als JSON-formaat, bijv: {"protein":10,"carbs":20,"fat":5}</small>
+
+        <input type="file" name="image" accept="image/*">
+
+        <button type="submit">Toevoegen</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="/admin.js"></script>
+</body>
+</html>

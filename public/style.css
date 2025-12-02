@@ -1,0 +1,953 @@
+/* ===================== Algemene layout ===================== */
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-image: url('/Fotos/brooke-lark-4J059aGa5s4-unsplash.jpg');
+  background-size: cover;       
+  background-position: center;  
+  background-repeat: no-repeat; 
+  background-attachment: fixed; 
+  color: #333333;
+  box-sizing: border-box;
+}
+
+/* ===================== Header / Navigatie ===================== */
+header {
+  background: rgba(255, 255, 255, 0.3);
+  padding: 1rem 2rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+header nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 2rem;
+  max-width: 100%;
+}
+
+.nav-left .logo {
+  height: 50px;
+}
+
+.nav-right {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  margin-left: auto;
+  padding: 0;
+}
+
+.nav-right a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.nav-right a:hover,
+.nav-right a.active {
+  color: #3f3f3f;
+}
+
+/* Login button */
+.nav-right .login-btn {
+  padding: 0.5rem 1rem;
+  background: linear-gradient(90deg, #ff7f50, #ffb347);
+  border-radius: 8px;
+  color: white !important;
+  transition: transform 0.25s ease, background-position 0.25s ease;
+  background-size: 200% 100%;
+}
+
+.nav-right .login-btn:hover {
+  transform: scale(1.1);
+  background-position: right center;
+  color: #fff;
+}
+
+
+/* ===================== Hamburger icon ===================== */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 30px;
+  height: 25px;
+  cursor: pointer;
+  z-index: 20;
+}
+
+.hamburger span {
+  display: block;
+  height: 3px;
+  width: 100%;
+  background: #fff;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* ===================== Main content ===================== */
+main {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 1rem 2rem;
+  padding-top: 7rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===================== Page-header met achtergrondafbeelding ===================== */
+.page-header {
+  text-align: center;
+  padding: 3rem 1rem 10rem 1rem;
+  color: #ffffff;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 0;
+  box-shadow: none;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+
+.page-header h1,
+.page-header p {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+}
+
+.page-header h1 {
+  font-size: 2.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.page-header p {
+  font-size: 1.rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Alleen voor plannerpagina */
+body.planner-page .steps {
+  position: relative;
+  z-index: 1; /* lager dan footer */
+  margin-bottom: 200px; /* ruimte zodat footer eroverheen kan vallen */
+}
+
+body.planner-page footer {
+  position: relative;   /* normaal volgen in de flow */
+  margin-top: -150px;   /* negatieve marge om over steps heen te vallen */
+  z-index: 10;          /* boven steps */
+}
+
+
+
+/* ===================== Formulierstijl ===================== */
+.preferences {
+  background: linear-gradient(145deg, #ffffff, #ffffff);
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  margin-bottom: 3rem;
+  position: relative;
+  top: -5rem; 
+  z-index: 2;
+}
+
+.preferences h2 {
+  text-align: center;
+  color: #ff7f50;
+  margin-bottom: 1rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+input, select {
+  padding: 0.8rem;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #333;
+  font-size: 1rem;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+input:focus, select:focus {
+  border-color: #7cbeca;
+  box-shadow: 0 0 8px rgba(124,190,202,0.5);
+  outline: none;
+}
+
+input::placeholder {
+  color: #aaa;
+}
+
+button {
+  padding: 1rem;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(90deg, #ff7f50, #ffb347);
+  color: #fff;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: linear-gradient(90deg, #ffb347, #ff7f50);
+  transform: scale(1.05);
+}
+
+/* ===================== Menu sectie ===================== */
+.menu {
+  background: linear-gradient(145deg, #b7d8d7, #f2f2f2);
+  padding: 1rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+#menu-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.day-card {
+  position: relative;
+  background: linear-gradient(145deg, #ffffff, #ffffff);
+  border-radius: 15px;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+  color: #414141;
+}
+
+.day-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 20px rgba(255,140,0,0.5);
+}
+
+.day-card h3 {
+  margin: 0 0 0.5rem 0;
+  color: #414141;
+}
+
+.day-card img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.day-card.dragging {
+  opacity: 0.6;
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(255,140,0,0.6);
+  z-index: 10;
+}
+
+.day-card.drag-over {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(255,140,0,0.4);
+  border: 2px dashed #ff8c00;
+}
+
+.remove-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(255,69,0,0.8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.remove-btn:hover {
+  background: red;
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #91c5c4, #7cbeca);
+  border-radius: 15px;
+  height: 180px;
+  flex-direction: column;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.plus-container .plus {
+  font-size: 2rem;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.plus-container .plus-text {
+  font-size: 0.9rem;
+  color: #f0f0f0;
+  margin-top: 0.3rem;
+}
+
+/* ===================== Popup overlay ===================== */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.popup {
+  background: linear-gradient(145deg, #e4e4e4, #f2f2f2);
+  border-radius: 20px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 500px;
+  max-height: calc(90vh - 30px);
+  overflow-y: auto;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+  animation: fadeIn 0.3s ease-in-out;
+  position: relative;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.popup h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+.popup img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 0.3rem;
+}
+
+/* ===================== Recipe info: duration + macros ===================== */
+.recipe-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #555;
+  margin: 0.5rem 0 1rem 0;
+}
+
+.recipe-info .duration {
+  font-style: italic;
+  color: #666;
+}
+
+.recipe-info .macros {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.recipe-info .macros span {
+  padding: 0.3rem 0.6rem;
+  border-radius: 12px;
+  color: white;
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+.recipe-info .macros span.protein { background-color: #4CAF50; }
+.recipe-info .macros span.carbs { background-color: #FF9800; }
+.recipe-info .macros span.fat { background-color: #F44336; }
+
+/* ===================== Ingrediënten ===================== */
+.popup ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.popup ul li {
+  background: #ffffff;
+  margin: 0.4rem 0;
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.popup ul.ingredients-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding-left: 0;
+}
+
+.popup ul.ingredients-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  margin: 0.2rem 0;
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.popup ul.ingredients-list li span {
+  display: inline-block;
+}
+
+.popup ul.ingredients-list li .macro-info {
+  text-align: right;
+  color: #666;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: 10px;
+}
+
+/* ===================== 3-stappenplan sectie ===================== */
+.steps {
+  background: #ffffff;
+  padding: 4rem 1rem 8rem 1rem;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  top: 4rem;
+}
+
+.steps h2 {
+  font-size: 2rem;
+  margin-bottom: 3rem;
+  color: #ff7f50;
+}
+
+.steps-container {
+  display: flex;
+  justify-content: center; 
+  gap: 2rem;
+  flex-wrap: wrap; 
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.step {
+  background: #ffffff;          
+  padding: 2rem 1rem;
+  border-radius: 15px;
+  flex: 1 1 250px; 
+  max-width: 350px;
+  text-align: center;
+  transition: transform 0.3s;
+  box-shadow: none;           
+}
+
+.step:hover {
+  transform: translateY(-5px);
+}
+
+.step-number {
+  width: 60px;
+  height: 60px;
+  background: #ff7f50;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem auto;
+}
+
+.step h3 {
+  margin-bottom: 1rem;
+  color: #414141;
+}
+
+.step p {
+  font-size: 1rem;
+  color: #666666;
+  line-height: 1.5;
+}
+
+/* ===================== Footer ===================== */
+footer {
+  background: linear-gradient(135deg, #2c2c2c, #1f1f1f);
+  color: #ffb347;
+  padding: 3rem 2rem;
+  box-shadow: 0 -8px 20px rgba(0,0,0,0.4);
+  border-radius: 15px 15px 0 0;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 2rem;
+}
+
+.footer-left, .footer-center, .footer-right {
+  flex: 1 1 200px;
+}
+
+.footer-left p {
+  margin: 0.3rem 0;
+  font-size: 0.95rem;
+}
+
+.footer-logo {
+  height: 50px;
+  margin-bottom: 0.5rem;
+}
+
+.footer-center h4, .footer-right h4 {
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+  font-size: 1.1rem;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-links a {
+  color: #ffb347;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-links a:hover {
+  color: #ffffff;
+}
+
+.social-icons a {
+  display: inline-block;
+  margin: 0 0.5rem;
+  transition: transform 0.3s, filter 0.3s;
+}
+
+.social-icons a img {
+  width: 30px;
+  height: 30px;
+}
+
+.social-icons a:hover {
+  transform: scale(1.2);
+  filter: brightness(1.3);
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .footer-left, .footer-center, .footer-right {
+    flex: 1 1 100%;
+  }
+
+  .social-icons {
+    justify-content: center;
+  }
+}
+
+
+/* ===================== Animatie ===================== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ===================== Responsive ===================== */
+@media (min-width: 768px) and (max-width: 1024px) {
+  header nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    max-width: 100%;
+    padding: 0;
+  }
+  
+  .nav-left .logo { height: 45px; }
+  
+  .nav-right {
+    display: flex;
+    gap: 1.5rem;
+    margin-left: auto;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  
+  .nav-right a {
+    font-size: 1rem;
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .nav-right a:hover,
+  .nav-right a.active { color: #3f3f3f; }
+}
+
+/* ===================== Mobiel (max-width: 767px) ===================== */
+@media (max-width: 767px) {
+  header nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    position: relative;
+  }
+
+  .nav-left .logo {
+    height: 40px;
+  }
+
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 22px;
+    cursor: pointer;
+    z-index: 400; /* boven drawer */
+  }
+
+  .hamburger span {
+    display: block;
+    height: 3px;
+    width: 100%;
+    background: #333;
+    border-radius: 3px;
+    transition: all 0.4s ease;
+  }
+
+  .hamburger.active span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+    background: #ff8c42;
+  }
+  .hamburger.active span:nth-child(2) {
+    opacity: 0;
+  }
+  .hamburger.active span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+    background: #ff8c42;
+  }
+
+  /* Menu drawer */
+  .nav-right {
+    position: fixed;
+    top: 60px; /* iets onder header */
+    right: 10px;
+    width: 260px;
+    max-width: 80%;
+    height: auto; /* past zich aan inhoud aan */
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(15px);
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+    transform: translateX(120%);
+    opacity: 0;
+    transition: transform 0.4s ease, opacity 0.3s ease;
+    z-index: 350;
+  }
+
+  .nav-right.active {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  /* Menu links */
+  .nav-right a {
+    display: block;
+    padding: 0.7rem 1rem;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #333;
+    text-decoration: none;
+    background: rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.3);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: all 0.25s ease;
+  }
+
+  .nav-right a:hover {
+    background: rgba(255,140,66,0.85);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255,140,66,0.3);
+  }
+
+  .nav-right a.active {
+    background: rgba(255,140,66,0.8);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(255,140,66,0.25);
+  }
+
+  /* Subtiele overlay achter menu */
+  .drawer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.15);
+    z-index: 300;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .drawer-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+/* ===================== Mobiel optimalisatie: main content ===================== */
+@media (max-width: 767px) {
+  main {
+    padding: 1rem;
+    margin-top: 5rem; /* houdt ruimte voor header */
+  }
+
+  .preferences {
+    position: relative; /* blijft relatief, maar geen top offset */
+    top: 0;             /* verwijder -5rem */
+    margin-top: 1.5rem; /* ruimte onder de header/intro */
+    padding: 1.5rem;    
+  }
+
+  .page-header {
+    padding: 2rem 1rem 6rem 1rem;
+    text-align: center;
+  }
+
+  .page-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .page-header p {
+    font-size: 1rem;
+    max-width: 90%;
+    margin: 0.5rem auto 0 auto;
+  }
+
+  .preferences {
+    padding: 1.5rem;
+    margin-top: -4rem;
+  }
+
+  form input, form select, form button {
+    font-size: 0.95rem;
+  }
+
+  /* Weekmenu kaarten: 1 kolom */
+  #menu-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* Stappenplan: onder elkaar */
+  .steps-container {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .step {
+    max-width: 100%;
+    padding: 1.5rem;
+  }
+
+  /* Popup/overlay */
+  .popup {
+    padding: 1.5rem;
+    max-width: 95%;
+  }
+
+  /* Shopping list button kleiner */
+  #shopping-list-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+  #menu-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .day-card {
+    display: flex;
+    flex-direction: column; /* dag bovenaan, content eronder */
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    gap: 0.5rem;
+  }
+
+  /* Dag boven de foto en titel */
+  .day-card .day-name {
+    font-weight: bold;
+    font-size: 1rem;
+    color: #414141;
+  }
+
+  /* Row met foto links, titel rechts */
+  .day-card .day-content {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .day-card .day-content img {
+    width: 100px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+
+  .day-card .day-content h3 {
+    font-size: 1rem;
+    margin: 0;
+    color: #414141;
+  }
+
+  .day-card .remove-btn {
+    top: 5px;
+    right: 5px;
+  }
+
+  .placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: linear-gradient(145deg, #91c5c4, #7cbeca); /* behoud desktop kleuren */
+    border-radius: 15px;
+    height: 120px; /* compacter op mobiel */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    color: #ffffff; /* tekst blijft wit */
+    font-weight: bold;
+  }
+
+  .placeholder .plus {
+    font-size: 1.8rem; /* iets kleiner dan desktop, past in mobiel */
+    color: #ffffff;
+  }
+
+  .placeholder .plus-text {
+    font-size: 0.85rem;
+    color: #ffffff;
+    margin-top: 0.2rem;
+    text-align: center;
+  }
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center; /* horizontaal centreren */
+    align-items: center;     /* verticaal centreren */
+    padding: 1rem;           /* ruimte rondom popup */
+    z-index: 1000;
+    overflow-y: auto;        /* scroll als nodig */
+    box-sizing: border-box;
+  }
+
+  /* popup zelf */
+  .popup {
+    width: 100%;             
+    max-width: 400px;        /* voorkom te brede popup */
+    max-height: 90vh;        /* niet hoger dan 90% van schermhoogte */
+    margin: 0;               /* centreren via flex van overlay */
+    padding: 1.5rem;
+    border-radius: 20px;
+    background: linear-gradient(145deg, #e4e4e4, #f2f2f2);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+    color: #333;
+    position: relative;
+    overflow-y: auto;        /* scrollen binnen popup als content te groot */
+    box-sizing: border-box;
+  }
+}

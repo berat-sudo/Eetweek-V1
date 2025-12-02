@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mijn Recepten Toevoegen</title>
+  <link rel="stylesheet" href="mijnrecepten.css" />
+</head>
+<body>
+  <!-- ===================== Sidebar ===================== -->
+  <aside class="sidebar">
+
+        <!-- Hamburger button -->
+<div class="hamburger" id="hamburger-btn">
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
+
+    <div class="profile">
+      <div class="profile-circle" id="profile-circle">U</div>
+      <span id="user-name-sidebar">Gebruiker</span>
+    </div>
+    <nav class="sidebar-nav">
+      <ul>
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li class="active"><a href="/mijnrecepten">Mijn Recepten</a></li>
+        <li><a href="/opgeslagenweekmenu.html">Opgeslagen weekmenu's</a></li>
+        <li><a href="/nieuws.html">Nieuws</a></li>
+        <li><a href="/logout">Uitloggen</a></li>
+      </ul>
+
+         <!-- ⬇️ LOGO LINKSONDER ⬇️ -->
+  <div class="sidebar-logo" style="
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+">
+  <img src="/Fotos/logo_.png" style="
+    width: 40px;
+    height: auto;
+    display: block;
+  ">
+</div>
+    </nav>
+  </aside>
+
+  <!-- ===================== Main content ===================== -->
+  <main class="main-content">
+    <section class="hero">
+      <div class="hero-content">
+          <h2>Mijn Recepten</h2>
+          <p>Maak hier je eigen recepten.</p>
+      </div>
+  </section>
+
+    <section class="content-section">
+      <div class="recipe-layout">
+        <!-- Formulier -->
+        <aside class="form-column">
+          <section class="own-recipe-form-section">
+            <h2>Voeg een Eigen Recept Toe</h2>
+            <form id="own-recipe-form" autocomplete="off">
+              <label for="recipe-name">Recept Naam:</label>
+              <input type="text" id="recipe-name" required placeholder="Bijv. Burrito met gehakt">
+
+              <label for="recipe-image-file">Afbeelding:</label>
+              <input type="file" id="recipe-image-file" accept="image/*" capture="environment">
+              <p style="font-size:0.8rem; color:#555;">Je kunt een foto maken of een bestand kiezen.</p>
+
+              <label for="recipe-duration">Bereidingstijd (minuten):</label>
+              <input type="number" id="recipe-duration" required min="1" placeholder="Bijv. 30">
+
+              <label for="recipe-persons">Aantal personen:</label>
+              <input type="number" id="recipe-persons" required min="1" value="1">
+
+              <label>Ingrediënten:</label>
+              <div id="ingredients-container">
+                <div class="ingredient-row">
+                  <input type="text" class="ingredient-item" placeholder="Ingrediënt" required>
+                  <input type="text" class="ingredient-amount" placeholder="Hoeveelheid" required>
+                  <button type="button" class="remove-ingredient">❌</button>
+                </div>
+              </div>
+              <button type="button" id="add-ingredient-btn">Ingrediënt toevoegen</button>
+
+              <label for="recipe-instructions">Bereidingswijze:</label>
+              <textarea id="recipe-instructions" rows="5" placeholder="Schrijf hier de stappen..."></textarea>
+
+              <label for="recipe-tags">Tags (komma gescheiden, bijv. vegan, lowcarb):</label>
+              <input type="text" id="recipe-tags" placeholder="Bijv. vegetarisch, snel">
+
+              <button type="submit" class="primary-btn">Recept Toevoegen</button>
+            </form>
+          </section>
+        </aside>
+
+        <!-- Recepten -->
+        <aside class="recipes-column">
+          <section class="added-recipes">
+            <h2>Mijn Recepten</h2>
+            <div id="added-recipes-container" class="recipes-grid">
+              <p class="placeholder-text">Hier komen je recepten te staan.</p>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== JS ===================== -->
+  <script src="mijnrecepten.js"></script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact - Mijn Weekmenu</title>
+  <link rel="stylesheet" href="contact.css">
+</head>
+<body>
+
+  <!-- Navigatie -->
+  <header>
+    <nav>
+      <div class="nav-left">
+        <a href="homepage.html">
+          <img src="/Fotos/logo_.png" alt="Mijn Weekmenu Logo" class="logo">
+        </a>
+      </div>
+      <ul class="nav-right">
+        <li><a href="homepage.html">Home</a></li>
+        <li><a href="index.html">Planner</a></li>
+        <li><a href="overons.html">Over Ons</a></li>
+        <li><a href="contact.html" class="active">Contact</a></li>
+        <li><a href="login.html" class="login-btn">Login</a></li>
+      </ul>
+
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero sectie -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Contact</h1>
+      <p>We horen graag van je! Heb je vragen, suggesties of feedback? Vul het formulier hieronder in.</p>
+    </div>
+  </section>
+
+  <!-- Contact formulier -->
+  <section class="contact-section">
+    <div class="contact-container">
+      <form class="contact-form">
+        <h2>Stuur ons een bericht</h2>
+
+        <label for="name">Naam</label>
+        <input type="text" id="name" name="name" placeholder="Jouw naam" required>
+
+        <label for="email">E-mailadres</label>
+        <input type="email" id="email" name="email" placeholder="Jouw e-mailadres" required>
+
+        <label for="message">Bericht</label>
+        <textarea id="message" name="message" rows="5" placeholder="Schrijf hier je bericht..." required></textarea>
+
+        <button type="submit">Verstuur</button>
+      </form>
+
+      <div class="contact-info">
+        <h3>Contactgegevens</h3>
+        <p><strong>E-mail:</strong> eetweek@gmail.com</p>
+        
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-left">
+        <img src="/Fotos/logo_.png" alt="Mijn Weekmenu Logo" class="footer-logo">
+        <p>© 2025 eetweek</p>
+        <p>Gemaakt met liefde voor eten</p>
+      </div>
+      <div class="footer-center">
+        <h4>Pagina's</h4>
+        <ul class="footer-links">
+          <li><a href="homepage.html">Home</a></li>
+          <li><a href="index.html">Planner</a></li>
+          <li><a href="Overons.html">Over Ons</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="login.html">Login</a></li>
+        </ul>
+      </div>
+      <div class="footer-right">
+        <h4>Volg ons</h4>
+        <div class="social-icons">
+          <a href="#" aria-label="Facebook"><img src="/Fotos/facebookicon.png" alt="Facebook"></a>
+          <a href="#" aria-label="Instagram"><img src="/Fotos/instaicon.png" alt="Instagram"></a>
+          <a href="#" aria-label="Tiktok"><img src="/Fotos/tiktokicon.png" alt="Tiktok"></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Feature sectie zichtbaar bij scroll
+      const features = document.querySelector('.features');
+      if (features) {
+        function checkVisibility() {
+          const rect = features.getBoundingClientRect();
+          const windowHeight = window.innerHeight;
+          if (rect.top <= windowHeight * 0.8 && rect.bottom >= 0) {
+            features.classList.add('visible');
+          } else {
+            features.classList.remove('visible');
+          }
+        }
+        window.addEventListener('scroll', checkVisibility);
+        checkVisibility();
+      }
+    
+      // Hamburger menu toggle
+      const hamburger = document.querySelector(".hamburger");
+      const navRight = document.querySelector(".nav-right");
+    
+      // overlay maken
+      const overlay = document.createElement("div");
+      document.body.appendChild(overlay);
+    
+      function toggleMenu(open) {
+        const willOpen = open === undefined ? !navRight.classList.contains("active") : !!open;
+        if (willOpen) {
+          navRight.classList.add("active");
+          hamburger.classList.add("active");
+          overlay.classList.add("active"); 
+        } else {
+          navRight.classList.remove("active");
+          hamburger.classList.remove("active");
+          overlay.classList.remove("active");
+        }
+      }
+    
+      if (hamburger && navRight) {
+        hamburger.addEventListener("click", () => toggleMenu());
+      }
+    
+      overlay.addEventListener("click", () => toggleMenu(false));
+
+      // ------------------ CONTACT FORM AJAX ------------------
+      const contactForm = document.querySelector(".contact-form");
+      contactForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = {
+          name: document.getElementById("name").value.trim(),
+          email: document.getElementById("email").value.trim(),
+          message: document.getElementById("message").value.trim(),
+        };
+        try {
+          const res = await fetch("/contact", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+          });
+          const data = await res.json();
+          if (data.success) {
+            alert(data.message);
+            contactForm.reset();
+          } else {
+            alert(data.error || "Er ging iets mis");
+          }
+        } catch (err) {
+          console.error(err);
+          alert("Er ging iets mis bij het versturen van je bericht.");
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

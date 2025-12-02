@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aanmelden</title>
+    <link rel="stylesheet" href="loginregister.css">
+</head>
+<body>
+    <a href="homepage.html" class="back-arrow">&#8592; Terug</a>
+
+    <div class="auth-wrapper">
+        <div class="auth-box">
+            <h2>Aanmelden</h2>
+
+            <form id="register-form" action="/register" method="POST">
+                <input type="text" name="name" placeholder="Naam" required>
+                <input type="email" name="email" placeholder="Email" required>
+
+                <input type="password" name="password" placeholder="Wachtwoord" required>
+                <div id="password-rules" class="password-rules">
+                    <p>Je wachtwoord moet voldoen aan:</p>
+                    <ul>
+                        <li id="rule-length" class="invalid">Minimaal 6 tekens</li>
+                        <li id="rule-uppercase" class="invalid">Minimaal 1 hoofdletter</li>
+                        <li id="rule-number" class="invalid">Minimaal 1 cijfer</li>
+                        <li id="rule-special" class="invalid">Minimaal 1 speciaal teken (!@#$%^&*)</li>
+                    </ul>
+                </div>
+
+                <input type="password" name="confirmPassword" placeholder="Herhaal wachtwoord" required>
+                <button type="submit" class="auth-btn">Account aanmaken</button>
+
+                <!-- Foutmeldingen -->
+                <p id="error-message" class="error-message"></p>
+                <!-- Succesmelding -->
+                <p id="success-message" class="success-message"></p>
+            </form>        
+
+            <p class="switch-text">
+                Al een account? <a href="login.html">Inloggen</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById("register-form");
+        const errorMessage = document.getElementById("error-message");
+        const successMessage = document.getElementById("success-message");
+
+        const passwordInput = form.password;
+        const rules = {
+            length: document.getElementById("rule-length"),
+            uppercase: document.getElementById("rule-uppercase"),
+            number: document.getElementById("rule-number"),
+            special: document.getElementById("rule-special")
+        };
+
+        // Functie om error te tonen
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add("fade-in", "shake");
+            errorMessage.classList.remove("fade-out");
+        }
+
+        // Functie om succes te tonen
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.classList.add("fade-in");
+            successMessage.classList.remove("fade-out");
+        }
+
+        // Verberg meldingen bij typen
+        form.addEventListener("input", () => {
+            errorMessage.classList.remove("fade-in", "shake");
+            errorMessage.classList.add("fade-out");
+            successMessage.classList.remove("fade-in");
+            successMessage.classList.add("fade-out");
+
+            // Live password rules check
+            const value = passwordInput.value;
+            rules.length.className = value.length >= 6 ? "valid" : "invalid";
+            rules.uppercase.className = /[A-Z]/.test(value) ? "valid" : "invalid";
+            rules.number.className = /\d/.test(value) ? "valid" : "invalid";
+            rules.special.className = /[!@#$%^&*]/.test(value) ? "valid" : "invalid";
+        });
+
+        // Controleer query params bij laden
+        const params = new URLSearchParams(window.location.search);
+        const error = params.get("error");
+        const success = params.get("success");
+
+        if (error === "emailexists") {
+            showError("Email bestaat al!");
+        }
+
+        if (success === "registered") {
+            showSuccess("Registratie succesvol! Je kunt nu inloggen.");
+        }
+
+        // Client-side validatie bij submit
+        form.addEventListener("submit", (e) => {
+            const name = form.name.value.trim();
+            const email = form.email.value.trim();
+            const password = form.password.value.trim();
+            const confirmPassword = form.confirmPassword.value.trim();
+
+            if (!name || !email || !password || !confirmPassword) {
+                e.preventDefault();
+                showError("Vul alle velden in!");
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                showError("Wachtwoorden komen niet overeen!");
+                return;
+            }
+
+            // Controleer alle regels
+            if (
+                password.length < 6 ||
+                !/[A-Z]/.test(password) ||
+                !/\d/.test(password) ||
+                !/[!@#$%^&*]/.test(password)
+            ) {
+                e.preventDefault();
+                showError("Wachtwoord voldoet niet aan de regels!");
+                return;
+            }
+        });
+    </script>
+</body>
+</html>

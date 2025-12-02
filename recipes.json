@@ -1,0 +1,181 @@
+[
+  {
+    "_id": "r001",
+    "name": "Kip curry met rijst",
+    "tags": ["kip", "vlees", "rijst"],
+    "image": "/Fotos/Firefly_Kip curry met rijst 113739.jpg",
+    "duration": 30,
+    "ingredients": [
+      { "item": "Kipfilet", "amount": "150 g" },
+      { "item": "Kerriepoeder", "amount": "1 tl" },
+      { "item": "Kokosmelk", "amount": "100 ml" },
+      { "item": "Rijst", "amount": "100 g" },
+      { "item": "Ui", "amount": "0.5 stuk" },
+      { "item": "Knoflook", "amount": "1 teentje" }
+    ],
+    "instructions": [
+      "Snijd de kipfilet in blokjes van gelijke grootte.",
+      "Verhit een beetje olie in een pan en bak de kip rondom goudbruin (3-4 min), haal uit de pan.",
+      "Snipper de ui en knoflook, bak in dezelfde pan tot glazig.",
+      "Voeg kerriepoeder toe en roer goed door om de smaken vrij te laten komen.",
+      "Voeg kokosmelk toe, breng zachtjes aan de kook en voeg de kip terug. Laat 15 minuten sudderen op laag vuur.",
+      "Kook ondertussen de rijst volgens de verpakking.",
+      "Proef en breng op smaak met zout en peper. Serveer de curry over de rijst en garneer met verse koriander."
+    ],
+    "macros": { "protein": 20, "carbs": 30, "fat": 7.5 }
+  },
+  {
+    "_id": "r002",
+    "name": "Pasta met tomatensaus",
+    "tags": ["pasta", "vegetarisch"],
+    "image": "/Fotos/Firefly_Pasta met tomatensaus 113739.jpg",
+    "duration": 25,
+    "ingredients": [
+      { "item": "Pasta", "amount": "125 g" },
+      { "item": "Tomatenblokjes", "amount": "200 g" },
+      { "item": "Ui", "amount": "0.5 stuk" },
+      { "item": "Basilicum", "amount": "klein handje" },
+      { "item": "Parmezaanse kaas", "amount": "25 g" }
+    ],
+    "instructions": [
+      "Breng een pan water aan de kook, kook de pasta beetgaar en giet af.",
+      "Snipper de ui en bak in olijfolie tot glazig.",
+      "Voeg de tomatenblokjes toe en laat 10-12 minuten zachtjes inkoken, roer af en toe.",
+      "Hak de basilicum grof en voeg toe aan de saus.",
+      "Meng de pasta door de saus zodat alles bedekt is.",
+      "Serveer op borden en bestrooi met Parmezaanse kaas."
+    ],
+    "macros": { "protein": 10, "carbs": 35, "fat": 7.5 }
+  },
+  {
+    "_id": "r003",
+    "name": "Vegetarische lasagne",
+    "tags": ["vegetarisch", "lasagne"],
+    "image": "/Fotos/Firefly_Vegetarische lasagne 113739.jpg",
+    "duration": 40,
+    "ingredients": [
+      { "item": "Lasagnebladen", "amount": "4 stuks" },
+      { "item": "Courgette", "amount": "0.5 stuk" },
+      { "item": "Tomatensaus", "amount": "150 ml" },
+      { "item": "Ricotta", "amount": "50 g" },
+      { "item": "Mozzarella", "amount": "50 g" }
+    ],
+    "instructions": [
+      "Verwarm de oven voor op 180°C.",
+      "Snijd de courgette in dunne plakjes en bak kort tot licht goudbruin.",
+      "Neem een ovenschaal en begin met een laag tomatensaus, dan lasagnebladen, courgette, ricotta en mozzarella. Herhaal lagen en eindig met kaas.",
+      "Dek af met folie en bak 25 minuten, verwijder folie en bak nog 5-10 minuten tot goudbruin.",
+      "Laat 5 minuten rusten voor het aansnijden zodat de lagen stevig blijven."
+    ],
+    "macros": { "protein": 12.5, "carbs": 25, "fat": 10 }
+  },
+  {
+    "_id": "r004",
+    "name": "Rundvlees stoofpot",
+    "tags": ["vlees"],
+    "image": "/Fotos/Firefly_Rundvlees stoofpot 113739.jpg",
+    "duration": 120,
+    "ingredients": [
+      { "item": "Rundvlees", "amount": "200 g" },
+      { "item": "Ui", "amount": "0.5 stuk" },
+      { "item": "Wortel", "amount": "1 stuk" },
+      { "item": "Rode wijn", "amount": "50 ml" },
+      { "item": "Bouillon", "amount": "150 ml" }
+    ],
+    "instructions": [
+      "Snijd rundvlees in blokjes en kruid met zout en peper.",
+      "Verhit olie in een stoofpan en braad vlees rondom aan tot bruin.",
+      "Snipper ui en snijd wortel, voeg toe en bak kort mee.",
+      "Blus af met rode wijn en laat enkele minuten inkoken.",
+      "Voeg bouillon toe, breng aan de kook, zet vuur laag en laat 2 uur zachtjes sudderen.",
+      "Proef en breng op smaak met zout, peper en verse kruiden zoals tijm of peterselie."
+    ],
+    "macros": { "protein": 25, "carbs": 10, "fat": 10 }
+  },
+  {
+    "_id": "r005",
+    "name": "Tofu roerbak met noedels",
+    "tags": ["vegan", "noedels"],
+    "image": "/Fotos/Firefly_Tofu roerbak met noedels 113739.jpg",
+    "duration": 20,
+    "ingredients": [
+      { "item": "Tofu", "amount": "125 g" },
+      { "item": "Noedels", "amount": "100 g" },
+      { "item": "Sojasaus", "amount": "1 el" },
+      { "item": "Groentenmix", "amount": "100 g" },
+      { "item": "Sesamolie", "amount": "0.5 el" }
+    ],
+    "instructions": [
+      "Snijd tofu in blokjes en dep droog.",
+      "Verhit sesamolie in een wok of pan, bak tofu krokant rondom.",
+      "Voeg groentenmix toe en roerbak 3-4 minuten tot beetgaar.",
+      "Voeg tofu terug, besprenkel met sojasaus en roer door.",
+      "Kook noedels volgens verpakking en meng met tofu en groenten. Serveer direct."
+    ],
+    "macros": { "protein": 10, "carbs": 30, "fat": 7.5 }
+  },
+  {
+    "_id": "r006",
+    "name": "Kip fajita wraps",
+    "tags": ["kip", "vlees"],
+    "image": "/Fotos/Firefly_Kip fajita wraps 113739.jpg",
+    "duration": 25,
+    "ingredients": [
+      { "item": "Kipfilet", "amount": "150 g" },
+      { "item": "Paprika", "amount": "1 stuk" },
+      { "item": "Ui", "amount": "0.5 stuk" },
+      { "item": "Tortilla wraps", "amount": "2 stuks" },
+      { "item": "Kruidenmix", "amount": "0.5 el" }
+    ],
+    "instructions": [
+      "Snijd kip, paprika en ui in dunne reepjes.",
+      "Verhit olie in een pan en bak kip gaar.",
+      "Voeg paprika en ui toe, bak 3-4 minuten mee.",
+      "Strooi kruidenmix erover en meng goed.",
+      "Verwarm tortilla’s kort, vul met kip-groentemengsel en rol op. Serveer direct."
+    ],
+    "macros": { "protein": 17.5, "carbs": 20, "fat": 5 }
+  },
+  {
+    "_id": "r007",
+    "name": "Gezonde lasagne met spinazie",
+    "tags": ["vegetarisch", "lasagne", "spinazie", "gezond"],
+    "image": "/Fotos/Firefly_Gezonde lasagne met spinazie 373271.jpg",
+    "duration": 85,
+    "ingredients": [
+      { "item": "Volkoren lasagnebladen", "amount": "3 stuks" },
+      { "item": "Hüttenkäse", "amount": "100 g" },
+      { "item": "Tomatenblokjes", "amount": "200 ml" },
+      { "item": "Italiaanse kruiden", "amount": "0.5 tl" },
+      { "item": "Peper", "amount": "snuf" },
+      { "item": "Zout", "amount": "snuf" },
+      { "item": "Champignons", "amount": "62.5 g" },
+      { "item": "Spinazie", "amount": "100 g" },
+      { "item": "Paprika", "amount": "0.25 stuk" },
+      { "item": "Verse basilicum", "amount": "handje" },
+      { "item": "Ui", "amount": "0.25 stuk" },
+      { "item": "Knoflook", "amount": "0.5 teen" },
+      { "item": "Geraspte 30+ kaas", "amount": "0.25 handje" }
+    ],
+    "instructions": [
+      "Verwarm de oven voor op 180°C.",
+      "Snipper de ui en knoflook.",
+      "Snijd de champignons in plakjes en de paprika in kleine blokjes.",
+      "Verhit een beetje olie of boter in een pan en fruit de ui en knoflook kort.",
+      "Voeg de champignons en paprika toe en bak een paar minuten mee.",
+      "Voeg de tomatenblokjes, Italiaanse kruiden, peper, zout en verse basilicum toe.",
+      "Laat het mengsel ca. 20 minuten zachtjes pruttelen en roer af en toe door.",
+      "Bak de spinazie beetje bij beetje in een andere pan tot deze geslonken is.",
+      "Laat de spinazie goed uitlekken in een vergiet.",
+      "Meng de geslonken spinazie met de Hüttenkäse en breng op smaak met peper en zout.",
+      "Vet een ovenschaal in en verdeel een klein beetje tomatensaus over de bodem.",
+      "Leg 3 lasagnebladen op de saus.",
+      "Verdeel de helft van het spinaziemengsel erover en dek af met lasagnebladen.",
+      "Verdeel de helft van de tomatensaus over de lasagnebladen.",
+      "Leg hierop de rest van het spinaziemengsel, dek af met lasagnebladen en eindig met de resterende tomatensaus.",
+      "Bestrooi de bovenkant met geraspte kaas.",
+      "Bak de lasagne ca. 45 minuten in de oven tot de bovenkant goudbruin is."
+    ],
+    "macros": { "protein": 24, "carbs": 32, "fat": 10 }
+  }
+]

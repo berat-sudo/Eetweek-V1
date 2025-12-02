@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mijn Weekmenu - Planner</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="nav-left">
+        <a href="homepage.html">
+          <img src="/Fotos/logo_.png" alt="Mijn Weekmenu Logo" class="logo">
+        </a>
+        
+      </div>
+
+      <ul class="nav-right">
+        <li><a href="homepage.html">Home</a></li>
+        <li><a href="index.html" class="active">Planner</a></li>
+        <li><a href="Overons.html">Over Ons</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="login.html" class="login-btn">Login</a></li>
+      </ul>
+
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <h1>EetWeek Planner</h1>
+      <p>Vertel ons wat je lekker vindt en wij maken een gevarieerd weekmenu voor jou.</p>
+    </div>
+    
+    <section class="preferences">
+      <h2>Jouw voorkeuren</h2>
+      <form id="preferences-form">
+        <label for="favorite">Wat eet je graag?</label>
+        <input type="text" id="favorite" name="favorite" placeholder="Bijv. kip, pasta, vegetarisch...">
+
+        <label for="diet">Specifieke dieetvoorkeur?</label>
+        <select id="diet" name="diet">
+          <option value="">Geen voorkeur</option>
+          <option value="vegetarian">Vegetarisch</option>
+          <option value="vegan">Vegan</option>
+          <option value="lowcarb">Low-carb</option>
+          <option value="highprotein">High-protein</option>
+          <option value="glutenfree">Glutenvrij</option>
+        </select>
+
+        <button type="submit">Maak mijn weekmenu</button>
+      </form>
+    </section>
+
+    <section class="menu">
+      <h2 style="display: flex; justify-content: space-between; align-items: center;">
+        Jouw weekmenu
+        <button id="shopping-list-btn" style="padding: 0.5rem 1rem; border-radius: 10px; background: linear-gradient(90deg, #32cd32, #7fff00); border: none; color: white; font-weight: bold; cursor: pointer;">🛒 Boodschappenlijst</button>
+      </h2>
+      <div id="menu-container">
+        <p>Kies je voorkeuren en ontvang direct een persoonlijk menu.</p>
+      </div>
+    </section>
+  </main>
+
+  <section class="steps">
+    <h2>Zo werkt EetWeek</h2>
+    <div class="steps-container">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Kies je voorkeuren</h3>
+        <p>Geef je favoriete gerechten en dieetwensen door, zodat wij een weekmenu helemaal op jou kunnen afstemmen.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>Ontvang je menu</h3>
+        <p>Klik op ‘Maak mijn weekmenu’ en ontdek een gevarieerd, lekker of gezond menu voor de hele week.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>Kook en geniet</h3>
+        <p>Volg de recepten en geniet elke dag van smaakvolle, voedzame maaltijden zonder stress.</p>
+      </div>
+    </div>
+  </section>
+  
+  <footer>
+    <div class="footer-container">
+      <!-- Links: logo & copyright -->
+      <div class="footer-left">
+        <img src="/Fotos/logo_.png" alt="Mijn Weekmenu Logo" class="footer-logo">
+        <p>© 2025 eetweek</p>
+        <p>Gemaakt met liefde voor eten</p>
+      </div>
+  
+      <!-- Midden: pagina-links -->
+      <div class="footer-center">
+        <h4>Pagina's</h4>
+        <ul class="footer-links">
+          <li><a href="homepage.html">Home</a></li>
+          <li><a href="index.html">Planner</a></li>
+          <li><a href="Overons.html">Over Ons</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="login.html">Login</a></li>
+        </ul>
+      </div>
+  
+      <!-- Rechts: sociale iconen -->
+      <div class="footer-right">
+        <h4>Volg ons</h4>
+        <div class="social-icons">
+          <a href="#" aria-label="Facebook"><img src="/Fotos/facebookicon.png" alt="Facebook"></a>
+          <a href="#" aria-label="Instagram"><img src="/Fotos/instaicon.png" alt="Instagram"></a>
+          <a href="#" aria-label="Tiktok"><img src="/Fotos/tiktokicon.png" alt="Tiktok"></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
+  <body class="planner-page"></body>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Feature sectie zichtbaar bij scroll
+      const features = document.querySelector('.features');
+      function checkVisibility() {
+        const rect = features.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        if (rect.top <= windowHeight * 0.8 && rect.bottom >= 0) {
+          features.classList.add('visible');
+        } else {
+          features.classList.remove('visible');
+        }
+      }
+      window.addEventListener('scroll', checkVisibility);
+      checkVisibility();
+  
+      // Hamburger menu toggle
+      const hamburger = document.querySelector(".hamburger");
+      const navRight = document.querySelector(".nav-right");
+  
+      if (hamburger && navRight) {
+        hamburger.addEventListener("click", () => {
+          hamburger.classList.toggle("active");
+          navRight.classList.toggle("active");
+        });
+      }
+    });
+    // overlay maken
+const overlay = document.createElement("div");
+overlay.classList.add("drawer-overlay");
+document.body.appendChild(overlay);
+
+function toggleMenu(open) {
+  const willOpen = open === undefined ? !navRight.classList.contains("active") : !!open;
+  if (willOpen) {
+    navRight.classList.add("active");
+    hamburger.classList.add("active");
+    overlay.classList.add("active");
+    document.body.classList.add("drawer-open");
+  } else {
+    navRight.classList.remove("active");
+    hamburger.classList.remove("active");
+    overlay.classList.remove("active");
+    document.body.classList.remove("drawer-open");
+  }
+}
+
+// klik overlay sluit menu
+overlay.addEventListener("click", () => toggleMenu(false));
+
+  </script>
+</body>
+</html>
