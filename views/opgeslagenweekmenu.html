@@ -5,54 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Opgeslagen Weekmenu's</title>
 
-    <!-- Pagina CSS -->
     <link rel="stylesheet" href="/opgeslagenweekmenu.css">
+    <link rel="icon" href="/Fotos/logo_.png" type="image/x-icon">
 </head>
 
 <body>
 
-    <!-- ===================== Sidebar ===================== -->
     <aside class="sidebar">
 
-            <!-- Hamburger button -->
-<div class="hamburger" id="hamburger-btn">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-        <div class="profile">
+        <div class="hamburger" id="hamburger-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        
+        <a href="/mijnaccount.html" class="profile">
             <div class="profile-circle" id="profile-circle">U</div>
             <span id="user-name-sidebar">Gebruiker</span>
-          </div>
+          </a>
 
         <nav class="sidebar-nav">
             <ul>
                 <li><a href="/dashboard">Dashboard</a></li>
                 <li><a href="/mijnrecepten.html">Mijn Recepten</a></li>
-                <li class="active"><a href="/opgeslagenweekmenu.html">Opgeslagen Weekmenu’s</a></li>
+                <li class="active"><a href="/opgeslagenweekmenu.html">Mijn Weekmenu’s</a></li>
                 <li><a href="/nieuws.html">Nieuws</a></li>
                 <li><a href="/logout">Uitloggen</a></li>
             </ul>
 
-               <!-- ⬇️ LOGO LINKSONDER ⬇️ -->
-  <div class="sidebar-logo" style="
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-">
-  <img src="/Fotos/logo_.png" style="
-    width: 40px;
-    height: auto;
-    display: block;
-  ">
-</div>
+            <div class="sidebar-logo" style="
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            ">
+                <img src="/Fotos/logo_.png" style="
+                    width: 40px;
+                    height: auto;
+                    display: block;
+                ">
+            </div>
         </nav>
     </aside>
 
-    <!-- ===================== Main Content ===================== -->
     <main class="main-content">
         
-        <!-- Hero -->
         <section class="hero">
             <div class="hero-content">
                 <h2>Opgeslagen Weekmenu’s</h2>
@@ -60,41 +56,17 @@
             </div>
         </section>
 
-        <!-- Saved Menus -->
         <section class="saved-menus-wrapper">
             <div class="saved-menus">
-                <div id="saved-menus-container"></div>
+                <div id="saved-menus-container">
+                    <p>Laden...</p>
+                </div>
             </div>
         </section>
 
-        <!-- Popup voor weekmenu -->
-<div id="menu-popup" class="popup">
-    <div class="popup-content">
-        <span id="popup-close">&times;</span>
-        <h3 id="popup-menu-title"></h3>
-        <div id="popup-menu-days"></div>
-    </div>
-</div>
+        </main>
 
-<!-- Popup voor gerecht -->
-<div id="recipe-popup" class="popup">
-    <div class="popup-content">
-        <span id="recipe-popup-close">&times;</span>
-        <h3 id="recipe-title"></h3>
-        <p><strong>Ingrediënten:</strong></p>
-        <ul id="recipe-ingredients"></ul>
-        <p><strong>Macro’s:</strong> <span id="recipe-macros"></span></p>
-        <p><strong>Bereidingswijze:</strong></p>
-        <p id="recipe-instructions"></p>
-    </div>
-</div>
-
-
-    </main>
-
-    <!-- Page-specific script -->
-    
-<script type="module" src="/opgeslagenweekmenu.js"></script>        
+    <script type="module" src="/opgeslagenweekmenu.js"></script>        
 
 </body>
 </html>

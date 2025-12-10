@@ -105,6 +105,7 @@ async function loadRecipes() {
     recipesTable.innerHTML = "";
     recipes.forEach(r => {
       const tr = document.createElement("tr");
+      // Voeg hier eventueel een kolom toe om de chef te tonen
       tr.innerHTML = `
         <td>${r.name}</td>
         <td>${r.userId ? r.userId.name : "Algemeen"}</td>

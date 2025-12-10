@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard - Mijn Weekmenu</title>
   <link rel="stylesheet" href="/dashboard.css" />
+  <link rel="icon" href="/Fotos/logo_.png" type="image/x-icon">
 </head>
 <body>
   <aside class="sidebar">
@@ -17,15 +18,15 @@
 </div>
 
     
-    <div class="profile">
-      <div class="profile-circle" id="profile-circle">U</div>
-      <span id="user-name-sidebar">Gebruiker</span>
-    </div>
+<a href="/mijnaccount.html" class="profile">
+  <div class="profile-circle" id="profile-circle">U</div>
+  <span id="user-name-sidebar">Gebruiker</span>
+</a>
     <nav class="sidebar-nav">
       <ul>
         <li class="active"><a href="/dashboard">Dashboard</a></li>
         <li><a href="/mijnrecepten.html">Mijn Recepten</a></li>
-        <li><a href="opgeslagenweekmenu.html">Opgeslagen weekmenu's</a></li>
+        <li><a href="opgeslagenweekmenu.html">Mijn Weekmenu's</a></li>
         <li><a href="/nieuws.html">Nieuws</a></li>
         <li><a href="/logout">Uitloggen</a></li>
       </ul>
@@ -111,16 +112,15 @@
       
         <h2 style="display: flex; justify-content: space-between; align-items: center;">
           Eigen recepten
-          <a href="/mijnrecepten.html">
-            <button style="
-              padding: 0.5rem 1rem; 
-              border-radius: 10px; 
-              background: linear-gradient(90deg, #32cd32, #7fff00); 
-              border: none; 
-              color: white; 
-              font-weight: bold; 
-              cursor: pointer;">
-              Maak recept
+          <a href="/mijnrecepten.html" class="create-recipe-link">
+            <button id="create-recipe-btn" class="icon-swap-button">
+              <span class="button-text-label">Maak recept</span>
+              
+              <img 
+                  src="/Fotos/addicon.png" 
+                  alt="Nieuw recept" 
+                  class="button-icon-mobile"
+              >
             </button>
           </a>
         </h2>

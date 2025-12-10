@@ -5,7 +5,11 @@ html, body {
   font-family: 'Poppins', sans-serif;
   margin: 0;
   padding: 0;
-  background-image: url('/Fotos/brooke-lark-4J059aGa5s4-unsplash.jpg');
+  /* 🔑 CORRECTIE: Combineer de donkere overlay met de achtergrondafbeelding */
+  background: 
+    linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), 
+    url('/Fotos/brooke-lark-4J059aGa5s4-unsplash.jpg');
+    
   background-size: cover;       
   background-position: center;  
   background-repeat: no-repeat; 
@@ -210,11 +214,13 @@ input::placeholder {
   color: #aaa;
 }
 
+
+
 button {
   padding: 1rem;
   border-radius: 10px;
   border: none;
-  background: linear-gradient(90deg, #ff7f50, #ffb347);
+  background: linear-gradient(90deg, #32cd32, #7fff00);
   color: #fff;
   font-weight: bold;
   font-size: 1rem;
@@ -223,7 +229,7 @@ button {
 }
 
 button:hover {
-  background: linear-gradient(90deg, #ffb347, #ff7f50);
+  background: linear-gradient(90deg, #32cd32, #7fff00);
   transform: scale(1.05);
 }
 
@@ -374,40 +380,101 @@ button:hover {
   margin-bottom: 0.3rem;
 }
 
-/* ===================== Recipe info: duration + macros ===================== */
-.recipe-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.85rem;
-  font-weight: 400;
+/* 🔑 GECORRIGEERD: Recipe Info Bar (Tijd, Porties, Macro's p.p.) */
+.recipe-info-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 gelijke kolommen naast elkaar */
+  gap: 10px;
+  text-align: center;
+  padding: 10px 0;
+  margin-bottom: 15px;
+  border-bottom: 1px dashed #ccc;
+  border-top: 1px dashed #ccc;
+}
+
+.recipe-info-bar .info-block {
+  padding: 5px;
+  border-radius: 5px;
+  background: #f7f7f7;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.recipe-info-bar h4 {
+  margin: 0;
+  font-size: 0.9rem;
   color: #555;
-  margin: 0.5rem 0 1rem 0;
+  font-weight: 500;
 }
 
-.recipe-info .duration {
-  font-style: italic;
-  color: #666;
+/* 🔑 AANGEPAST: Stijl voor Tijdwaarde (Time Value) */
+.recipe-info-bar p.time-value {
+    margin-top: 0.5rem;
+    
+    font-size: 1.1rem; /* Nieuwe specificatie */
+    font-weight: bold; /* Nieuwe specificatie */
+    color: #222222; /* Blauw/groen behouden voor herkenbaarheid */
 }
 
-.recipe-info .macros {
+/* Stijl voor de Porties controle */
+.persons-controls {
   display: flex;
-  gap: 0.5rem;
-  justify-content: flex-end;
-  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 5px;
 }
 
-.recipe-info .macros span {
-  padding: 0.3rem 0.6rem;
-  border-radius: 12px;
-  color: white;
+/* 🔑 AANGEPAST: Stijl voor Porties Knoppen (- en +) */
+.persons-controls button {
+    /* Nieuwe specificaties */
+    background: linear-gradient(90deg, #32cd32, #7fff00) !important;
+    color: white !important;
+    width: 30px !important;
+    height: 30px !important;
+    flex: 0 0 auto !important;
+    border-radius: 50% !important;
+    border: none !important;
+    transition: transform 0.1s ease;
+    
+    /* Behoud overige functionele stijlen */
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 0;
+    line-height: 1; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Een default box-shadow toegevoegd om de knop zichtbaar te maken */
+}
+
+.persons-controls button:hover {
+  /* Alleen transform behouden, de achtergrond is nu een gradient */
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.persons-controls span#persons-count {
+  font-size: 1rem;
   font-weight: bold;
-  font-size: 0.85rem;
+  color: #333;
 }
 
-.recipe-info .macros span.protein { background-color: #4CAF50; }
-.recipe-info .macros span.carbs { background-color: #FF9800; }
-.recipe-info .macros span.fat { background-color: #F44336; }
+/* Stijl voor Voedingswaarden p.p. (Macro's) */
+.macros-block > div {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.macros-block div span {
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  flex: 1; /* Verdeelt de ruimte gelijkmatig */
+  padding: 2px 0;
+}
+
 
 /* ===================== Ingrediënten ===================== */
 .popup ul {
@@ -416,18 +483,11 @@ button:hover {
   margin: 0;
 }
 
-.popup ul li {
-  background: #ffffff;
-  margin: 0.4rem 0;
-  padding: 0.5rem 0.8rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
+/* 🔑 GECORRIGEERD: Stijl voor Ingredienten Lijst Items */
 .popup ul.ingredients-list {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 5px; 
   padding-left: 0;
 }
 
@@ -436,24 +496,64 @@ button:hover {
   justify-content: space-between;
   align-items: center;
   background: #ffffff;
-  margin: 0.2rem 0;
   padding: 0.5rem 0.8rem;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.popup ul.ingredients-list li span {
-  display: inline-block;
-}
-
-.popup ul.ingredients-list li .macro-info {
-  text-align: right;
-  color: #666;
-  font-size: 0.85rem;
-  white-space: nowrap;
-  flex-shrink: 0;
+.popup ul.ingredients-list li span:last-child {
+  /* Stijl voor de hoeveelheid */
+  font-weight: bold;
+  color: #333333; /* Oranje voor de hoeveelheid */
+  white-space: nowrap; /* Voorkomt afbreken van de hoeveelheid */
   margin-left: 10px;
 }
+
+/* 🔑 Stijl voor Bereidingswijze stappen */
+.instructions-container div {
+    margin-bottom: 12px; 
+    padding: 8px 10px; 
+    background: #f8f8f8; 
+    border-left: 3px solid #ff7f50; 
+    border-radius: 4px; 
+    line-height: 1.4;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* 🔑 Stijl voor Chef block */
+.chef-block {
+  background: #f8f8f8;
+  padding: 15px 10px;
+  border-radius: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px; 
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  border: 1px solid #eee;
+}
+
+/* Stijl voor Chef block titel (H4) */
+.chef-block h4 {
+    margin: 0;
+    font-size: 1rem;
+    color: #555;
+    font-weight: 500;
+}
+
+/* Stijl voor de Chef's opmerking/naam (P) */
+.chef-block p {
+    margin: 5px 0 0;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #ff7f50;
+}
+
+/* Nieuwe stijl voor het dikgedrukte woord in H4 */
+.chef-block h4 strong {
+    font-weight: bold; /* Zorgt ervoor dat 'Chef' vetgedrukt is */
+    color: #333; /* Optioneel: Maakt de kleur net iets donkerder om het te laten opvallen */
+}
+
 
 /* ===================== 3-stappenplan sectie ===================== */
 .steps {
@@ -675,7 +775,7 @@ footer {
   .hamburger {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
     width: 30px;
     height: 22px;
     cursor: pointer;
@@ -819,34 +919,6 @@ footer {
 
   /* Weekmenu kaarten: 1 kolom */
   #menu-container {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  /* Stappenplan: onder elkaar */
-  .steps-container {
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  .step {
-    max-width: 100%;
-    padding: 1.5rem;
-  }
-
-  /* Popup/overlay */
-  .popup {
-    padding: 1.5rem;
-    max-width: 95%;
-  }
-
-  /* Shopping list button kleiner */
-  #shopping-list-btn {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.9rem;
-  }
-  #menu-container {
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -854,7 +926,7 @@ footer {
 
   .day-card {
     display: flex;
-    flex-direction: column; /* dag bovenaan, content eronder */
+    flex-direction: column; 
     padding: 0.5rem 1rem;
     border-radius: 10px;
     background: #fff;
@@ -900,16 +972,16 @@ footer {
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    background: linear-gradient(145deg, #91c5c4, #7cbeca); /* behoud desktop kleuren */
+    background: linear-gradient(145deg, #91c5c4, #7cbeca); 
     border-radius: 15px;
-    height: 120px; /* compacter op mobiel */
+    height: 120px; 
     box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-    color: #ffffff; /* tekst blijft wit */
+    color: #ffffff; 
     font-weight: bold;
   }
 
   .placeholder .plus {
-    font-size: 1.8rem; /* iets kleiner dan desktop, past in mobiel */
+    font-size: 1.8rem; 
     color: #ffffff;
   }
 
@@ -919,6 +991,19 @@ footer {
     margin-top: 0.2rem;
     text-align: center;
   }
+
+  /* Stappenplan: onder elkaar */
+  .steps-container {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .step {
+    max-width: 100%;
+    padding: 1.5rem;
+  }
+
+  /* Popup/overlay */
   .overlay {
     position: fixed;
     top: 0;
@@ -927,27 +1012,110 @@ footer {
     height: 100%;
     background: rgba(0,0,0,0.7);
     display: flex;
-    justify-content: center; /* horizontaal centreren */
-    align-items: center;     /* verticaal centreren */
-    padding: 1rem;           /* ruimte rondom popup */
+    justify-content: center; 
+    align-items: center;     
+    padding: 1rem;           
     z-index: 1000;
-    overflow-y: auto;        /* scroll als nodig */
+    overflow-y: auto;        
     box-sizing: border-box;
   }
 
   /* popup zelf */
   .popup {
     width: 100%;             
-    max-width: 400px;        /* voorkom te brede popup */
-    max-height: 90vh;        /* niet hoger dan 90% van schermhoogte */
-    margin: 0;               /* centreren via flex van overlay */
+    max-width: 400px;        
+    max-height: 90vh;        
+    margin: 0;               
     padding: 1.5rem;
     border-radius: 20px;
     background: linear-gradient(145deg, #e4e4e4, #f2f2f2);
     box-shadow: 0 6px 20px rgba(0,0,0,0.5);
     color: #333;
     position: relative;
-    overflow-y: auto;        /* scrollen binnen popup als content te groot */
+    overflow-y: auto;        
     box-sizing: border-box;
   }
+  
+  /* 🔑 GECORRIGEERDE MOBIELE LAYOUT VOOR POPUP INFO BAR */
+  .recipe-info-bar {
+    grid-template-columns: 1fr; /* Stapel de blokken verticaal */
+    gap: 5px;
+    padding: 15px 0 10px 0;
+  }
+  
+  .recipe-info-bar .info-block {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 15px;
+  }
+  
+  .recipe-info-bar .info-block h4 {
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-right: 15px;
+  }
+  
+  /* Tijd op mobiel */
+  .time-block .time-value {
+    margin: 0;
+    font-size: 1.1rem; /* Aangepast naar 1.1rem */
+  }
+
+  /* Porties knoppen op mobiel */
+  .persons-controls {
+    margin-top: 0;
+    flex-grow: 1;
+    justify-content: flex-end; /* Knoppen naar rechts */
+  }
+
+  /* Macro's op mobiel */
+  .macros-block > div {
+    display: flex;
+    flex-direction: column; 
+    align-items: flex-end;
+    gap: 2px; /* Kleinere gap tussen macro's */
+    margin-top: 0;
+  }
+  
+  .macros-block div span {
+    text-align: right;
+    width: auto;
+    flex: none;
+    font-size: 0.9rem;
+  }
+  
+  /* Kopieerknop op mobiel */
+  #copy-recipe-btn {
+      top: 15px !important;
+      right: 15px !important;
+      padding: 8px !important;
+  }
+  #copy-recipe-btn span {
+      display: none; /* Verberg tekst op mobiel */
+  }
+
+  #shopping-list-btn {
+    /* Icoontje toevoegen als achtergrond */
+    background-image: url('/Fotos/winkelmandjeblack.png'); /* 🔑 PAS HIER DE URL AAN */
+    background-size: 70%; /* Maak het icoon groot genoeg */
+    background-repeat: no-repeat;
+    background-position: center;
+    
+    /* 🔑 Maak de knop klein en vierkant */
+    width: 45px; 
+    height: 45px; 
+    padding: 0; /* Verwijder padding om de grootte te fixeren */
+    border-radius: 50%; /* Maak het eventueel rond */
+    
+    /* Tekst verbergen */
+    text-indent: -9999px; /* Duwt de tekst buiten het zicht */
+    
+    /* Zorg dat de kleur van het originele element (login-btn) niet stoort */
+    background-color: var(--accent1); /* Of een effen kleur voor het rondje */
+    
+    /* Zorg dat de knop niet uitrekt of krimpt in de flex container */
+    flex-shrink: 0;
+    margin-left: 10px; /* Ruimte tot andere elementen, indien nodig */
+}
 }

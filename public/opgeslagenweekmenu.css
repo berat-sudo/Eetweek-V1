@@ -1,715 +1,617 @@
 /* ===================== Variabelen ===================== */
 :root {
-    --sidebar-width: 230px;
-    --accent1: #ff7f50;
-    --accent2: #ffb347;
-    --radius-lg: 20px;
-    --radius-md: 14px;
+  --sidebar-width: 230px;
+  --accent1: #ff7f50;
+  --accent2: #ffb347;
+  --radius-lg: 20px;
+  --radius-md: 14px;
 }
 
 .profile-circle {
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
-    background: linear-gradient(145deg, #ff7f50, #ffb347);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 1.4rem;
-    border: 3px solid var(--accent2);
-    box-shadow: 0 0 10px rgba(255,179,71,0.5);
-    cursor: pointer;
-    text-transform: uppercase;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #ff7f50, #ffb347);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.4rem;
+  border: 3px solid var(--accent2);
+  box-shadow: 0 0 10px rgba(255,179,71,0.5);
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.sidebar .profile {
+  /* Verwijdert de onderstreping van de link */
+  text-decoration: none !important;
+  
+  /* Zorgt dat de tekst wit blijft (vervangt de standaard paarse/blauwe linkkleur) */
+  color: white !important; 
+}
+
+/* Zorg dat de letter in de cirkel ook geen onderstreping krijgt */
+.sidebar .profile-circle {
+  /* Zorgt ervoor dat tekst binnen de cirkel niet wordt onderstreept */
+  text-decoration: none !important;
 }
 
 /* ===================== Hero ===================== */
 .hero {
-    background: linear-gradient(90deg, var(--accent1), var(--accent2));
-    color: #fff;
-    padding: 2.5rem 2rem;
-    border-radius: var(--radius-lg);
-    margin-bottom: 2rem;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  color: #fff;
+  padding: 2.5rem 2rem;
+  border-radius: var(--radius-lg);
+  margin-bottom: 2rem;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
 }
 
 .hero-content h2 {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
 }
 
 .hero-content p {
-    font-size: 1.1rem;
-    opacity: 0.9;
+  font-size: 1.1rem;
+  opacity: 0.9;
 }
 
 
 /* ===================== Algemeen ===================== */
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Poppins', sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
 }
 
 body {
-    display: flex;
-    min-height: 100vh;
-    background: #f4f4f4;
-    color: #333;
+  display: flex;
+  min-height: 100vh;
+  background: #f4f4f4;
+  color: #333;
 }
 
 html, body {
-    overflow-x: hidden;
+  overflow-x: hidden;
 }
 
-/* ===================== Sidebar ===================== */
+/* ===================== Sidebar (Desktop) ===================== */
 .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: var(--sidebar-width);
-    height: 100vh;
-    background: linear-gradient(180deg, #2c3e50, #1f2a36);
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    padding: 2rem 1.2rem;
-    border-radius: 0 20px 20px 0;
-    box-shadow: 6px 0 20px rgba(0,0,0,0.2);
-    z-index: 100;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  background: linear-gradient(180deg, #2c3e50, #1f2a36);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1.2rem;
+  border-radius: 0 20px 20px 0;
+  box-shadow: 6px 0 20px rgba(0,0,0,0.2);
+  z-index: 1000;
 }
 
 .profile {
-    display: flex;
-    align-items: center;
-    gap: 0.9rem;
-    margin-bottom: 2.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
 }
 
 .profile-pic {
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid var(--accent2);
-    box-shadow: 0 0 10px rgba(255,179,71,0.5);
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--accent2);
+  box-shadow: 0 0 10px rgba(255,179,71,0.5);
 }
 
 #user-name-sidebar {
-    font-weight: bold;
-    font-size: 1.1rem;
+  font-weight: bold;
+  font-size: 1.1rem;
 }
 
 .sidebar-nav ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 1.7rem;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.7rem;
 }
 
 .sidebar-nav a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: 500;
-    padding: 0.8rem 1rem;
-    border-radius: var(--radius-md);
-    display: block;
-    background: rgba(255,255,255,0.04);
-    transition: all 0.25s ease;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius-md);
+  display: block;
+  background: rgba(255,255,255,0.04);
+  transition: all 0.25s ease;
 }
 
 .sidebar-nav a:hover {
-    background: rgba(255,255,255,0.12);
-    transform: translateX(6px);
+  background: rgba(255,255,255,0.12);
+  transform: translateX(6px);
 }
 
 .sidebar-nav .active a {
-    background: linear-gradient(90deg, var(--accent1), var(--accent2));
-    color: #fff;
-    font-weight: 600;
-    box-shadow: 0 0 12px rgba(255,179,71,0.6);
-    transform: translateX(6px);
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 0 12px rgba(255,179,71,0.6);
+  transform: translateX(6px);
 }
 
-/* ===================== Main content ===================== */
+/* ===================== Main content (Desktop) ===================== */
 .main-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    margin-left: var(--sidebar-width);
-    padding: 2rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: var(--sidebar-width);
+  padding: 2rem;
+  transition: margin-left 0.3s ease;
 }
 
 /* ===================== Menu-kaarten ===================== */
 .menu-card {
-    background: #fff;
-    padding: 1.8rem 2rem;
-    border-radius: var(--radius-md);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    margin-bottom: 1.8rem;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  background: #fff;
+  padding: 1.8rem 2rem;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  margin-bottom: 1.8rem;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .menu-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 
 .menu-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: #333;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #333;
 }
 
 .menu-days .day {
-    margin: 0.4rem 0;
-    padding-left: 0.6rem;
-    font-size: 1rem;
-    color: #555;
+  margin: 0.4rem 0;
+  padding-left: 0.6rem;
+  font-size: 1rem;
+  color: #555;
 }
 
-/* ===================== Popup ===================== */
+/* ===================== Popup (GECORRIGEERDE BREEDTE & KLEUR) ===================== */
 .overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 1rem;
-  overflow-y: auto;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+
+/* 🔑 FIX: Voeg de donkere achtergrond toe om de overlay functioneel te maken,
+   maar verwijder hem uit de JS code van de recepten popup om dubbele overlay te voorkomen */
+background: rgba(0,0,0,0.7);
+
+display: flex;
+align-items: center;
+justify-content: center;
+z-index: 1000;
+padding: 1rem;
+overflow-y: auto;
 }
 
 .popup {
+  /* 🔑 FIX: Achtergrond, radius en padding overgenomen van 'Mijn Recepten' */
   background: linear-gradient(145deg, #e4e4e4, #f2f2f2);
   border-radius: 20px;
   padding: 2rem;
-  width: 100%;
-  max-width: 500px;
-  max-height: calc(90vh - 30px);
+  
+  /* Breedte en hoogte zijn correct */
+  width: 95%; 
+  max-width: 600px; 
+  max-height: 85%;
   overflow-y: auto;
+  
+  /* 🔑 FIX: Schaduw overgenomen van 'Mijn Recepten' */
   box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+  
   animation: fadeIn 0.3s ease-in-out;
   position: relative;
   color: #333;
-  margin-bottom: 20px;
 }
 
 .popup h2 {
-  margin-top: 0;
-  color: #333;
+margin-top: 0;
+color: #333;
 }
 
 .popup img {
-  width: 100%;
-  height: auto;
-  border-radius: 10px;
-  margin-bottom: 0.3rem;
+width: 100%;
+height: auto;
+border-radius: 10px;
+margin-bottom: 0.3rem;
 }
 
-/* ===================== Recipe info: duration + macros ===================== */
+/* 🔑 OUDE STIJL VERBERGEN */
 .recipe-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.85rem;
-  font-weight: 400;
-  color: #555;
-  margin: 0.5rem 0 1rem 0;
+display: none !important;
 }
 
-.recipe-info .duration {
-  font-style: italic;
-  color: #666;
+/* ===================== NIEUWE POPUP LAYOUT STIJLEN (Recipe Info Bar) ===================== */
+
+.recipe-info-bar {
+  display: flex; 
+  gap: 1.5rem;   
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap; 
+  justify-content: space-between; 
 }
 
-.recipe-info .macros {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: flex-end;
-  flex-wrap: wrap;
+.recipe-info-bar .info-block {
+  flex: 1; 
+  min-width: 120px; 
+  padding: 0.8rem;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  text-align: center; 
 }
 
-.recipe-info .macros span {
-  padding: 0.3rem 0.6rem;
-  border-radius: 12px;
-  color: white;
-  font-weight: bold;
-  font-size: 0.85rem;
+.recipe-info-bar .macros-block {
+  flex: 2; 
+  min-width: 250px;
 }
 
-.recipe-info .macros span.protein { background-color: #4CAF50; }
-.recipe-info .macros span.carbs { background-color: #FF9800; }
-.recipe-info .macros span.fat { background-color: #F44336; }
+/* --- MACRO KLEUREN FIX --- */
+
+.recipe-info-bar .macros-block strong {
+  font-weight: bold !important;
+}
+
+.recipe-info-bar .protein strong {
+  color: #4CAF50 !important; /* Groen */
+}
+
+.recipe-info-bar .carbs strong {
+  color: #FF9800 !important; /* Oranje */
+}
+
+.recipe-info-bar .fat strong {
+  color: #2196F3 !important; /* Blauw */
+}
+
+/* --- PERSONEN KNOPPEN FIX --- */
+
+.recipe-info-bar .persons-controls button {
+  background: linear-gradient(90deg, #32cd32, #7fff00) !important; 
+  color: white !important; 
+  
+  width: 30px !important; 
+  height: 30px !important;
+  flex: 0 0 auto !important; 
+  
+  border-radius: 50% !important;
+  border: none !important; 
+  
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  transition: transform 0.1s ease;
+}
+
+.recipe-info-bar .persons-controls button:hover {
+  transform: scale(1.05);
+}
+
 
 /* ===================== Ingrediënten ===================== */
 .popup ul {
-  list-style: none;
-  padding-left: 0;
-  margin: 0;
+list-style: none;
+padding-left: 0;
+margin: 0;
 }
 
 .popup ul li {
-  background: #ffffff;
-  margin: 0.4rem 0;
-  padding: 0.5rem 0.8rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+background: #ffffff;
+margin: 0.4rem 0;
+padding: 0.5rem 0.8rem;
+border-radius: 8px;
+box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .popup ul.ingredients-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  padding-left: 0;
+display: flex;
+flex-direction: column;
+gap: 0.3rem;
+padding-left: 0;
 }
 
 .popup ul.ingredients-list li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #ffffff;
-  margin: 0.2rem 0;
-  padding: 0.5rem 0.8rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+display: flex;
+justify-content: space-between;
+align-items: center;
+background: #ffffff;
+margin: 0.2rem 0;
+padding: 0.5rem 0.8rem;
+border-radius: 8px;
+box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .popup ul.ingredients-list li span {
-  display: inline-block;
+display: inline-block;
 }
 
 .popup ul.ingredients-list li .macro-info {
-  text-align: right;
-  color: #666;
-  font-size: 0.85rem;
-  white-space: nowrap;
-  flex-shrink: 0;
-  margin-left: 10px;
+text-align: right;
+color: #666;
+font-size: 0.85rem;
+white-space: nowrap;
+flex-shrink: 0;
+margin-left: 10px;
 }
 
 
-@media(max-width: 768px) {
-    body { flex-direction: column; }
-
-    .sidebar {
-        flex-direction: row;
-        width: 100%;
-        height: auto;
-        padding: 1rem;
-        border-radius: 0;
-    }
-
-    .sidebar-nav ul {
-        flex-direction: row;
-        gap: 0.6rem;
-    }
-
-    .main-content {
-        margin-left: 0;
-    }
-}
-
-/* ===================== Opgeslagen Weekmenu's ===================== */
+/* ===================== Opgeslagen Weekmenu's (bestaande) ===================== */
 .saved-menus-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .saved-menus h2 {
-    margin-bottom: 1rem;
-    font-size: 1.8rem;
-    color: var(--accent1);
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  color: var(--accent1);
 }
 
 #saved-menus-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
 }
 
-/* Kaft van een menu */
 .saved-menu-kaft {
-    background: white;
-    border-radius: var(--radius-md);
-    padding: 15px 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    transition: transform 0.2s, box-shadow 0.2s;
-    cursor: pointer;
+  background: white;
+  border-radius: var(--radius-md);
+  padding: 15px 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
 }
 
 .saved-menu-kaft:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
 }
 
 .saved-menu-kaft h3 {
-    font-size: 1.2rem;
-    color: var(--accent2);
-    margin-bottom: 10px;
+  font-size: 1.2rem;
+  color: var(--accent2);
+  margin-bottom: 10px;
 }
 
 .day-preview {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .day-preview span {
-    background: var(--accent1);
-    color: #fff;
-    font-size: 0.9rem;
-    padding: 4px 8px;
-    border-radius: var(--radius-md);
+  background: var(--accent1);
+  color: #fff;
+  font-size: 0.9rem;
+  padding: 4px 8px;
+  border-radius: var(--radius-md);
 }
 
-/* ===================== Popup ===================== */
-.popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.6);
-    display: none;
-    justify-content: center;
-    align-items: center;
-}
-
-.popup-content {
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 500px;
-    position: relative;
-}
-
-#popup-close {
-    position: absolute;
-    right: 15px;
-    top: 10px;
-    cursor: pointer;
-    font-size: 24px;
-}
-
+/* ========================================================= */
+/* 🔑 MEDIA QUERY: TABLET (<= 1024px) */
+/* ========================================================= */
 @media (max-width: 1024px) {
-    /* Topbar */
-    .sidebar {
-        display: flex;
-        flex-direction: row;
-        align-items: center; /* vertical center */
-        justify-content: flex-start; /* profiel + logo links, hamburger rechts */
-        width: 100%;
-        height: 60px;
-        padding: 0 1rem;
-        background: linear-gradient(180deg, #2c3e50, #1f2a36);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 1000;
-        border-radius: 0;
-    }
-
-    /* Profiel links en verticaal gecentreerd */
-    .profile {
-        border-bottom: none; /* verwijdert streepje */
-        padding-bottom: 0;
-        margin-bottom: 0;
-    }
-
-    .profile-circle {
-        width: 40px;
-        height: 40px;
-        font-size: 1.1rem;
-        border-width: 2px;
-        cursor: pointer;
-        flex-shrink: 0;
-    }
-
-    #user-name-sidebar {
-        color: #fff;
-        font-weight: 500;
-        font-size: 0.95rem;
-        white-space: nowrap;
-    }
-
-    /* Logo rechts naast profiel */
-    .sidebar-logo {
-        display: none;
-    }
-
-    /* Hamburger rechts */
-    .hamburger {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        width: 28px;
-        height: 22px;
-        cursor: pointer;
-        margin-left: auto; /* duwt hamburger helemaal naar rechts */
-        order: 3;
-    }
-    .hamburger span {
-        display: block;
-        height: 3px;
-        background: #fff;
-        border-radius: 2px;
-        transition: all 0.3s ease;
-    }
-
-    /* Navigatie als slide-in menu */
-    .sidebar-nav {
-        position: fixed;
-        top: 60px; /* start onder topbar */
-        left: -100%;
-        width: 250px;
-        height: auto; /* niet meer 100vh */
-        max-height: 70vh; /* maximaal 70% van de viewport hoogte */
-        flex-direction: column;
-        gap: 1rem;
-        padding: 1rem 1rem;
-        background: linear-gradient(180deg, #2c3e50, #1f2a36);
-        border-radius: 0 20px 20px 0;
-        transition: left 0.3s ease;
-        overflow-y: auto; /* scrollbaar indien te veel items */
-        z-index: 1050;
-    }
-    .sidebar-nav.open {
-        left: 0;
-    }
-
-    /* Hamburger animatie naar X */
-    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-    .hamburger.active span:nth-child(2) { opacity: 0; }
-    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
-
-    /* Main content start direct onder topbar */
-    .main-content {
-        margin-left: 0;
-        margin-top: 60px;
-        padding: 0;
-    }
-
-    /* Hero volledig breed */
-    .hero {
-        display: flex;
-        align-items: center;       /* verticale centrering */
-        justify-content: flex-start; /* horizontaal links */
-        min-height: 25vh;          /* pas aan voor iPad modus */
-        padding: 3rem 4rem;
-        position: relative;
-        background-position: center;
-        background-size: cover;
-        color: #fff;
-    }
-    
-    .hero-content {
-        padding-left: 1.5rem;       /* horizontale afstand van links */
-        display: flex;
-        flex-direction: column;
-        justify-content: center;   /* verticale centrering */
-        height: 100%;              /* vult Hero container */
-    }
-    
-}
-
-/* ===================== Mobile (≤768px) ===================== */
-/* ===================== Mobile (≤768px) ===================== */
-/* ===================== Mobile (≤768px) ===================== */
-@media (max-width: 768px) {
-
-    /* -------- TOPBAR (mobiele sidebar) -------- */
-    .sidebar {
-      position: fixed;
+  /* Topbar */
+  .sidebar {
+      flex-direction: row;
+      width: 100%;
+      height: 60px;
+      padding: 0 1rem;
+      border-radius: 0;
+      z-index: 1000;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 55px;
-      background: linear-gradient(180deg, #2c3e50, #1f2a36);
-      display: flex;
-      align-items: center;
-      padding: 0 0.7rem; /* uitgelijnd met logo + hamburger */
-      z-index: 1000;
-      border-radius: 0;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
+      position: fixed;
+      align-items: center; 
+  }
 
-    
-  
-    .profile-circle {
-      width: 36px;
-      height: 36px;
-      font-size: 1rem;
+  /* Profiel links in de topbar */
+  .profile {
+      border-bottom: none;
+      padding-bottom: 0;
+      margin-bottom: 0;
+      display: flex;
+      align-items: center; 
+      gap: 0.9rem;
+  }
+
+  .profile-circle {
+      width: 40px;
+      height: 40px;
+      font-size: 1.1rem;
+      border-width: 2px;
       flex-shrink: 0;
-    }
-  
-    #user-name-sidebar {
+  }
+
+  #user-name-sidebar {
+      font-size: 0.95rem;
+      white-space: nowrap;
+  }
+
+  .sidebar-logo {
       display: none;
-    }
-  
-    /* Hamburger rechts */
-    .hamburger {
+  }
+
+  /* Hamburger rechts */
+  .hamburger {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       width: 28px;
-      height: 20px;
-      margin-left: auto;
+      height: 22px;
       cursor: pointer;
-      z-index: 1010;
-    }
-  
-    .hamburger span {
+      margin-left: auto; 
+      order: 3;
+
+      
+  }
+  .hamburger span {
+      display: block;
       height: 3px;
-      width: 100%;
       background: #fff;
       border-radius: 2px;
       transition: all 0.3s ease;
-    }
-  
-    /* Hamburger animatie naar X */
-    .hamburger.active span:nth-child(1) {
-      transform: rotate(45deg) translate(5px, 5px);
-    }
-    .hamburger.active span:nth-child(2) {
-      opacity: 0;
-    }
-    .hamburger.active span:nth-child(3) {
-      transform: rotate(-45deg) translate(5px, -5px);
-    }
-  
-    /* Slide-in menu links, items onder elkaar */
-    .sidebar-nav {
+  }
+
+  /* Navigatie als slide-in menu */
+  .sidebar-nav {
       position: fixed;
-      top: 60px; /* iets meer ruimte tussen topbar en menu */
+      top: 60px; 
       left: -100%;
-      width: 210px;
-      max-height: 65vh;
-      background: linear-gradient(180deg, #2c3e50, #1f2a36);
-      display: flex;
+      width: 250px;
+      height: auto; 
+      max-height: 70vh; 
       flex-direction: column;
-      padding: 0.8rem; /* padding rondom menu */
+      gap: 1rem;
+      padding: 1rem 1rem;
+      background: linear-gradient(180deg, #2c3e50, #1f2a36);
       border-radius: 0 20px 20px 0;
       transition: left 0.3s ease;
       overflow-y: auto;
-      z-index: 1005;
-    }
-  
-    .sidebar-nav.open {
+      z-index: 999; 
+  }
+  .sidebar-nav.open {
       left: 0;
-    }
-  
-    /* UL styling zodat items onder elkaar staan */
-    .sidebar-nav ul {
-      display: flex;
-      flex-direction: column;
-      gap: 1.7rem; /* grotere verticale spacing tussen pagina-titels */
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-  
-    .sidebar-nav li {
-      width: 100%;
-    }
-  
-    .sidebar-nav a {
-      display: block;
-      width: 100%;
-      padding: 0.8rem 1rem; /* verticale padding per link */
-      border-radius: 14px;
-      font-weight: 500;
-      color: #fff;
-      text-decoration: none;
-      background: rgba(255,255,255,0.04);
-      transition: all 0.25s ease;
-    }
-  
-    .sidebar-nav a:hover {
-      background: rgba(255,255,255,0.12);
-      transform: translateX(6px);
-    }
-  
-    .sidebar-nav .active a {
-      background: linear-gradient(90deg, var(--accent1), var(--accent2));
-      color: #fff;
-      font-weight: 600;
-      box-shadow: 0 0 12px rgba(255,179,71,0.6);
-      transform: translateX(6px);
-    }
-  
-    /* -------- MAIN CONTENT -------- */
-    .main-content {
-      margin-left: 0;
-      margin-top: 55px; /* ruimte voor topbar */
-      padding: 0.5rem 0.6rem; /* precies uitgelijnd met topbar */
-      width: 100%;
-      box-sizing: border-box;
-    }
-  
-    /* -------- HERO -------- */
-    .hero {
-      padding: 2rem 0.6rem; /* iets strakker bovenkant */
-      min-height: 20vh;
-      margin-bottom: 1rem;
-    }
-  
-    .hero-content {
-      padding-left: 0 !important; /* exact uitgelijnd */
-    }
-  
-    /* -------- FORM + RECEPTEN LAYOUT -------- */
-    .recipe-layout {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-      width: 100%;
-      align-items: center;
-      margin: 0 auto !important;
-    }
-  
-    .form-column, .recipes-column {
-      width: 100%;
-      max-width: 500px;
-      margin: 0 auto !important;
-    }
+      margin-top: 5px;
+  }
 
-    
-  
-    /* -------- RECEPTEN GRID -------- */
-    .recipes-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 0.8rem; /* verticale spacing tussen kaarten */
-      width: 100%;
-    }
-  
-    .recipe-card {
-      width: 100%;
-      padding: 0.5rem;
-      box-sizing: border-box;
-    }
-  
-    html, body {
-      overflow-x: hidden;
-    }
-  
-    /* Heel kleine schermen → 1 per rij */
-    @media (max-width: 420px) {
-      .recipes-grid {
-        grid-template-columns: 1fr !important;
-      }
-    }
+  /* Hamburger animatie naar X */
+  .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+  .hamburger.active span:nth-child(2) { opacity: 0; }
+  .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+  /* Main content start direct onder topbar */
+  .main-content {
+      margin-left: 0;
+      margin-top: 60px;
+      padding: 1.5rem; 
+  }
+
+  /* Hero */
+  .hero {
+      padding: 2.5rem; 
   }
   
+  .hero-content {
+      padding-left: 0 !important; 
+  }
+  
+  /* Popup mobile */
+  .popup {
+      padding: 1.5rem;
+  }
+}
+
+/* ========================================================= */
+/* 🔑 MEDIA QUERY: MOBIEL (≤768px) */
+/* ========================================================= */
+@media (max-width: 768px) {
+
+  /* -------- TOPBAR (mobiele sidebar) -------- */
+  .sidebar {
+    height: 55px; 
+    padding: 0 0.7rem; 
+    align-items: center; 
+  }
+  
+  .profile-circle {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .profile {
+    display: flex;
+    align-items: center; 
+  }
+
+  #user-name-sidebar {
+    display: none; 
+  }
+
+  /* Hamburger rechts */
+  .hamburger {
+    width: 24px;
+    height: 18px;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(3px, 4px); }
+  .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(3px, -4px); }
+
+
+  /* Slide-in menu links */
+  .sidebar-nav {
+    top: 55px; 
+    width: 210px;
+    max-height: 65vh;
+  }
+
+  /* -------- MAIN CONTENT -------- */
+  .main-content {
+    margin-top: 55px; 
+    padding: 0.5rem 0.6rem; 
+    width: 100%;
+  }
+
+  /* -------- HERO -------- */
+  .hero {
+    padding: 1.5rem 0.8rem;
+    min-height: 15vh;
+    margin-bottom: 1rem;
+  }
+
+  /* -------- RECEPT POPUP INFO BAR FIX -------- */
+  .recipe-info-bar {
+      /* Herstelt de grid layout op mobiel */
+      display: grid;
+      grid-template-columns: 1fr 1fr; 
+      gap: 1rem; 
+  }
+
+  .recipe-info-bar .macros-block {
+      grid-column: 1 / -1; 
+      order: -1; 
+      min-width: unset; 
+  }
+
+  .recipe-info-bar .time-block {
+      grid-column: 1 / 2;
+      min-width: unset;
+  }
+
+  .recipe-info-bar .persons-block {
+      grid-column: 2 / 3;
+      min-width: unset;
+  }
+  
+  /* Weekmenu's (bestaande stijlen geoptimaliseerd) */
+  #saved-menus-container {
+      grid-template-columns: 1fr; 
+      gap: 15px;
+  }
+}

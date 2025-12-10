@@ -120,7 +120,7 @@ header nav {
 }
 
 .hero-content h1 { font-size: 2.4rem; margin-bottom: 1rem; }
-.hero-content p { font-size: 1.2rem; line-height: 1.6; }
+.hero-content p { font-size: 1rem; line-height: 1.6; }
 
 /* ===================== Info secties ===================== */
 .info-section, .reverse-section {
@@ -329,6 +329,11 @@ footer {
   .nav-left .logo {
     margin-left: 0rem;
     height: 40px;
+  }
+
+  .hero {
+    background-position: 50% 0% !important;
+  background-size: 300% auto !important;
   }
 
   .hamburger {

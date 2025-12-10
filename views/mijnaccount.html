@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mijn Account - Mijn Weekmenu</title>
+  <link rel="stylesheet" href="/dashboard.css" /> 
+  <link rel="icon" href="/Fotos/logo_.png" type="image/x-icon">
+  <style>
+    /* Algemene containerstijl */
+    .account-settings-container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 30px;
+      background: #fdfdfd;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .setting-section {
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #eee;
+    }
+    .setting-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+    .setting-section h3 {
+      color: #1f2a36;
+      border-left: 4px solid #7fff00;
+      padding-left: 10px;
+      margin-top: 0;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #444;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+    input:focus {
+        border-color: #32cd32;
+        outline: none;
+    }
+    /* Stijl voor het weergeven van het e-mailadres */
+    .email-display {
+      background: #f0f0f0;
+      padding: 12px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 1.1em;
+      color: #333;
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 10px;
+    }
+    /* Knop voor opslaan van alle instellingen */
+    .setting-section button {
+      width: 100%;
+      background: linear-gradient(90deg, #32cd32, #7fff00);
+      color: white;
+      border: none;
+      padding: 12px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-top: 10px;
+      box-shadow: 0 4px 10px rgba(50, 205, 50, 0.3);
+      transition: background 0.3s, transform 0.1s;
+    }
+    .setting-section button:hover {
+        background: linear-gradient(90deg, #28a428, #6fcf00);
+        transform: translateY(-1px);
+    }
+    
+    .message {
+        padding: 10px;
+        border-radius: 8px;
+        margin-top: 15px;
+        text-align: center;
+        font-weight: bold;
+        display: none;
+    }
+    .message.success {
+        background-color: #e6ffe6;
+        color: #387038;
+        border: 1px solid #387038;
+    }
+    .message.error {
+        background-color: #ffe6e6;
+        color: #a42a2a;
+        border: 1px solid #a42a2a;
+    }
+    @media (max-width: 768px) {
+        .account-settings-container {
+            margin: 1rem;
+            padding: 20px;
+            max-width: 100%;
+        }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+
+    <div class="hamburger" id="hamburger-btn">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <a href="/mijnaccount.html" class="profile">
+        <div class="profile-circle" id="profile-circle">U</div> <span id="user-name-sidebar">Gebruiker</span>
+      </a>
+    <nav class="sidebar-nav">
+      <ul>
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/mijnrecepten.html">Mijn Recepten</a></li>
+        <li><a href="opgeslagenweekmenu.html">Mijn Weekmenu's</a></li>
+        <li><a href="/nieuws.html">Nieuws</a></li>
+        <li><a href="/logout">Uitloggen</a></li>
+      </ul>
+
+      <div class="sidebar-logo" style="
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+      ">
+        <img src="/Fotos/logo_.png" style="
+          width: 40px;
+          height: auto;
+          display: block;
+        ">
+      </div>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <section class="hero">
+      <div class="hero-content">
+        <h2>Mijn Account Instellingen</h2>
+        <p>Beheer je profielinformatie en wachtwoord.</p>
+      </div>
+    </section>
+
+    <div class="account-settings-container">
+        
+        <div class="setting-section">
+            <h3>E-mailadres</h3>
+            <p>Dit is het e-mailadres dat is gekoppeld aan je account.</p>
+            <div class="email-display" id="user-email-display">Laden...</div>
+        </div>
+
+        <div class="setting-section">
+            <h3>Naam Wijzigen</h3>
+            <form id="name-update-form">
+                <label for="name">Nieuwe Naam</label>
+                <input type="text" id="name" name="name" placeholder="Voer je naam in" required>
+                <button type="submit">Naam Opslaan</button>
+            </form>
+        </div>
+            
+        <div class="setting-section">
+            <h3>Wachtwoord Wijzigen</h3>
+            <form id="password-update-form">
+                <p>Voer je huidige wachtwoord in om een nieuw wachtwoord in te stellen.</p>
+
+                <label for="oldPassword">Huidig Wachtwoord</label>
+                <input type="password" id="oldPassword" name="oldPassword" required>
+
+                <label for="newPassword">Nieuw Wachtwoord</label>
+                <input type="password" id="newPassword" name="newPassword" required>
+
+                <label for="confirmNewPassword">Bevestig Nieuw Wachtwoord</label> 
+                <input type="password" id="confirmNewPassword" name="confirmNewPassword" required> 
+                
+                <button type="submit">Wachtwoord Wijzigen</button>
+            </form>
+        </div>
+
+    </div>
+  </main>
+
+  <div id="toast" style="
+    position: fixed !important;
+    bottom: 20px !important;
+    left: 50% !important; /* Positioneert de linkerkant op 50% */
+    right: auto !important; /* Zorgt dat de 'right' eigenschap wordt genegeerd */
+    transform: translate(-50%, 20px) !important; /* Verschuift 50% van eigen breedte terug om te centreren */
+    background: #4caf50;
+    color: #fff;
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-size: 16px;
+    opacity: 0;
+    transition: opacity 0.4s, transform 0.4s;
+    pointer-events: none;
+    z-index: 9999;
+    max-width: 90%; 
+    width: auto;
+    text-align: center;
+    box-sizing: border-box;
+  "></div>
+  
+  <script src="/mijnaccount.js"></script> 
+  <script src="/dashboard.js"></script> 
+</body>
+</html>

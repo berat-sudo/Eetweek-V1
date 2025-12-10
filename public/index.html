@@ -5,8 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mijn Weekmenu - Planner</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="/Fotos/logo_.png" type="image/x-icon">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1HEFQKM888"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-1HEFQKM888');
+  </script>
+
 </head>
-<body>
+<body class="planner-page">
   <header>
     <nav>
       <div class="nav-left">
@@ -61,7 +72,10 @@
     <section class="menu">
       <h2 style="display: flex; justify-content: space-between; align-items: center;">
         Jouw weekmenu
-        <button id="shopping-list-btn" style="padding: 0.5rem 1rem; border-radius: 10px; background: linear-gradient(90deg, #32cd32, #7fff00); border: none; color: white; font-weight: bold; cursor: pointer;">🛒 Boodschappenlijst</button>
+        <button id="shopping-list-btn" class="nav-button">
+          <span class="btn-text">Boodschappenlijst</span> 
+          
+      </button>
       </h2>
       <div id="menu-container">
         <p>Kies je voorkeuren en ontvang direct een persoonlijk menu.</p>
@@ -92,14 +106,12 @@
   
   <footer>
     <div class="footer-container">
-      <!-- Links: logo & copyright -->
       <div class="footer-left">
         <img src="/Fotos/logo_.png" alt="Mijn Weekmenu Logo" class="footer-logo">
         <p>© 2025 eetweek</p>
         <p>Gemaakt met liefde voor eten</p>
       </div>
   
-      <!-- Midden: pagina-links -->
       <div class="footer-center">
         <h4>Pagina's</h4>
         <ul class="footer-links">
@@ -111,71 +123,89 @@
         </ul>
       </div>
   
-      <!-- Rechts: sociale iconen -->
       <div class="footer-right">
         <h4>Volg ons</h4>
         <div class="social-icons">
           <a href="#" aria-label="Facebook"><img src="/Fotos/facebookicon.png" alt="Facebook"></a>
-          <a href="#" aria-label="Instagram"><img src="/Fotos/instaicon.png" alt="Instagram"></a>
+          <a href="https://www.instagram.com/eet.week/" aria-label="Instagram"><img src="/Fotos/instaicon.png" alt="Instagram"></a>
           <a href="#" aria-label="Tiktok"><img src="/Fotos/tiktokicon.png" alt="Tiktok"></a>
         </div>
       </div>
     </div>
   </footer>
   
-  <body class="planner-page"></body>
+  <div class="overlay" id="recipe-popup-overlay" style="display: none;">
+    <div class="popup" id="recipe-popup">
+        
+        <button class="remove-btn" id="close-popup-btn">&times;</button>
+        
+        <img id="recipe-image" src="/Fotos/default_recipe.jpg" alt="Recept afbeelding">
+        <h2 id="recipe-title">Titel van het Recept</h2>
+        
+        <div class="recipe-info-bar-new">
+            
+            <div class="info-block macros-block-full">
+                <h4>Voedingswaarden per persoon</h4>
+                <div id="recipe-macros">
+                    <span>**Kcal**<br>0</span>
+                    <span>**Eiwit**<br>0g</span>
+                    <span>**Vet**<br>0g</span>
+                    <span>**Koolh**<br>0g</span>
+                </div>
+            </div>
+
+            <div class="info-blocks-half">
+                
+                <div class="info-block time-block">
+                    <h4>Bereidingstijd</h4>
+                    <p class="time-value" id="recipe-time">0 min</p>
+                </div>
+                
+                <div class="info-block persons-block">
+                    <h4>Aantal personen</h4>
+                    <div class="persons-controls">
+                        <button id="decrement-persons" type="button">-</button>
+                        <span id="persons-count">4</span>
+                        <button id="increment-persons" type="button">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h4>Ingrediënten</h4>
+        <ul class="ingredients-list" id="ingredients-list">
+            </ul>
+        
+        <div class="chef-block" id="chef-note-container" style="display:none;">
+            <p><strong>Opmerking van de Chef:</strong> <span id="chef-note-text"></span></p>
+        </div>
+
+        <h4>Bereidingswijze</h4>
+        <div class="instructions-container" id="instructions-container">
+            </div>
+
+        <div class="popup-buttons">
+            <button class="add-to-menu-btn" id="add-to-menu-btn">Voeg toe aan Weekmenu</button>
+            <button class="close-popup-btn-footer" onclick="closePopup()">Sluiten</button>
+        </div>
+
+    </div>
+  </div>
+
 
   <script src="script.js"></script>
   <script>
+    // Dit script zorgt ervoor dat de overlay sluit bij een klik buiten de pop-up
     document.addEventListener('DOMContentLoaded', function() {
-      // Feature sectie zichtbaar bij scroll
-      const features = document.querySelector('.features');
-      function checkVisibility() {
-        const rect = features.getBoundingClientRect();
-        const windowHeight = window.innerHeight;
-        if (rect.top <= windowHeight * 0.8 && rect.bottom >= 0) {
-          features.classList.add('visible');
-        } else {
-          features.classList.remove('visible');
-        }
-      }
-      window.addEventListener('scroll', checkVisibility);
-      checkVisibility();
-  
-      // Hamburger menu toggle
-      const hamburger = document.querySelector(".hamburger");
-      const navRight = document.querySelector(".nav-right");
-  
-      if (hamburger && navRight) {
-        hamburger.addEventListener("click", () => {
-          hamburger.classList.toggle("active");
-          navRight.classList.toggle("active");
+      const popupOverlay = document.getElementById('recipe-popup-overlay');
+      if (popupOverlay) {
+        popupOverlay.addEventListener('click', (e) => {
+          if (e.target === popupOverlay) {
+            closePopup();
+          }
         });
       }
     });
-    // overlay maken
-const overlay = document.createElement("div");
-overlay.classList.add("drawer-overlay");
-document.body.appendChild(overlay);
-
-function toggleMenu(open) {
-  const willOpen = open === undefined ? !navRight.classList.contains("active") : !!open;
-  if (willOpen) {
-    navRight.classList.add("active");
-    hamburger.classList.add("active");
-    overlay.classList.add("active");
-    document.body.classList.add("drawer-open");
-  } else {
-    navRight.classList.remove("active");
-    hamburger.classList.remove("active");
-    overlay.classList.remove("active");
-    document.body.classList.remove("drawer-open");
-  }
-}
-
-// klik overlay sluit menu
-overlay.addEventListener("click", () => toggleMenu(false));
-
   </script>
 </body>
 </html>

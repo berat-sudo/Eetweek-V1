@@ -31,6 +31,15 @@ body { background: var(--bg); color: #222; }
   text-transform: uppercase;
 }
 
+.sidebar .profile {
+  text-decoration: none !important;
+  color: white !important; 
+}
+
+.sidebar .profile-circle {
+  text-decoration: none !important;
+}
+
 /* ===================== Sidebar ===================== */
 .sidebar {
     position: fixed;
@@ -113,18 +122,20 @@ body { background: var(--bg); color: #222; }
 #add-ingredient-btn {
   display: inline-block;
   margin-top: 8px;
-  padding: 6px 14px;
-  background-color: #4CAF50;
+  background: linear-gradient(90deg, #32cd32, #7fff00); 
+  padding: 8px 16px;
   color: white;
   font-weight: bold;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
 }
 
 #add-ingredient-btn:hover {
-  background-color: #45a049;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 8px rgba(0,0,0,0.3);
 }
 
 /* Rijen voor ingredienten */
@@ -132,7 +143,7 @@ body { background: var(--bg); color: #222; }
   display: flex;
   gap: 8px;
   margin-top: 6px;
-  align-items: center;
+  align-items: center; 
 }
 
 /* Inputs in de ingredient row */
@@ -140,16 +151,28 @@ body { background: var(--bg); color: #222; }
   padding: 6px 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  flex: 1;
+  flex: 1 1 0; 
   font-size: 0.9rem;
 }
 
-/* ❌ subtiel verwijder-icoon */
+/* De naam mag het breedst zijn */
+.ingredient-row input:nth-child(1) { 
+    flex: 3 1 0; 
+}
+
+/* De hoeveelheid en eenheid zijn kleiner */
+.ingredient-row input:nth-child(2),
+.ingredient-row input:nth-child(3) {
+    flex: 1 1 0; 
+    min-width: 50px; 
+}
+
+/* ❌ Verwijder-icoon (Desktop/Algemeen) */
 .ingredient-row .remove-ingredient {
-  background-color: #f0f0f0;   /* lichte neutrale achtergrond */
-  color: #888;                 /* grijs kruisje */
+  background-color: #f0f0f0;
+  color: #888;
   border: none;
-  border-radius: 4px;          /* iets afgeronde hoeken */
+  border-radius: 4px;
   width: 24px;
   height: 24px;
   font-size: 16px;
@@ -159,29 +182,7 @@ body { background: var(--bg); color: #222; }
   justify-content: center;
   align-items: center;
   transition: all 0.2s;
-}
-
-
-
-
-
-/* RESPONSIVE SCHAAL VOOR MOBIEL */
-@media (max-width: 768px) {
-  .ingredient-row .remove-ingredient {
-    width: 20px !important;
-    height: 20px !important;
-    font-size: 14px !important;
-  }
-
- 
-}
-
-@media (max-width: 420px) {
-  .ingredient-row .remove-ingredient {
-    width: 20px !important;
-    height: 20px !important;
-    font-size: 14px !important;
-  }
+  flex-shrink: 0; 
 }
 
 /* Optioneel: kleine schaduw voor inputs */
@@ -195,8 +196,8 @@ body { background: var(--bg); color: #222; }
 
 /* Grote schermen (>768px) */
 .main-content {
-  margin-left: var(--sidebar-width); /* ruimte vrijmaken voor sidebar */
-  padding: 0rem; /* optionele padding */
+  margin-left: var(--sidebar-width);
+  padding: 0rem;
   width: calc(100% - var(--sidebar-width));
   box-sizing: border-box;
 }
@@ -207,9 +208,9 @@ body { background: var(--bg); color: #222; }
   color: #fff;
   padding: 2.5rem 2rem;
   border-radius: var(--radius-lg);
-  margin: 2rem 2rem 0rem 2rem; /* 2rem boven en onder, automatisch centreren horizontaal */
+  margin: 2rem 2rem 0rem 2rem;
   box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-  max-width: auto; /* voorkomt dat het de hele breedte vult */
+  max-width: auto;
 }
 
 
@@ -227,7 +228,11 @@ body { background: var(--bg); color: #222; }
 .own-recipe-form-section h2 { color: var(--accent1); margin-bottom: .5rem; }
 #own-recipe-form { display: flex; flex-direction: column; gap: 1rem; }
 #own-recipe-form input, #own-recipe-form textarea {
-  padding: .8rem 1rem; border-radius: var(--radius-md); border: 1px solid #d3d3d3; background: #ffffff;
+  padding: .8rem 1rem; 
+  border-radius: var(--radius-md); 
+  border: 1px solid #d3d3d3; 
+  background: #ffffff;
+  font-size: 16px; 
 }
 .primary-btn {
   padding: .85rem 1rem; background: linear-gradient(90deg, var(--accent1), var(--accent2));
@@ -235,17 +240,98 @@ body { background: var(--bg); color: #222; }
 }
 .primary-btn:hover { transform: scale(1.03); }
 
-/* ===================== Receptkaarten ===================== */
+/* ===================== Receptkaarten & Iconen (GECORRIGEERD) ===================== */
+
+/* Container voor de afbeelding */
+.recipe-card .recipe-image-container {
+    position: relative;
+    width: 100%;
+}
+
+/* 🎯 FIX: TARGET ALLEEN DE HOOFD RECEPT AFBEELDING */
+.recipe-card .recipe-image { 
+    width: 100%; 
+    height: 130px; /* Vaste hoogte */
+    object-fit: cover; 
+    border-radius: var(--radius-md); 
+    box-shadow: 0 6px 15px rgba(0,0,0,0.25); 
+    display: block; 
+}
+
+/* 🔑 DESKTOP STIJLEN VOOR ALLE ICON WRAPPERS (Upload, Delete, Share) */
+/* ✨ Upload knop (addicon) en andere knoppen hebben donkere achtergrond */
+.recipe-card .recipe-upload-icon,
+.recipe-card .icon-wrapper { 
+    /* Desktop grootte is 30px */
+    width: 30px; 
+    height: 30px; 
+    display: flex; /* Zorgt dat het icoon gecentreerd wordt */
+    align-items: center;
+    justify-content: center;
+    
+    /* Achtergrond en schaduw wordt hier beheerd */
+    border-radius: 50%; 
+    /* Aangepast: Wit en 40% doorzichtig */
+    background: rgba(255, 255, 255, 0.8); 
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: transform 0.2s;
+    /* Z-index is nodig voor de juiste stapeling */
+    z-index: 5;
+    position: absolute; /* Nodig voor positionering binnen de image-container */
+}
+
+.recipe-card .recipe-upload-icon:hover,
+.recipe-card .icon-wrapper:hover {
+    transform: scale(1.1);
+}
+
+/* Icoon afbeeldingen (binnen de wrappers) */
+.recipe-card .recipe-upload-icon img,
+.recipe-card .icon-wrapper img {
+    /* De afbeelding is 60-70% van de wrapper groot */
+    width: 65%;
+    height: 65%;
+    /* Reset stijlen overgenomen van andere img tags */
+    box-shadow: none; 
+    border-radius: 0;
+    object-fit: contain;
+    padding: 0;
+    /* Aangepast: Geen filter om de iconen zwart te houden */
+    filter: none; 
+    
+}
+
+/* ⭐ Positionering van de uploadknop naar LINKSBOVEN op Desktop/Algemeen */
+.recipe-card .recipe-upload-icon {
+    top: 5px;
+    left: 5px;   
+    right: auto; 
+}
+
+/* Positionering Share/Delete */
+.recipe-card .delete-btn-wrapper {
+    bottom: 5px; 
+    right: 5px;
+}
+
+.recipe-card .share-btn-wrapper {
+    bottom: 5px; 
+    right: 40px; /* 5px + 30px (knop) + 5px buffer = 40px van rechts */
+}
+
+
+/* --- Algemene receptkaart stijlen --- */
 .recipes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.2rem; }
 .recipe-card { background: linear-gradient(145deg, #ffffff, #ffffff); border-radius: var(--radius-lg); padding: .8rem; box-shadow: var(--card-shadow); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; color: #414141; }
 .recipe-card:hover { transform: translateY(-6px); box-shadow: var(--card-hover-shadow); }
-.recipe-card img { width: 100%; height: 130px; object-fit: cover; border-radius: var(--radius-md); box-shadow: 0 6px 15px rgba(0,0,0,0.25); }
 .recipe-card h3 { margin-top: .5rem; font-weight: 700; font-size: 1.05rem; color: #333; }
 .recipe-card p { font-size: 0.85rem; color: #666; }
 
 #added-recipes-container {
-  margin-top: 1rem; /* ruimte tussen h2 en recepten */
+  margin-top: 2rem;
 }
+
 
 /* ===================== Placeholder Image ===================== */
 .placeholder-image {
@@ -255,9 +341,10 @@ body { background: var(--bg); color: #222; }
   justify-content: center;
   border-radius: 8px;
   width: 100%;
-  height: 130px;
+  height: 130px; /* Vaste hoogte */
 }
-.placeholder-image img {
+/* 🎯 FIX: Zorg dat de afbeelding in de placeholder niet 100% wordt */
+.placeholder-image img { 
   max-width: 50%;
   max-height: 70%;
   object-fit: contain;
@@ -280,7 +367,7 @@ body { background: var(--bg); color: #222; }
 .popup {
   background: linear-gradient(145deg, #e4e4e4, #f2f2f2);
   border-radius: 20px;
-  padding: 2rem;
+  padding: 1rem;
   width: 100%;
   max-width: 500px;
   max-height: calc(90vh - 30px);
@@ -294,6 +381,7 @@ body { background: var(--bg); color: #222; }
 
 .popup h2 {
   margin-top: 0;
+  margin-bottom: 0.5rem;
   color: #333;
 }
 
@@ -304,33 +392,10 @@ body { background: var(--bg); color: #222; }
   margin-bottom: 0.3rem;
 }
 
-/* Recipe info */
+/* Oude .recipe-info verbergen */
 .recipe-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.85rem;
-  font-weight: 400;
-  color: #555;
-  margin: 0.5rem 0 1rem 0;
+  display: none !important;
 }
-.recipe-info .duration { font-style: italic; color: #666; }
-.recipe-info .macros {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-}
-.recipe-info .macros span {
-  padding: 0.3rem 0.6rem;
-  border-radius: 12px;
-  color: white;
-  font-weight: bold;
-  font-size: 0.85rem;
-}
-.recipe-info .macros span.protein { background-color: #4CAF50; }
-.recipe-info .macros span.carbs { background-color: #FF9800; }
-.recipe-info .macros span.fat { background-color: #F44336; }
 
 /* Kopjes Ingrediënten en Bereidingswijze */
 .popup h4 {
@@ -389,14 +454,90 @@ body { background: var(--bg); color: #222; }
   to { opacity: 1; transform: scale(1); }
 }
 
+
+/* ======================================================= */
+/* POPUP INFO BAR */
+/* ======================================================= */
+
+.recipe-info-bar {
+    display: flex; 
+    gap: 1.5rem;   
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap; 
+    justify-content: space-between; 
+}
+
+.recipe-info-bar .info-block {
+    flex: 1; 
+    min-width: 120px; 
+    padding: 0.8rem;
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    text-align: center; 
+}
+
+/* Macro's krijgen meer ruimte op desktop */
+.recipe-info-bar .macros-block {
+    flex: 2; 
+    min-width: 250px;
+}
+
+/* --- MACRO KLEUREN FIX --- */
+
+.recipe-info-bar .macros-block span {
+    color: #333 !important; 
+    font-weight: normal !important;
+}
+
+.recipe-info-bar .protein strong {
+    color: #4CAF50 !important; 
+    font-weight: bold !important;
+}
+
+.recipe-info-bar .carbs strong {
+    color: #FF9800 !important; 
+    font-weight: bold !important;
+}
+
+.recipe-info-bar .fat strong {
+    color: #2196F3 !important; 
+    font-weight: bold !important;
+}
+
+/* --- PERSONEN KNOPPEN FIX --- */
+
+.recipe-info-bar .persons-controls button {
+    background: linear-gradient(90deg, #32cd32, #7fff00) !important; 
+    color: white !important; 
+    
+    width: 30px !important; 
+    height: 30px !important;
+    flex: 0 0 auto !important; 
+    
+    border-radius: 50% !important;
+    border: none !important; 
+    
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    transition: transform 0.1s ease;
+}
+
+.recipe-info-bar .persons-controls button:hover {
+    transform: scale(1.05);
+}
+
+.recipes-column h2 {
+  margin-bottom: 1rem; 
+}
+
 /* ============================= */
 /* TABLET & MOBILE RESPONSIVE CSS */
 /* ============================= */
 
 /* ---------- TABLET: max-width 1024px ---------- */
 @media (max-width: 1024px) {
-
-    /* -------- SIDEBAR → TOPBAR -------- */
+    
     .sidebar {
         display: flex;
         flex-direction: row;
@@ -501,34 +642,33 @@ body { background: var(--bg); color: #222; }
 
     .main-content {
       margin-left: 0;
-      margin-top: 60px; /* ruimte voor topbar */
-      padding: 0 0rem; /* geef wat ruimte links en rechts */
+      margin-top: 60px; 
+      padding: 0 0rem;
       width: 100%;
       box-sizing: border-box;
-  }
+    }
 
     /* -------- HERO SECTION -------- */
     .hero {
       width: 100%;
-      padding: 3rem 1.5rem 2rem 1.5rem; /* boven, rechts, onder, links */
+      padding: 3rem 1.5rem 2rem 1.5rem;
       min-height: 25vh;
       background-position: center;
       background-size: cover;
-      margin: 0rem 0rem 0rem 0rem; /* ruimte boven en onder, centreren horizontaal */
+      margin: 0rem 0rem 0rem 0rem;
       border-radius: var(--radius-lg);
       box-sizing: border-box;
-  }
+    }
 
-  .hero-content {
-    padding: 1.5rem 5rem; /* 0 boven/onder, 2rem links/rechts */
-  }
+    .hero-content {
+      padding: 1.5rem 5rem;
+    }
 }
-
 
 
 /* ===================== MOBILE RESPONSIVE (≤768px) ===================== */
 @media (max-width: 768px) {
-  /* -------- TOPBAR -------- */
+  
   .sidebar {
     height: 55px;
     padding: 0 0.7rem;
@@ -543,25 +683,49 @@ body { background: var(--bg); color: #222; }
   #user-name-sidebar {
     display: none;
   }
-
-  .hamburger {
-    width: 25px;
-    height: 20px;
+  
+  /* ❌ FIX: Verwijder-icoon in ingrediëntenrij moet klein zijn op mobiel */
+  .ingredient-row .remove-ingredient {
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 14px !important;
+  }
+  
+  /* 🔑 FIX: Vergroot ALLEEN Share/Delete knoppen op mobiel naar 40x40px */
+  /* De knop-container */
+  .recipe-card .icon-wrapper { 
+      width: 32px !important; 
+      height: 32px !important;
+      right: 5px !important; /* Delete knop positie op mobiel */
+  }
+  
+  /* ⭐ OPLOSSING: Specifiek de Upload-knop (de cirkel) op 30px houden op mobiel */
+  .recipe-card .recipe-upload-icon {
+      width: 30px !important; 
+      height: 30px !important;
+      /* Positionering op mobiel */
+      left: 5px !important;
+      top: 5px !important;
+      right: auto !important; 
   }
 
-  .hamburger span {
-    height: 3px;
+  /* Positie Share knop op mobiel */
+  .recipe-card .share-btn-wrapper {
+      right: 50px !important; /* 5px (Delete knop) + 40px (knop) = 45px van rechts */
   }
 
-  .sidebar-nav {
-    width: 210px;
-    max-height: 65vh;
+  /* De afbeeldingen in alle knoppen moeten 65% blijven */
+  .recipe-card .recipe-upload-icon img,
+  .recipe-card .icon-wrapper img {
+      width: 65% !important; 
+      height: 65% !important;
+      padding: 0 !important; /* Geen extra padding in de img tag */
   }
 
   /* -------- MAIN CONTENT -------- */
   .main-content {
     margin-left: 0;
-    margin-top: 55px; /* ruimte voor de topbar */
+    margin-top: 55px; 
     padding-top: 0.5rem;
     box-sizing: border-box;
   }
@@ -570,34 +734,30 @@ body { background: var(--bg); color: #222; }
   .hero {
     background: linear-gradient(90deg, var(--accent1), var(--accent2));
     color: #fff;
-
     padding: 2.3rem 0.8rem;
     border-radius: var(--radius-lg);
     margin-bottom: 0rem;
     height: 6rem;
-
-    /* nog iets dichter bij de randen, gecentreerd */
     margin: 0 0.58rem 2rem 0.58rem;
     width: auto;
-    max-width: calc(100% - 1.16rem); /* 0.65 + 0.65 = 1.3 */
-
+    max-width: calc(100% - 1.16rem); 
     box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-}
+  }
 
-.hero-content {
-    padding-left: 0;
-}
+  .hero-content {
+      padding-left: 0;
+  }
 
-.hero-content h2 {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-  margin-top: -0.7rem;
-}
+  .hero-content h2 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    margin-top: -0.7rem;
+  }
 
-.hero-content p {
-  font-size: 1.1rem;
-  opacity: 0.9;
-}
+  .hero-content p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
 
   /* -------- LAYOUT & FORM -------- */
   .recipe-layout {
@@ -612,35 +772,30 @@ body { background: var(--bg); color: #222; }
   }
 
   .form-column {
-    width: 100%;       /* vult volledige breedte */
-    max-width: none;   /* verwijdert 500px limiet */
+    width: 100%;
+    max-width: none;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     margin-left: auto;
     margin-right: auto;
   }
 
-  /* Formulier dichter bij de hero */
   .form-column .own-recipe-form-section {
-    margin-top: -2.5rem;      /* geen extra ruimte boven */
-    padding: 1rem;      /* binnenruimte behouden */
-    position: relative; /* sticky verwijderen */
+    margin-top: -2.5rem;
+    padding: 1rem;
+    position: relative;
     top: auto;
     box-sizing: border-box;
     width: 100%;
     border-radius: 10px;
   }
 
-  
-
-  
-
   .recipes-column {
     width: 100%;
     max-width: 500px;
     margin-top: 1rem;
     box-sizing: border-box;
-}
+  }
 
 
   .recipes-grid {
@@ -660,10 +815,23 @@ body { background: var(--bg); color: #222; }
     box-sizing: border-box !important;
   }
 
-  .recipe-card img {
+  /* Vaste Afbeeldingshoogte 130px op mobiel */
+  /* 🎯 FIX: TARGET ALLEEN DE KLASSE .recipe-image */
+  .recipe-card .recipe-image {
     width: 100% !important;
-    height: auto !important;
+    height: 130px !important; 
     object-fit: cover;
+  }
+
+  /* Zorg dat de placeholder dezelfde hoogte heeft */
+  .placeholder-image {
+    height: 130px;
+  }
+  
+  /* 🎯 FIX: Zorg dat de afbeelding in de placeholder niet 100% wordt */
+  .placeholder-image img { 
+    max-width: 50% !important;
+    max-height: 70% !important;
   }
 
   .own-recipe-form-section input,
@@ -696,9 +864,19 @@ body { background: var(--bg); color: #222; }
     box-sizing: border-box;
   }
 
+  #add-ingredient-btn {
+    font-size: 1rem; 
+    padding: 1rem 1.5rem; 
+    width: 100%; 
+    display: block;
+  }
   
-
-  
+  .primary-btn {
+    font-size: 1rem; 
+    padding: 1rem 1rem; 
+    width: 100%; 
+    border-radius: 10px; 
+  }
 
   /* Heel kleine schermen */
   @media (max-width: 420px) {
@@ -706,4 +884,60 @@ body { background: var(--bg); color: #222; }
       grid-template-columns: 1fr !important;
     }
   }
+
+  /* MOBIELE LAY-OUT POPUP FIX */
+  .recipe-info-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr; 
+      gap: 1rem; 
+      margin-top: 1rem;
+      margin-bottom: 1.5rem;
+  }
+
+  .recipe-info-bar .macros-block {
+      grid-column: 1 / -1; 
+      order: -1; 
+  }
+
+  .recipe-info-bar .time-block {
+      grid-column: 1 / 2;
+  }
+
+  .recipe-info-bar .persons-block {
+      grid-column: 2 / 3;
+  }
+
+  /* ===================== Aanpassing voor Mobiel Boodschappenlijstje ===================== */
+
+    #shopping-list-btn {
+        /* Icoontje toevoegen als achtergrond */
+        background-image: url('/Fotos/list_icon.png'); 
+        background-size: 70%; 
+        background-repeat: no-repeat;
+        background-position: center;
+        
+        /* Maak de knop klein en vierkant */
+        width: 45px; 
+        height: 45px; 
+        padding: 0; 
+        border-radius: 50%; 
+        
+        /* Tekst verbergen */
+        text-indent: -9999px; 
+        
+        /* Zorg dat de kleur van het originele element (login-btn) niet stoort */
+        background-color: var(--accent1); 
+        
+        /* Zorg dat de knop niet uitrekt of krimpt in de flex container */
+        flex-shrink: 0;
+        margin-left: auto; 
+    }
+
+    /* Zorg dat de knop op tablet groter wordt */
+    @media (min-width: 601px) and (max-width: 768px) {
+        #shopping-list-btn {
+            width: 50px;
+            height: 50px;
+        }
+    }
 }

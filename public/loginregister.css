@@ -1,8 +1,7 @@
-
-
 body, input, button, textarea, select {
     font-family: 'Poppins', sans-serif;
 }
+
 /* Login & Register Styling */
 .auth-wrapper {
     height: 100vh;
@@ -28,13 +27,28 @@ body, input, button, textarea, select {
     color: #333;
 }
 
+/* ➡️ CENTRERING AANPASSING 1: Formulier op Flexbox */
+#login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centreert alle items (inputs, knop) horizontaal */
+}
+
+/* ➡️ CENTRERING AANPASSING 2: Breedte inputs en knop verkleind en gecentreerd */
+.auth-box input, 
+.auth-btn {
+    width: 85%; /* Verklein de breedte (was 100%) */
+    margin-left: auto; /* Zorgt samen met Flexbox voor centrering */
+    margin-right: auto;
+}
+
 .auth-box input {
-    width: 100%;
     padding: 12px;
     margin: 10px 0;
     border-radius: 10px;
     border: 1px solid #ccc;
     font-size: 16px;
+    /* eventueel: text-align: center; als je de tekst in het veld wilt centreren */
 }
 
 .auth-box input:focus {
@@ -43,7 +57,6 @@ body, input, button, textarea, select {
 }
 
 .auth-btn {
-    width: 100%;
     padding: 12px;
     margin-top: 15px;
     border-radius: 10px;
@@ -94,12 +107,14 @@ body, input, button, textarea, select {
 }
 
 /* Error message styling */
+/* ➡️ CENTRERING AANPASSING 3: Foutmelding uitlijnen */
 .error-message {
+    width: 85%; /* Maak even breed als inputs/knop */
+    margin: 10px auto 0 auto; /* Horizontaal centreren met auto */
     color: #fff;
     background: #ff4d4d;
     padding: 10px 15px;
     border-radius: 8px;
-    margin-top: 10px;
     font-weight: bold;
     opacity: 0;
     transition: opacity 0.3s ease;
@@ -138,8 +153,11 @@ body, input, button, textarea, select {
     animation: shake 0.4s;
 }
 
+/* ➡️ CENTRERING AANPASSING 4: Wachtwoord vergeten uitlijnen */
 .forgot-password {
     margin-top: 8px;
+    width: 85%; /* Maak even breed als inputs/knop */
+    text-align: center; /* **NU GECENTREERD** */
 }
 
 .forgot-password a {

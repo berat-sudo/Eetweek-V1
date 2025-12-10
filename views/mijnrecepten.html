@@ -5,33 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mijn Recepten Toevoegen</title>
   <link rel="stylesheet" href="mijnrecepten.css" />
+  <link rel="icon" href="/Fotos/logo_.png" type="image/x-icon">
 </head>
 <body>
-  <!-- ===================== Sidebar ===================== -->
   <aside class="sidebar">
 
-        <!-- Hamburger button -->
-<div class="hamburger" id="hamburger-btn">
+        <div class="hamburger" id="hamburger-btn">
   <span></span>
   <span></span>
   <span></span>
 </div>
 
-    <div class="profile">
-      <div class="profile-circle" id="profile-circle">U</div>
-      <span id="user-name-sidebar">Gebruiker</span>
-    </div>
+<a href="/mijnaccount.html" class="profile">
+  <div class="profile-circle" id="profile-circle">U</div>
+  <span id="user-name-sidebar">Gebruiker</span>
+</a>
     <nav class="sidebar-nav">
       <ul>
         <li><a href="/dashboard">Dashboard</a></li>
         <li class="active"><a href="/mijnrecepten">Mijn Recepten</a></li>
-        <li><a href="/opgeslagenweekmenu.html">Opgeslagen weekmenu's</a></li>
+        <li><a href="/opgeslagenweekmenu.html">Mijn Weekmenu's</a></li>
         <li><a href="/nieuws.html">Nieuws</a></li>
         <li><a href="/logout">Uitloggen</a></li>
       </ul>
 
-         <!-- ⬇️ LOGO LINKSONDER ⬇️ -->
-  <div class="sidebar-logo" style="
+         <div class="sidebar-logo" style="
   position: absolute;
   bottom: 20px;
   left: 20px;
@@ -45,7 +43,6 @@
     </nav>
   </aside>
 
-  <!-- ===================== Main content ===================== -->
   <main class="main-content">
     <section class="hero">
       <div class="hero-content">
@@ -56,7 +53,6 @@
 
     <section class="content-section">
       <div class="recipe-layout">
-        <!-- Formulier -->
         <aside class="form-column">
           <section class="own-recipe-form-section">
             <h2>Voeg een Eigen Recept Toe</h2>
@@ -95,7 +91,6 @@
           </section>
         </aside>
 
-        <!-- Recepten -->
         <aside class="recipes-column">
           <section class="added-recipes">
             <h2>Mijn Recepten</h2>
@@ -108,7 +103,6 @@
     </section>
   </main>
 
-  <!-- ===================== JS ===================== -->
   <script src="mijnrecepten.js"></script>
 </body>
 </html>

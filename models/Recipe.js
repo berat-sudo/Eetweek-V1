@@ -21,7 +21,13 @@ const recipeSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 
   // ✅ Nieuw: Share token voor link delen
-  shareToken: { type: String, unique: true, sparse: true } 
+  shareToken: { type: String, unique: true, sparse: true },
+  
+  // 👨‍🍳 NIEUWE TOEVOEGING: Chef-kok Veld
+  chef: { 
+      type: String, 
+      default: null 
+  }
 });
 
 export default mongoose.model("Recipe", recipeSchema);

@@ -1,4 +1,75 @@
 document.addEventListener("DOMContentLoaded", () => {
+
+  /* ============================
+     GLOBALE HULPDEFINITIES
+  ============================ */
+  const dummyLogo = "/Fotos/logo_.png";
+  const greenGradient = 'linear-gradient(90deg, #32cd32, #7fff00)'; 
+  const orangeGradient = 'linear-gradient(90deg,#ff7f50,#ffb347)'; 
+  const copyIconPath = "/Fotos/copyicon.png"; 
+
+  const days = ["Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag", "Zondag"];
+  
+  // 🔑 Helper om mobiele weergave te bepalen
+  const isMobileGlobal = window.innerWidth <= 600; 
+
+  // 🔑 Helper voor toast/meldingen (Nu ALTIJD gecentreerd onderaan)
+  function showToast(msg, color = greenGradient) {
+    let toast = document.getElementById("toast");
+    const isGradient = color.includes('gradient');
+    const isMobileView = window.innerWidth <= 600;
+
+    if (!toast) {
+      toast = document.createElement("div");
+      toast.id = "toast";
+      toast.style.position = "fixed";
+      toast.style.bottom = "20px";
+      toast.style.left = "50%"; 
+      toast.style.right = "auto";
+      
+      toast.style.padding = "0.75rem 1.25rem";
+      toast.style.color = "#fff";
+      toast.style.borderRadius = "8px";
+      toast.style.boxShadow = "0 4px 12px rgba(0,0,0,0.3)";
+      toast.style.textAlign = "center";
+      toast.style.fontSize = "1rem";
+      toast.style.fontWeight = "bold";
+      toast.style.opacity = "0";
+      toast.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+      toast.style.zIndex = "10000";
+      
+      document.body.appendChild(toast);
+    }
+
+    toast.textContent = msg;
+    
+    if (isGradient) {
+        toast.style.background = color;
+        toast.style.backgroundColor = 'transparent';
+    } else {
+        toast.style.background = 'none';
+        toast.style.backgroundColor = color;
+    }
+    
+    if (isMobileView) {
+        toast.style.width = "90%";
+        toast.maxWidth = "none";
+    } else {
+        toast.style.width = "auto";
+        toast.maxWidth = "400px"; 
+    }
+
+    toast.style.transform = "translate(-50%, 20px)"; 
+
+    toast.style.opacity = "1";
+    toast.style.transform = "translate(-50%, 0)";
+
+    setTimeout(() => {
+      toast.style.opacity = "0";
+      toast.style.transform = "translate(-50%, 20px)";
+    }, 2500);
+  }
+  
   // ===================== Gebruikersnaam laden =====================
   const userNameEl = document.getElementById("user-name");
   const userNameSidebarEl = document.getElementById("user-name-sidebar");
@@ -21,28 +92,93 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
   loadUserName();
+  
+  // 🔑 NIEUWE TAG FUNCTIE: Overgenomen uit uw werkende zoek/favorieten code
+  function getRecipeTagsHtml(recipe) {
+    const tags = recipe.tags?.map(t => t.toLowerCase().trim()) || [];
+    const macros = recipe.macros || {};
+    const displayedTags = [];
+
+    // 1. Vegetarisch & Vegan
+    if (tags.includes("vegan")) {
+        displayedTags.push({ label: "Vegan", color: "#2E8B57" }); 
+    } else if (tags.includes("vegetarisch")) {
+        displayedTags.push({ label: "Veggie", color: "#6B8E23" });
+    }
+
+    // 2. Glutenvrij
+    if (tags.includes("glutenvrij")) {
+        displayedTags.push({ label: "Glutenvrij", color: "#FF8C00" });
+    }
+
+    // 3. Low-Carb (minder dan 20g koolhydraten per portie aangenomen)
+    if (macros.carbs !== undefined && macros.carbs <= 20) {
+        displayedTags.push({ label: "Low-Carb", color: "#4682B4" });
+    }
+    
+    // 4. High-Protein (meer dan 15g eiwitten per portie aangenomen)
+    if (macros.protein !== undefined && macros.protein >= 20) {
+        displayedTags.push({ label: "High-Protein", color: "#DC143C" });
+    }
+
+    if (displayedTags.length === 0) return '';
+
+    // Creëer de HTML voor de tags-container
+    const tagsHtml = displayedTags.map(tag => `
+        <span style="
+            background-color: ${tag.color}; 
+            color: white; 
+            padding: 4px 8px; 
+            border-radius: 12px; 
+            font-size: 0.75rem;
+            font-weight: 500; 
+            margin: 3px; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2); 
+            white-space: nowrap;
+            display: inline-block; 
+        ">${tag.label}</span>
+    `).join('');
+
+    return `
+        <div class="tags-container" style="
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center;
+            margin-top: 5px; 
+            min-height: 25px;
+            padding-bottom: 5px; 
+        ">${tagsHtml}</div>
+    `;
+  }
 
   // ===================== Opgeslagen weekmenu's =====================
   const container = document.getElementById("saved-menus-container");
   if (!container) return;
-  const days = ["Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag", "Zondag"];
 
   async function loadSavedMenus() {
     try {
       const res = await fetch("/api/savedmenus", { credentials: "include" });
       if (!res.ok) throw new Error("Kon weekmenu's niet ophalen");
-      const savedMenus = await res.json();
+      let savedMenus = await res.json(); 
+
+      // ✅ FIX: Zorg ervoor dat savedMenus een array is, anders is reverse() niet beschikbaar.
+      if (!Array.isArray(savedMenus)) {
+        console.warn("API gaf geen array terug. Initieert met lege lijst.");
+        savedMenus = [];
+      }
 
       container.innerHTML = "";
-      if (!Array.isArray(savedMenus) || savedMenus.length === 0) {
+      if (savedMenus.length === 0) {
         container.innerHTML = "<p>Hier komen je opgeslagen weekmenu's te staan.</p>";
         return;
       }
 
-      savedMenus.forEach((saved) => addSavedMenuToDOM(saved));
+      // Draai de array om om de meest recente bovenaan te plaatsen
+      savedMenus.reverse().forEach((saved) => addSavedMenuToDOM(saved));
+
     } catch (err) {
       console.error("Fout bij laden weekmenu's:", err);
-      container.innerHTML = "<p>Kon weekmenu's niet laden.</p>";
+      container.innerHTML = "<p>Kon weekmenu's niet laden. Probeer later opnieuw of zie console.</p>";
     }
   }
 
@@ -69,9 +205,12 @@ document.addEventListener("DOMContentLoaded", () => {
     preview.style.gap = "5px";
 
     (saved.menu || []).forEach(recipe => {
-      if (recipe.persons === undefined) recipe.persons = 1;
+      
+      const recipeName = recipe?.name || (recipe?.recipeId ? "Recept" : "-"); 
+      
+      if (recipe && recipe.persons === undefined) recipe.persons = 1;
       const span = document.createElement("span");
-      span.textContent = recipe?.name || "-";
+      span.textContent = recipeName;
       span.style = `
         background:#f0f0f0; 
         color:rgb(45, 45, 45); 
@@ -106,9 +245,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         if (!delRes.ok) throw new Error("Kon weekmenu niet verwijderen");
         kaft.remove();
+        showToast("Weekmenu verwijderd!", orangeGradient);
       } catch (err) {
         console.error("Fout bij verwijderen:", err);
-        alert("Kon weekmenu niet verwijderen");
+        showToast("Kon weekmenu niet verwijderen", "#ff4d4d");
       }
     });
     kaft.appendChild(trash);
@@ -156,7 +296,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const overlay = document.createElement("div");
     overlay.style = `
       position:fixed; top:0; left:0; width:100%; height:100%;
-      background:rgba(0,0,0,0.6); display:flex;
+      background:rgba(0,0,0,0.7); display:flex; 
       justify-content:center; align-items:center; z-index:1000; padding:10px;
     `;
 
@@ -184,7 +324,7 @@ document.addEventListener("DOMContentLoaded", () => {
         transition: transform 0.2s;
       `;
       if (recipe) {
-        card.addEventListener("mouseenter", () => card.style.transform = "scale(1.05)");
+        card.addEventListener("mouseenter", () => card.style.transform = "scale(1.03)");
         card.addEventListener("mouseleave", () => card.style.transform = "scale(1)");
         card.addEventListener("click", e => {
           e.stopPropagation();
@@ -202,6 +342,10 @@ document.addEventListener("DOMContentLoaded", () => {
       recipeName.style.fontSize = "0.95rem";
       recipeName.style.color = recipe ? "#ff7f50" : "#999";
       card.appendChild(recipeName);
+      
+      if (recipe) {
+          card.innerHTML += getRecipeTagsHtml(recipe);
+      }
 
       grid.appendChild(card);
     });
@@ -211,7 +355,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const closeBtn = document.createElement("button");
     closeBtn.textContent = "Sluiten";
     closeBtn.style = `
-      margin-top:15px; padding:0.5rem 1rem; border:none; border-radius:10px;
+      margin-top:15px; 
+      padding:1rem 1.5rem; 
+      font-size: 1.1rem;    
+      width: 100%;          
+      border:none; border-radius:10px;
       background:linear-gradient(90deg,#ff7f50,#ffb347); color:white; cursor:pointer;
     `;
     closeBtn.addEventListener("click", () => overlay.remove());
@@ -225,108 +373,307 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ===================== Recept-popup =====================
+  // ==========================================================
+  // Recept-popup (showRecipeDetails)
+  // ** GECORRIGEERDE FUNCTIE **
+  // ==========================================================
   function showRecipeDetails(recipe) {
     const overlay = document.createElement("div");
+    overlay.classList.add("overlay");
     overlay.style = `
-      position:fixed; top:0; left:0; width:100%; height:100%;
-      background:rgba(0,0,0,0.6); display:flex;
-      justify-content:center; align-items:center; z-index:1001; padding:10px;
+        position:fixed; top:0; left:0; width:100%; height:100%;
+        background:rgba(0,0,0,0.0); 
+        display:flex; justify-content:center; align-items:center; 
+        z-index:1001; padding:10px;
     `;
+
 
     if (recipe.persons === undefined) recipe.persons = 1;
     let persons = recipe.persons;
+    
+    const isMobile = window.innerWidth <= 600;
+
+    // Zorg ervoor dat baseAmount bestaat voor schaling (BELANGRIJK!)
+    (recipe.ingredients || []).forEach(i => {
+        if (!i.baseAmount) i.baseAmount = i.amount;
+    });
+
+    const getIngredientsTextToCopy = () => {
+        let text = `--- Ingrediënten voor ${recipe.name} (${persons} porties) ---\n`;
+        
+        (recipe.ingredients || []).forEach(i => {
+            let qty = i.baseAmount || "";
+            const match = i.baseAmount?.match(/^([\d.,]+)\s*(.*)$/);
+            if (match) {
+                const baseAmount = parseFloat(match[1].replace(",", "."));
+                const unit = match[2] || "";
+                const calculatedQty = (baseAmount * persons).toFixed(2).replace(/\.00$/, '').replace(/\./, ',');
+                qty = `${calculatedQty} ${unit}`.trim();
+            }
+            text += `${i.item}: ${qty}\n`;
+        });
+        
+        return text.trim();
+    };
+
 
     const getIngredientsHTML = () =>
       (recipe.ingredients || []).map(i => {
-        if (!i.amount) return `<li>${i.item}</li>`;
-        const match = i.amount.match(/^([\d.,]+)\s*(.*)$/);
-        let qty = i.amount;
-        if (match) qty = parseFloat(match[1].replace(",", ".")) * persons + " " + (match[2] || "");
+        let qty = i.baseAmount || "";
+        const match = i.baseAmount?.match(/^([\d.,]+)\s*(.*)$/);
+        if (match) {
+            const baseAmount = parseFloat(match[1].replace(",", "."));
+            const unit = match[2] || "";
+            const calculatedQty = (baseAmount * persons).toFixed(2).replace(/\.00$/, '').replace(/\./, ','); 
+            qty = `${calculatedQty} ${unit}`.trim();
+        }
         return `<li>${i.item} – ${qty}</li>`;
       }).join("");
+      
+    // 🚀 AANGEPASTE HELPER: Converteert instructies (Array) naar gescheiden DIV's (zonder nummers)
+    const getInstructionsHTML = () => {
+        let instructions = recipe.instructions;
 
-    const getMacrosHTML = () => {
-      if (!recipe.macros) return "";
-      return `
-        <span style="color:#ff6347; font-weight:bold;">Eiwitten: ${recipe.macros.protein * persons} g</span> |
-        <span style="color:#4682b4; font-weight:bold;">Koolhydraten: ${recipe.macros.carbs * persons} g</span> |
-        <span style="color:#32cd32; font-weight:bold;">Vetten: ${recipe.macros.fat * persons} g</span>
-      `;
+        // Controleer of het een array is en niet leeg
+        if (Array.isArray(instructions) && instructions.length > 0) {
+            // Maak gescheiden stappen met marges (vervangt <ol> en <li>)
+            const stepsHtml = instructions.map(step => 
+                // Gebruik een div voor elke stap met een duidelijke onderlinge marge
+                `<div style="margin-bottom: 12px; padding: 8px 10px; background: #f9f9f9; border-left: 3px solid #ff7f50; border-radius: 4px; line-height: 1.4;">${step}</div>`
+            ).join('');
+            
+            // Gebruik een container div
+            return `<div style="padding: 5px 0;">${stepsHtml}</div>`;
+        }
+        
+        // Terugval als het geen array is (bv. nog een enkele string)
+        if (typeof instructions === 'string' && instructions.trim() !== '') {
+             return `<p>${instructions}</p>`;
+        }
+
+        return `<p>Geen bereidingswijze beschikbaar.</p>`;
     };
 
+
+    // Genereert de complete info-bar met knoppen en tijd
+    const getMacrosAndControlsHTML = () => {
+        const macros = recipe.macros || {};
+        const time = recipe.duration || 0;
+        
+        const proteinPP = (macros.protein || 0).toFixed(1);
+        const carbsPP = (macros.carbs || 0).toFixed(1);
+        const fatPP = (macros.fat || 0).toFixed(1);
+        
+        let html = '<div class="recipe-info-bar">'; 
+
+        // 1. MACROS
+        html += `
+            <div class="info-block macros-block">
+                <h4 style="margin-top:0; margin-bottom: 0.5rem; font-size:1rem;">Voedingswaarden p.p.</h4>
+                <div style="display:flex; justify-content:space-between; font-size:0.9rem;">
+                    <span class="protein">Eiwit: <strong>${proteinPP}g</strong></span>
+                    <span class="carbs">Koolh.: <strong>${carbsPP}g</strong></span>
+                    <span class="fat">Vet: <strong>${fatPP}g</strong></span>
+                </div>
+            </div>
+        `;
+        
+        // 2. TIJD
+        html += `
+            <div class="info-block time-block">
+                <h4 style="margin-top:0; margin-bottom: 0.5rem; font-size:1rem;">Tijd</h4>
+                <p class="time-value" style="margin:0; font-size:1.1rem; font-weight:bold;">⏱ ${time} min</p>
+            </div>
+        `;
+
+        // 3. PERSONEN (met de knoppen)
+        html += `
+            <div class="info-block persons-block">
+                <h4 style="margin-top:0; margin-bottom: 0.5rem; font-size:1rem;">Personen</h4>
+                <div class="persons-controls" style="display:flex; justify-content:center; align-items:center; gap:8px;">
+                    <button id="decrement-persons" style="width:30px; height:30px; border-radius:50%; border:1px solid #ccc; cursor:pointer; font-size:1.2rem; font-weight:bold;">-</button>
+                    <span id="persons-count" style="font-size:1.1rem; font-weight:bold;">${persons}</span>
+                    <button id="increment-persons" style="width:30px; height:30px; border-radius:50%; border:1px solid #ccc; cursor:pointer; font-size:1.2rem; font-weight:bold;">+</button>
+                </div>
+            </div>
+        `;
+
+        html += '</div>'; // Sluit recipe-info-bar
+        return html;
+    };
+    
+    // Stijlen voor de Kopieerknop
+    const copyButtonStyle = `
+        position: absolute; 
+        top: 10px;        
+        right: 10px;       
+        padding: ${isMobile ? '8px 8px' : '8px 10px'}; 
+        border-radius: 8px;
+        background: ${greenGradient}; 
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        z-index: 10;
+        font-size: 14px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        display: flex;
+        align-items: center; 
+        gap: 5px;
+    `;
+    
+    const copyButtonContent = `
+        <img src="${copyIconPath}" alt="Kopieer" style="width: 25px; height: 25px;"> 
+        ${isMobile ? '' : '<span>Kopiëren</span>'}
+    `;
+
+    const closeButtonStyle = `
+        padding: 20px 20px; 
+        font-size: 1.1rem; 
+        width: 100%; 
+        border:none; 
+        border-radius:10px; 
+        background:${orangeGradient}; 
+        color:white; 
+        cursor:pointer;
+        margin-top:20px;
+    `;
+    
+    // 🔑 Chef-blok HTML (Conditioneel) - DEZE LOGICA IS NU GECORRIGEERD
+    let chefBlockHTML = '';
+    
+    // Alleen weergeven als recipe.chef bestaat, na trimmen NIET leeg is, EN NIET 'admin' is
+    const chefValue = recipe.chef ? recipe.chef.trim().toLowerCase() : '';
+
+    if (chefValue !== "" && chefValue !== "admin") {
+        chefBlockHTML = `
+            <div class="info-block chef-block" style="
+                background: #f8f8f8;
+                padding: 15px 10px;
+                border-radius: 10px;
+                margin-top: 20px;
+                margin-bottom: 20px; 
+                text-align: center;
+                box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+                border: 1px solid #eee;
+            ">
+                <h4 style="margin:0; font-size:1rem; color:#555;">Chef</h4>
+                <p style="margin:5px 0 0; font-size:1.1rem; font-weight:bold; color:#ff7f50;">${recipe.chef}</p>
+            </div>
+        `;
+    }
+
+
     overlay.innerHTML = `
-      <div style="
-        background:white; padding:25px; border-radius:15px;
-        max-width:550px; width:90%; max-height:85%; overflow-y:auto;
+      <div id="recipe-popup-content" class="popup" style="
+        background:white; padding:1rem; border-radius:15px;
+        max-width:600px; 
+        width:100%;       
+        max-height:85%; overflow-y:auto;
         box-shadow:0 10px 30px rgba(0,0,0,0.3); font-family:Arial,sans-serif;
       ">
-        <h2 style="margin-bottom:15px;">${recipe.name}</h2>
-        <img src="${recipe.image || '/Fotos/logo_.png'}" alt="${recipe.name}" style="width:100%; border-radius:10px; margin-bottom:15px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-          <span style="font-style:italic;">⏱ ${recipe.duration || 0} min</span>
-          <span class="macros">${getMacrosHTML()}</span>
+        <h2 style="margin-bottom:5px;">${recipe.name}</h2>
+        
+        <div style="position:relative; margin-bottom:15px;"> 
+            <img src="${recipe.image || dummyLogo}" alt="${recipe.name}" style="width:100%; border-radius:10px; display:block;">
+            
+            <button id="copy-recipe-btn" title="Kopieer Ingrediënten" style="${copyButtonStyle}">
+                ${copyButtonContent}
+            </button>
         </div>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-          <label style="font-weight:bold;">Aantal personen:</label>
-          <input type="number" id="persons" min="1" value="${persons}" style="width:60px; padding:3px; border-radius:5px; border:1px solid #ccc;">
-        </div>
+        
+        ${getMacrosAndControlsHTML()} 
+        
         <h4 style="margin-bottom:10px; border-bottom:1px solid #ddd; padding-bottom:5px;">Ingrediënten:</h4>
         <ul class="ingredients-list" style="margin-bottom:20px;">${getIngredientsHTML()}</ul>
+        
         <h4 style="margin-bottom:10px; border-bottom:1px solid #ddd; padding-bottom:5px;">Bereidingswijze:</h4>
-        <p style="margin-bottom:20px;">${recipe.instructions || "Geen bereidingswijze beschikbaar"}</p>
-        <button id="close-recipe" style="padding:0.5rem 1rem; border:none; border-radius:10px; background:linear-gradient(90deg,#ff7f50,#ffb347); color:white; cursor:pointer;">Sluiten</button>
+        <div class="instructions-container" style="margin-bottom:20px;">
+            ${getInstructionsHTML()} 
+        </div>
+        
+        ${chefBlockHTML} 
+
+        <button id="close-recipe" style="${closeButtonStyle}">Sluiten</button>
       </div>
     `;
 
     document.body.appendChild(overlay);
 
-    overlay.querySelector("#persons").addEventListener("input", e => {
-      persons = parseInt(e.target.value) || 1;
-      recipe.persons = persons;
-      overlay.querySelector("ul.ingredients-list").innerHTML = getIngredientsHTML();
-      overlay.querySelector(".macros").innerHTML = getMacrosHTML();
+    const personsCountSpan = overlay.querySelector("#persons-count");
+    const decrementBtn = overlay.querySelector("#decrement-persons");
+    const incrementBtn = overlay.querySelector("#increment-persons");
+    const ingredientsList = overlay.querySelector(".ingredients-list");
+    const copyBtn = overlay.querySelector("#copy-recipe-btn");
+
+    // Functie om de popup-inhoud te updaten
+    const updateRecipeDisplay = () => {
+        personsCountSpan.textContent = persons;
+        ingredientsList.innerHTML = getIngredientsHTML();
+        recipe.persons = persons; 
+    };
+
+    // Event Listeners voor de knoppen
+    decrementBtn.addEventListener("click", () => {
+        if (persons > 1) {
+            persons--;
+            updateRecipeDisplay();
+        }
+    });
+
+    incrementBtn.addEventListener("click", () => {
+        persons++;
+        updateRecipeDisplay();
+    });
+
+    copyBtn.addEventListener("click", async () => {
+        try {
+            const ingredientsText = getIngredientsTextToCopy(); 
+            await navigator.clipboard.writeText(ingredientsText);
+            showToast("Ingrediënten gekopieerd! Je kunt ze nu plakken.", greenGradient); 
+        } catch (err) {
+            console.error("Fout bij kopiëren:", err);
+            showToast("Kopiëren mislukt.", "#ff4d4d");
+        }
     });
 
     overlay.querySelector("#close-recipe").addEventListener("click", () => overlay.remove());
-    overlay.addEventListener("click", e => { if (e.target === overlay) overlay.remove(); });
+    overlay.addEventListener("click", e => { 
+        if (e.target === overlay) overlay.remove(); 
+    });
   }
 
   // ===================== Boodschappenlijst-popup (overlay) =====================
   function showShoppingList(saved) {
-    // Verwijder oude popups
     document.querySelectorAll(".force-popup-overlay").forEach(el => el.remove());
   
-    // Overlay
     const overlay = document.createElement("div");
     overlay.className = "force-popup-overlay";
     overlay.style = `
       position:fixed; top:0; left:0; width:100%; height:100%;
-      background:rgba(0,0,0,0.6);
+      background:rgba(0,0,0,0.7);
       display:flex; justify-content:center; align-items:center;
       z-index:999999; padding:20px;
     `;
   
-    // Popup
     const popup = document.createElement("div");
     popup.style = `
-      background:white; padding:25px; border-radius:18px;
+      background:linear-gradient(145deg, #e4e4e4, #f2f2f2); padding:25px; border-radius:18px;
       max-width:500px; width:95%;
       max-height:80%; overflow-y:auto;
       box-shadow:0 10px 30px rgba(0,0,0,0.30);
       position:relative; z-index:1000000;
     `;
   
-    // Titel + Kopieerknop container
     const titleContainer = document.createElement("div");
     titleContainer.style = `
-  display:flex;
-  flex-wrap: wrap;         /* Laat items naar nieuwe regel gaan als nodig */
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;               /* Ruimte tussen titel en knop op klein scherm */
-  margin-bottom: 15px;
-`;
+      display:flex;
+      flex-wrap: wrap;         
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;               
+      margin-bottom: 15px;
+    `;
 
   
     const title = document.createElement("h2");
@@ -341,7 +688,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   
     const copyIcon = document.createElement("img");
-    copyIcon.src = "/Fotos/winkelmandjeicon.png"; // Pas aan naar jouw icoon
+    copyIcon.src = "/Fotos/winkelmandjeicon.png"; 
     copyIcon.alt = "Kopiëren";
     copyIcon.style.width = "16px";
     copyIcon.style.height = "16px";
@@ -349,7 +696,7 @@ document.addEventListener("DOMContentLoaded", () => {
     copyBtn.appendChild(copyIcon);
     copyBtn.appendChild(document.createTextNode("Kopiëren"));
   
-    // Functionaliteit kopiëren
+    // Functionaliteit kopiëren (Boodschappenlijst)
     copyBtn.addEventListener("click", () => {
       const ingredientsList = [];
       (saved.menu || []).forEach(recipe => {
@@ -377,7 +724,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 1500);
       }).catch(err => {
         console.error("Kon niet kopiëren:", err);
-        alert("Kon niet kopiëren");
+        showToast("Kon niet kopiëren", "#ff4d4d");
       });
     });
   
@@ -437,13 +784,13 @@ document.addEventListener("DOMContentLoaded", () => {
   
       const textWrapper = document.createElement("div");
       textWrapper.style = `
-  display:flex;
-  flex-wrap: wrap;          /* Laat ingredient + hoeveelheid op nieuwe regel bij kleine schermen */
-  justify-content: space-between;
-  width:100%;
-  align-items:center;
-  gap: 5px;
-`;
+        display:flex;
+        flex-wrap: wrap;          
+        justify-content: space-between;
+        width:100%;
+        align-items:center;
+        gap: 5px;
+      `;
 
   
       const left = document.createElement("span");
@@ -480,7 +827,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const closeBtn = document.createElement("button");
     closeBtn.textContent = "Sluiten";
     closeBtn.style = `
-      margin-top:20px; padding:10px 20px;
+      margin-top:20px; 
+      padding:1rem 1.5rem; 
+      font-size: 1.1rem; 
+      width: 100%;
+
       border:none; border-radius:10px;
       background:linear-gradient(90deg,#ff7f50,#ffb347);
       color:white; cursor:pointer;
@@ -496,18 +847,21 @@ document.addEventListener("DOMContentLoaded", () => {
   
   
 
-  // ===================== Hamburgermenu =====================
+  // ===================== Hamburgermenu (AANGEPAST) =====================
   const hamburger = document.getElementById('hamburger-btn');
   const sidebarNav = document.querySelector('.sidebar-nav');
+  const body = document.body; // Referentie naar de body
 
   if (hamburger && sidebarNav) {
     hamburger.addEventListener('click', () => {
       hamburger.classList.toggle('active');
       sidebarNav.classList.toggle('open');
+      // 🚀 BELANGRIJKSTE WIJZIGING: Toggle een class op de body
+      body.classList.toggle('menu-open'); 
     });
   }
 
-  // ===================== Opslaan nieuw menu =====================
+  // ===================== Opslaan nieuw menu (Hulplogica) =====================
   async function saveNewMenu(newMenu) {
     try {
       const res = await fetch("/api/savedmenus", {
@@ -520,7 +874,7 @@ document.addEventListener("DOMContentLoaded", () => {
       loadSavedMenus();
     } catch (err) {
       console.error("Fout bij opslaan:", err);
-      alert("Kon weekmenu niet opslaan");
+      showToast("Kon weekmenu niet opslaan", "#ff4d4d");
     }
   }
 });
