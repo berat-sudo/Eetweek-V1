@@ -199,6 +199,99 @@ html, body {
     font-size: 1.2rem;
 }
 
+/* ===================== Maaltijd Vandaag Sectie (Desktop Fix) ===================== */
+
+.today-meal-info {
+    background: #fff;
+    padding: 1.5rem 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin: 2rem; 
+    margin-bottom: 0.5rem;
+    
+    max-width: auto;
+    width: auto;
+    box-sizing: border-box;
+}
+
+/* NIEUWE WRAPPER VOOR FLEXBOX */
+.today-meal-header-wrapper { 
+    display: flex;
+    /* FIX: Lijn alle elementen uit op het verticale midden van de container */
+    align-items: center; 
+    
+    gap: 15px; 
+    margin-bottom: 15px; 
+    flex-wrap: nowrap; 
+}
+
+/* Standaard stijl voor de titel */
+.today-meal-header-wrapper h3 {
+    margin: 0; 
+    color: var(--accent1); 
+    font-size: 1.2rem;
+    display: flex; 
+    align-items: center; 
+    
+    /* Behoud de onderlijn */
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #eee; 
+}
+
+/* Standaard stijl voor de datum */
+#today-date-display {
+    /* Deel de onderlijn met de H3 */
+    padding-bottom: 0.5rem; 
+    border-bottom: 1px solid #eee; 
+    
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--accent1); 
+    line-height: normal; 
+    
+    /* FIX: Verschuif de tekst verticaal met -3 pixels (naar boven) */
+    transform: translateY(-0px); 
+    display: inline-block; 
+}
+
+.today-meal-info h3 img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    object-fit: contain;
+}
+
+#today-meal-content {
+    padding-top: 0.5rem;
+}
+
+.today-meal-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.today-meal-item {
+    padding: 0.4rem 0;
+    font-size: 1rem;
+    color: #2d2d2d;
+    border-left: 3px solid var(--accent2); /* Lichte accentstreep aan de zijkant */
+    padding-left: 0.8rem;
+    margin-bottom: 5px;
+}
+
+.today-meal-link {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.today-meal-link a {
+    color: var(--accent1);
+    text-decoration: none;
+    font-weight: 500;
+}
+
 /* ===================== Preferences + Menu layout ===================== */
 .preferences-menu-wrapper {
     display: flex;
@@ -429,6 +522,12 @@ form#preferences-form button:hover {
 
 .own-recipes, .favorite-recipes {
     position: relative; /* nodig voor absolute positionering van de badge */
+    background: linear-gradient(145deg, #b7d8d7, #b7d8d7);
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    flex: 1; /* Staat toe om te groeien, maar geeft geen rigide basis */
+    min-width: 300px;
+    max-width: 100%; /* Zorg ervoor dat het nooit breder wordt dan de wrapper */
   }
   
   .section-badge {
@@ -446,18 +545,6 @@ form#preferences-form button:hover {
   }
   
 
-
-/* VIND dit blok in je CSS: */
-.own-recipes, .favorite-recipes {
-    background: linear-gradient(145deg, #b7d8d7, #b7d8d7);
-    padding: 2rem;
-    border-radius: var(--radius-lg);
-    
-    /* VERVANG door dit: */
-    flex: 1; /* Staat toe om te groeien, maar geeft geen rigide basis */
-    min-width: 300px;
-    max-width: 100%; /* Zorg ervoor dat het nooit breder wordt dan de wrapper */
-}
 
 .own-recipes h2, .favorite-recipes h2 {
     text-align: left;
@@ -486,6 +573,8 @@ form#preferences-form button:hover {
 
     width: auto;                /* breedte gelijk maken */
     box-sizing: border-box;     /* consistent met de andere wrappers */
+    position: relative; 
+    margin-top: 0.5rem;
 }
 
 
@@ -501,11 +590,6 @@ form#preferences-form button:hover {
     overflow-y: auto;
     padding-right: 5px;     /* voorkomt dat scrollbar over de kaarten valt */
 }
-
-.search-recipes-wrapper {
-    position: relative; 
-    margin-top: 0.5rem;
-  }
   
   /* Badge alleen voor zoek recepten */
   .search-recipes-wrapper .section-badge {
@@ -1060,40 +1144,37 @@ form#preferences-form button:hover {
 /* Tablet modus */
 @media (max-width: 1024px) {
 
-    @media (max-width: 1024px) {
+    .preferences-menu-wrapper {
+        display: flex;
+        flex-wrap: wrap;              /* laat onderdelen afbreken */
+        justify-content: center;      /* center horizontaal */
+        align-items: flex-start;
+        gap: 1.5rem;                  /* ruimte tussen blocks */
+        padding: 1.5rem;
+        width: 100%;
+        max-width: 1100px;            /* voorkomt dat hij te breed wordt */
+        margin: 1rem auto;            /* mooi in het midden */
+        box-sizing: border-box;
+    }
 
-        .preferences-menu-wrapper {
-            display: flex;
-            flex-wrap: wrap;              /* laat onderdelen afbreken */
-            justify-content: center;      /* center horizontaal */
-            align-items: flex-start;
-            gap: 1.5rem;                  /* ruimte tussen blocks */
-            padding: 1.5rem;
-            width: 100%;
-            max-width: 1100px;            /* voorkomt dat hij te breed wordt */
-            margin: 1rem auto;            /* mooi in het midden */
-            box-sizing: border-box;
-        }
-    
-        .preferences {
-            flex: 1 1 320px;              /* altijd meeschalen, min. 320px */
-            max-width: 480px;
-            padding: 1.5rem;
-            box-sizing: border-box;
-        }
-    
-        .menu {
-            flex: 1 1 320px;
-            max-width: 480px;
-            padding: 1.5rem;
-            box-sizing: border-box;
-        }
-    
-        #menu-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 1rem;
-        }
+    .preferences {
+        flex: 1 1 320px;              /* altijd meeschalen, min. 320px */
+        max-width: 480px;
+        padding: 1.5rem;
+        box-sizing: border-box;
+    }
+
+    .menu {
+        flex: 1 1 320px;
+        max-width: 480px;
+        padding: 1.5rem;
+        box-sizing: border-box;
+    }
+
+    #menu-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 1rem;
     }
     
     /* Topbar */
@@ -1209,9 +1290,6 @@ form#preferences-form button:hover {
     .grid-news {
         grid-template-columns: repeat(3, 1fr) !important;
     }
-
-    
- 
 }
 
 /* ===================== MOBIEL (≤ 768px) - 2 KOLOMMEN STANDAARD ===================== */
@@ -1261,6 +1339,51 @@ form#preferences-form button:hover {
         width: 100%;
         box-sizing: border-box;
     }
+    
+    /* Nieuwe sectie aanpassen */
+    .today-meal-info {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+
+    /* -------- FIX: Vandaag op het menu (Datum Lay-out) - Mobiel/Tablet -------- */
+    
+    .today-meal-header-wrapper {
+        /* Reset flex-direction en uitlijning voor mobiel: Stacking */
+        flex-direction: column; 
+        align-items: flex-start; 
+        gap: 0;
+        margin-bottom: 5px; 
+    }
+    
+    .today-meal-header-wrapper h3 {
+        display: flex;
+        align-items: center; 
+        margin-bottom: 0; 
+        
+        /* Zorgt dat de mobiele H3 de onderlijn pakt */
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #eee; 
+    }
+    
+    #today-date-display {
+        /* Reset desktop transform */
+        transform: none; 
+        display: block; /* Zorgt ervoor dat het de volledige breedte inneemt en stapelt */
+        
+        /* Reset desktop border/padding */
+        padding-bottom: 0;
+        border-bottom: none;
+        
+        /* Mobiele positionering: onder de titel, uitgelijnd met de tekst */
+        font-size: 1rem;
+        color: #555;
+        font-weight: normal;
+        margin-left: 30px; 
+        margin-top: 5px;
+        line-height: 1; 
+    }
+
 
     /* -------- HERO -------- */
     .hero {
@@ -1281,15 +1404,6 @@ form#preferences-form button:hover {
     }
 
     /* -------- PREFERENCES + MENU -------- */
-
-    #copy-list-btn {
-        width: 100%;
-        justify-content: center;
-        padding: 0.8rem;
-        font-size: 1.1rem;
-      }
-    
-
     .preferences-menu-wrapper {
         display: flex;
         flex-wrap: wrap;        /* items naast elkaar op grotere schermen */
@@ -1346,15 +1460,13 @@ form#preferences-form button:hover {
         align-items: stretch;
     }
 
-   
-
-.own-recipes, .favorite-recipes {
-    flex: 1 1 100%; /* Maak deze 100% breed op smalle schermen */
-    min-width: unset; /* <-- BELANGRIJK: Zorg dat het de 300px negeert */
-    max-width: 100%;
-    /* ... rest van de stijlen ... */
-}
-
+    .own-recipes, .favorite-recipes {
+        flex: 1 1 100%; /* Maak deze 100% breed op smalle schermen */
+        min-width: unset; /* <-- BELANGRIJK: Zorg dat het de 300px negeert */
+        max-width: 100%;
+        /* De padding, radius en box-shadow van de wrappers is al ingesteld in .custom-recipes-wrapper */
+    }
+    
     #own-recipes-container,
     #favorite-recipes-container {
         display: grid;
@@ -1579,7 +1691,9 @@ form#preferences-form button:hover {
         background: #f4f4f4; 
         box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
-    /* -------- ZOEKBARE RECEPTEN: EINDE NIEUWE BLOK -------- */
+    #today-meal-content p {
+        font-size: 0.9rem !important; 
+    }
 }
 
 /* ===================== ULTRA MOBIEL (≤ 480px) - 1 KOLOM ===================== */

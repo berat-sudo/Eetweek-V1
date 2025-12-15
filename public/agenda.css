@@ -1,0 +1,815 @@
+/* ===================== Variabelen (UIT ORIGINEEL) ===================== */
+:root {
+    --sidebar-width: 230px;
+    --accent1: #ff7f50;
+    --accent2: #ffb347;
+    --bg: #f4f4f4;
+    --radius-lg: 20px;
+    --radius-md: 14px;
+    --card-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    --card-hover-shadow: 0 12px 30px rgba(255,140,0,0.45);
+    --modal-bg: #fefefe; 
+}
+
+/* ===================== Basis (UIT ORIGINEEL) ===================== */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+body { background: var(--bg); color: #222; min-height: 100vh; }
+
+.sidebar .profile {
+  text-decoration: none !important;
+  color: white !important; 
+}
+
+.sidebar .profile-circle {
+  text-decoration: none !important;
+}
+
+/* ===================== Sidebar (UIT ORIGINEEL) ===================== */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--sidebar-width);
+    height: 100vh;
+    background: linear-gradient(180deg, #2c3e50, #1f2a36);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1.2rem;
+    border-radius: 0 20px 20px 0;
+    box-shadow: 6px 0 20px rgba(0,0,0,0.2);
+    z-index: 100;
+}
+
+.profile { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 2.5rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.15); }
+
+.profile-circle {
+    width: 55px; height: 55px; border-radius: 50%;
+    background: linear-gradient(145deg, var(--accent1), var(--accent2));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 1.4rem;
+    border: 3px solid var(--accent2);
+    box-shadow: 0 0 10px rgba(255,179,71,0.5);
+    cursor: pointer; text-transform: uppercase;
+}
+
+#user-name-sidebar { font-weight: bold; font-size: 1.1rem; }
+
+.sidebar-nav ul { list-style: none; display: flex; flex-direction: column; gap: 1.7rem; }
+.sidebar-nav a {
+    color: #fff; text-decoration: none; font-weight: 500;
+    padding: 0.8rem 1rem; border-radius: var(--radius-md); display: block;
+    background: rgba(255,255,255,0.04); transition: all 0.25s ease;
+}
+.sidebar-nav a:hover { background: rgba(255,255,255,0.12); transform: translateX(6px); }
+.sidebar-nav .active a {
+    background: linear-gradient(90deg, var(--accent1), var(--accent2));
+    color: #fff; font-weight: 600; box-shadow: 0 0 12px rgba(255,179,71,0.6);
+    transform: translateX(6px);
+}
+
+/* ===================== Main content (UIT ORIGINEEL) ===================== */
+.main-content { padding: 2rem; margin-left: var(--sidebar-width); }
+
+/* ===================== Hero (UIT ORIGINEEL) ===================== */
+.hero {
+    background: linear-gradient(90deg, var(--accent1), var(--accent2));
+    color: #fff;
+    padding: 2.5rem 2rem;
+    border-radius: var(--radius-lg);
+    margin-bottom: 2rem;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
+
+.hero-content h2 { font-size: 2rem; margin-bottom: 0.5rem; }
+.hero-content p { font-size: 1.1rem; opacity: 0.9; }
+
+/* ===================== NIEUWE AGENDA/KALENDER STIJLEN ===================== */
+
+/* Hoofdcontainer voor de kalender */
+.agenda-container {
+    padding: 2.5rem;
+    background: #fff;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--card-shadow);
+    margin-bottom: 2rem;
+}
+
+/* Kalender Header (Maand en Navigatie) */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.calendar-header h3 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: #2c3e50;
+    text-transform: capitalize;
+}
+
+.calendar-header button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--accent1);
+    transition: color 0.2s;
+    padding: 0.5rem;
+}
+.calendar-header button:hover {
+    color: var(--accent2);
+}
+
+/* Kalender Grid */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.day-name {
+    text-align: center;
+    font-weight: 600;
+    color: #555;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid #ddd;
+    font-size: 0.9rem;
+}
+
+/* Individuele Dag Cel (klikbaar bolletje) */
+.day-cell {
+    min-height: 100px;
+    padding: 5px;
+    border: 1px solid #eee;
+    background-color: #fcfcfc;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    overflow: hidden; 
+}
+
+.day-cell:hover {
+    background-color: #f0f0f0;
+}
+
+/* Dagnummer 'Bolletje' */
+.day-number-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, var(--accent1), var(--accent2)); 
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 5px;
+}
+
+.day-cell.other-month {
+    background-color: #f9f9f9;
+    color: #bbb;
+    cursor: default;
+}
+.day-cell.other-month .day-number-circle {
+    background: #ddd;
+    color: #999;
+}
+
+/* Maaltijd entry binnen de dagcel */
+.meal-entry {
+    font-size: 0.75rem;
+    color: #333;
+    padding: 2px 5px;
+    margin-top: 2px;
+    border-radius: 4px;
+    background-color: #e6e6fa; /* Zachte kleur voor maaltijden */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+}
+
+
+/* ===================== Modal (Pop-up) Stijlen - GEWIJZIGD ===================== */
+
+.modal {
+    /* display: none; -> Behoudt de verborgen status totdat JS het verandert naar 'flex' */
+    display: none; 
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Voorkomt scrollen van de achtergrond */
+    background-color: rgba(0,0,0,0.6); 
+    /* Centrering via Flexbox */
+    align-items: center; 
+    justify-content: center; 
+}
+
+.modal-content {
+    background-color: var(--modal-bg);
+    /* margin: 10% auto; -> Verwijderd door Flexbox centrering */
+    padding: 25px; 
+    border-radius: var(--radius-lg);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    width: 90%; 
+    max-width: 500px;
+    position: relative;
+    /* Flexibel in de hoogte */
+    max-height: 85vh; 
+    display: flex;
+    flex-direction: column; 
+}
+
+.close-button {
+    color: #aaa;
+    /* float: right; -> Verwijderd, Flexbox is beter voor moderne lay-out */
+    position: absolute; /* Plaats de knop absoluut in de content box */
+    top: 10px;
+    right: 15px;
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #333;
+    text-decoration: none;
+}
+
+.modal-content h4 {
+    font-size: 1rem; /* Houdt dezelfde grootte */
+    color: #2c3e50;
+    margin-bottom: 1.5rem; /* Ruimte onder de titel */
+    padding-top: 5px; 
+    border-bottom: 1px solid #eee; /* Optionele scheidingslijn */
+    padding-bottom: 0.8rem;
+}
+
+/* Formulier elementen in de modal */
+#add-meal-form label,
+.recipe-selection-container label {
+    display: block;
+    margin-top: 1rem;
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+    color: #333;
+}
+
+#add-meal-form select,
+#meal-type {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+}
+
+.btn-primary {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+    background: linear-gradient(90deg, var(--accent1), var(--accent2));
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(255,140,0,0.3);
+}
+
+.btn-secondary {
+    padding: 0.8rem 1.5rem;
+    border: 1px solid var(--accent1);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+    background: #fff;
+    color: var(--accent1);
+}
+
+.submit-btn {
+    margin-top: 1.5rem;
+    width: 100%;
+    font-size: 1.1rem;
+    flex-shrink: 0; 
+}
+
+/* Lijst van huidige geplande maaltijden */
+#current-meals-list {
+    border: 1px solid #f0f0f0;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    background-color: #f8f8f8;
+    flex-shrink: 0; 
+}
+
+#current-meals-list ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 0.5rem;
+}
+
+#current-meals-list li {
+    padding: 0.4rem 0;
+    border-bottom: 1px dotted #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+}
+#current-meals-list li:last-child {
+    border-bottom: none;
+}
+
+/* Verwijder knop voor maaltijden */
+.remove-meal-btn {
+    background: #ff7f50;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    line-height: 1;
+    font-size: 12px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: background 0.2s;
+    padding: 0; 
+}
+.remove-meal-btn:hover {
+    background: #cc6633;
+}
+
+/* ===================== Modal Recept Selectie Stijlen - GEWIJZIGD ===================== */
+
+.recipe-selection-container {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0; 
+}
+
+#recipe-search {
+    width: 100%;
+    padding: 0.7rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    flex-shrink: 0; 
+}
+
+#recipe-cards-container {
+    /* max-height: 300px; -> Verwijderd */
+    flex-grow: 1; 
+    overflow-y: auto;  /* Zorgt voor scrollen BINNEN de lijst */
+    padding: 5px;
+    border: 1px solid #f0f0f0;
+    border-radius: var(--radius-md);
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.recipe-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border: 1px solid #eee;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s;
+    background-color: #fafafa;
+    flex-shrink: 0;
+}
+
+.recipe-card:hover {
+    background-color: #f5f5f5;
+}
+
+.recipe-card.selected {
+    border-color: var(--accent1);
+    border-width: 2px;
+    background-color: #fff7f2; /* Lichte achtergrond als geselecteerd */
+    box-shadow: 0 0 5px rgba(255,127,80,0.5);
+}
+
+.recipe-card-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.recipe-card-info {
+    flex-grow: 1;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.recipe-card-info small {
+    display: block;
+    font-size: 0.75rem;
+    color: #777;
+}
+
+/* ===================== OUDE AGENDA STIJLEN (Tabel) ===================== */
+/* Dit is optionele code voor de tabel weergave */
+.agenda-container h3 {
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+    border-bottom: 2px solid var(--bg);
+    padding-bottom: 0.5rem;
+}
+
+.agenda-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+}
+
+.agenda-table th, .agenda-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.agenda-table th {
+    background-color: #f8f8f8;
+    color: #555;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.agenda-table tr:hover {
+    background-color: #fcfcfc;
+}
+
+.status-gepland {
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    font-weight: 600;
+    background-color: #e0f7fa;
+    color: #00796b;
+}
+
+.status-vrij {
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    font-weight: 600;
+    background-color: #fce4ec;
+    color: #c2185b;
+}
+
+.agenda-controls {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.recipe-selection-container label {
+    margin-top: -1rem; /* Verkleind van 1rem naar 0.5rem */
+}
+
+
+/* ===================== Responsiveness (UIT ORIGINEEL) ===================== */
+
+@media(max-width: 768px) { .main-content { margin-left: 0; } }
+
+@media (max-width: 1024px) {
+    /* Topbar */
+    .sidebar {
+        display: flex;
+        flex-direction: row;
+        align-items: center; 
+        justify-content: flex-start; 
+        width: 100%;
+        height: 60px;
+        padding: 0 1rem;
+        background: linear-gradient(180deg, #2c3e50, #1f2a36);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        border-radius: 0;
+    }
+
+    /* Profiel links en verticaal gecentreerd */
+    .profile {
+        border-bottom: none; 
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+
+    .profile-circle {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+        border-width: 2px;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+
+    #user-name-sidebar {
+        color: #fff;
+        font-weight: 500;
+        font-size: 0.95rem;
+        white-space: nowrap;
+    }
+
+    /* Logo rechts naast profiel */
+    .sidebar-logo {
+        display: none;
+    }
+
+    /* Hamburger rechts */
+    .hamburger {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 28px;
+        height: 22px;
+        cursor: pointer;
+        margin-left: auto; 
+        order: 3;
+    }
+    .hamburger span {
+        display: block;
+        height: 3px;
+        background: #fff;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+    }
+
+    /* Navigatie als slide-in menu */
+    .sidebar-nav {
+        position: fixed;
+        top: 60px; 
+        left: -100%;
+        width: 250px;
+        height: auto; 
+        max-height: 70vh; 
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem 1rem;
+        background: linear-gradient(180deg, #2c3e50, #1f2a36);
+        border-radius: 0 20px 20px 0;
+        transition: left 0.3s ease;
+        overflow-y: auto; 
+        z-index: 1050;
+    }
+    .sidebar-nav.open {
+        left: 0;
+    }
+
+    /* Hamburger animatie naar X */
+    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    /* Main content start direct onder topbar */
+    .main-content {
+        margin-left: 0;
+        margin-top: 60px;
+        padding: 0;
+    }
+
+    /* Hero volledig breed */
+    .hero {
+        display: flex;
+        align-items: center;       
+        justify-content: flex-start; 
+        min-height: 25vh;          
+        padding: 3rem 4rem;
+        position: relative;
+        background-position: center;
+        background-size: cover;
+        color: #fff;
+    }
+    
+    .hero-content {
+        padding-left: 1.5rem;       
+        display: flex;
+        flex-direction: column;
+        justify-content: center;   
+        height: 100%;              
+    }
+}
+
+/* ===================== MOBILE RESPONSIVE (≤768px) (UIT ORIGINEEL) ===================== */
+@media (max-width: 768px) {
+
+  /* -------- TOPBAR (mobiele sidebar) -------- */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 55px;
+    background: linear-gradient(180deg, #2c3e50, #1f2a36);
+    display: flex;
+    align-items: center;
+    padding: 0 0.7rem;
+    z-index: 1000;
+    border-radius: 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  .profile-circle {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  #user-name-sidebar {
+    display: none;
+  }
+
+  /* Hamburger rechts */
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 28px;
+    height: 20px;
+    margin-left: auto;
+    cursor: pointer;
+    z-index: 1010;
+  }
+
+  .hamburger span {
+    height: 3px;
+    width: 100%;
+    background: #fff;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+
+  .hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+  .hamburger.active span:nth-child(2) {
+    opacity: 0;
+  }
+  .hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+  }
+
+  /* Slide-in menu links */
+  .sidebar-nav {
+    position: fixed;
+    top: 60px;
+    left: -100%;
+    width: 210px;
+    max-height: 65vh;
+    background: linear-gradient(180deg, #2c3e50, #1f2a36);
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 0.8rem;
+    border-radius: 0 20px 20px 0;
+    transition: left 0.3s ease;
+    overflow-y: auto;
+    z-index: 1005;
+  }
+
+  .sidebar-nav ul {
+    display: flex;
+    flex-direction: column;
+    gap: 1.7rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sidebar-nav li {
+    width: 100%;
+  }
+
+  .sidebar-nav a {
+    display: block;
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border-radius: 14px;
+    font-weight: 500;
+    color: #fff;
+    text-decoration: none;
+    background: rgba(255,255,255,0.04);
+    transition: all 0.25s ease;
+  }
+
+  .sidebar-nav a:hover {
+    background: rgba(255,255,255,0.12);
+    transform: translateX(6px);
+  }
+
+  .sidebar-nav .active a {
+    background: linear-gradient(90deg, var(--accent1), var(--accent2));
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 0 12px rgba(255,179,71,0.6);
+    transform: translateX(6px);
+  }
+
+  .sidebar-nav.open {
+    left: 0;
+  }
+
+  /* -------- MAIN CONTENT -------- */
+  .main-content,
+  .content-section,
+  .recipe-layout,
+  .form-column,
+  .recipes-column,
+  .recipes-grid,
+  #added-recipes-container {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 0.6rem !important;
+    padding-right: 0.6rem !important;
+    box-sizing: border-box;
+  }
+
+  .main-content {
+    margin-top: 53px; 
+    padding-top: 0.1rem; 
+  }
+
+  /* -------- HERO -------- */
+  .hero {
+    padding: 1rem 0.4rem; 
+    margin: 0.5rem 0 1rem 0;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  }
+
+  .hero-content {
+    padding-left: 0.5rem !important;
+    text-align: left; 
+  }
+
+  html, body {
+    overflow-x: hidden;
+  }
+
+  /* Agenda specifieke responsiviteit op mobiel */
+  @media (max-width: 768px) {
+    /* Kalender grid optimalisatie voor kleine schermen */
+    .calendar-header h3 {
+        font-size: 1.5rem;
+    }
+    .day-cell {
+        min-height: 70px; /* Maak de cellen kleiner */
+        padding: 3px;
+    }
+    .day-number-circle {
+        width: 25px;
+        height: 25px;
+        font-size: 0.8rem;
+    }
+    .meal-entry {
+        font-size: 0.65rem;
+        padding: 1px 3px;
+    }
+    /* Modal aanpassing op mobiel */
+    .modal-content {
+        padding: 15px; /* Minder padding op mobiel */
+        max-height: 90vh; 
+        width: 95%; 
+        max-width: 95%;
+    }
+
+    /* Oude tabel stijlen */
+    .agenda-table th, .agenda-table td {
+        padding: 0.6rem;
+    }
+    .agenda-controls {
+        flex-direction: column;
+    }
+    .btn-primary {
+        width: 100%;
+    }
+  }
+}

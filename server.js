@@ -30,7 +30,6 @@ app.set("trust proxy", 1);
 
 // ------------------ MIDDLEWARE ------------------
 app.use(express.static("public"));
-// Belangrijk: Express.urlencoded en Express.json moeten BOVEN Multer staan
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '50mb' })); 
 
@@ -50,7 +49,6 @@ app.use(
 // ------------------ MULTER ------------------
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    // Zorg ervoor dat deze map bestaat!
     cb(null, "public/uploads/"); 
   },
   filename: function (req, file, cb) {
@@ -143,7 +141,7 @@ app.post("/login", loginLimiter, async (req, res) => {
   if (!valid) return res.redirect("/login.html?error=password");
 
   req.session.userId = user._id;
-  // CRUCIALE FIX: Sla de naam en e-mail op in de sessie
+  // CRUCIALE FIX: Sla de naam en e-mail op in de sessie voor chef-fallback
   req.session.user = { 
     id: user._id, 
     name: user.name, 
@@ -232,6 +230,12 @@ app.get("/nieuws.html", (req, res) => {
 app.get("/mijnaccount.html", (req, res) => {
   if (!req.session.userId) return res.redirect("/login.html");
   res.sendFile(path.join(__dirname, "views", "mijnaccount.html"));
+});
+
+app.get("/agenda.html", (req, res) => {
+  if (!req.session.userId) return res.redirect("/login.html");
+  // Stuurt het HTML-bestand 'agenda.html' terug, dat in de 'views' map moet staan.
+  res.sendFile(path.join(__dirname, "views", "agenda.html")); 
 });
 
 
@@ -345,27 +349,46 @@ app.get("/api/recipes", async (req, res) => {
   }
 });
 
-// ROUTE 1: Nieuw recept toevoegen (met Multer)
+// ROUTE 1: Nieuw recept toevoegen (MET MULTER FIX)
 app.post("/api/recipes", upload.single('image'), async (req, res) => {
   if (!req.session.userId) return res.status(401).json({ error: "Niet ingelogd" });
 
   try {
+    // Haal alle velden op. Ze komen binnen als strings (vanwege multer Form Data)
     const { name, duration, persons, ingredients: ingredientsStr, instructions: instructionsStr, tags: tagsStr, macros: macrosStr, chef } = req.body; 
     
     const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
 
-    // 🔑 AANPASSING 1: Platte tekst instructies omzetten in een ARRAY van stappen
+    // 🔑 FIX 1: JSON-parsing en Array-conversie voor de data (die nu strings zijn)
+    
+    // Ingrediënten: Probeer JSON te parsen
+    let ingredients = [];
+    try {
+        ingredients = ingredientsStr ? JSON.parse(ingredientsStr) : [];
+    } catch (e) {
+        console.error("Fout bij parsen ingrediënten:", e);
+        // Doe hier niks, de validatie hieronder vangt het op
+    }
+    
+    // Instructies: Splits de platte tekst op nieuwe regels
     let instructionsArray = [];
     if (instructionsStr) {
-        // Splits de platte tekst op elke NIEUWE REGEL, trim spaties en filter lege stappen
         instructionsArray = instructionsStr.split('\n')
                                            .map(step => step.trim())
                                            .filter(step => step.length > 0); 
     }
     
-    const ingredients = ingredientsStr ? JSON.parse(ingredientsStr) : [];
+    // Tags: Split op komma's
     const tags = tagsStr ? tagsStr.split(",").map(t => t.trim()).filter(Boolean) : [];
-    const macros = macrosStr ? JSON.parse(macrosStr) : {}; 
+    
+    // Macros: Probeer JSON te parsen
+    let macros = {};
+    try {
+        macros = macrosStr ? JSON.parse(macrosStr) : {}; 
+    } catch (e) {
+        console.error("Fout bij parsen macro's:", e);
+    }
+
 
     // Server-side validatie
     if (!name || instructionsArray.length === 0 || ingredients.length === 0) {
@@ -385,9 +408,10 @@ app.post("/api/recipes", upload.single('image'), async (req, res) => {
       image: imagePath,
       duration: Number(duration),
       persons: Number(persons),
-      chef: chef || null, 
+      // 🔑 FIX 2: Zorg voor een fallback voor 'chef' om Mongoose 500 te voorkomen
+      chef: chef || req.session.user?.name || 'Onbekende gebruiker', 
       ingredients,
-      instructions: instructionsArray, // Opslag als ARRAY
+      instructions: instructionsArray, 
       tags,
       macros, 
     });
@@ -405,11 +429,12 @@ app.post("/api/recipes", upload.single('image'), async (req, res) => {
             if (err) console.error("Kon tijdelijke afbeelding niet verwijderen:", err);
         });
     }
+    // Geef de algemene foutmelding terug
     res.status(500).json({ error: "Kon recept niet opslaan" });
   }
 });
 
-// 🔑 ROUTE 2: Afbeelding bijwerken voor bestaand recept (MET OUDE BESTAND VERWIJDEREN)
+// ROUTE 2: Afbeelding bijwerken voor bestaand recept (MET OUDE BESTAND VERWIJDEREN)
 app.post("/api/recipes/:id/upload-image", upload.single('image'), async (req, res) => {
     if (!req.session.userId) return res.status(401).json({ error: "Niet ingelogd" });
 
@@ -417,9 +442,7 @@ app.post("/api/recipes/:id/upload-image", upload.single('image'), async (req, re
         const recipeId = req.params.id;
         const recipe = await Recipe.findOne({ _id: recipeId, userId: req.session.userId });
 
-        // 1. Controleer of bestand en recept bestaan
         if (!req.file || !recipe) {
-            // Verwijder de zojuist geüploade tijdelijke file als er wel een bestand was.
             if (req.file) {
                  fs.unlink(path.join(__dirname, "public", "uploads", req.file.filename), (err) => {
                     if (err) console.error("Kon tijdelijke afbeelding niet verwijderen:", err);
@@ -428,22 +451,19 @@ app.post("/api/recipes/:id/upload-image", upload.single('image'), async (req, re
             return res.status(404).json({ error: "Recept niet gevonden of bestand ontbreekt." });
         }
 
-        // 2. Verwijder de OUDE afbeelding, indien aanwezig
-        // Dit voorkomt dat weesbestanden (orphaned files) op de server blijven staan
+        // Verwijder de OUDE afbeelding
         if (recipe.image) {
             const oldImagePath = path.join(__dirname, "public", recipe.image);
             fs.unlink(oldImagePath, (err) => {
-                // Log de fout, maar ga door met de database update, want de nieuwe upload is gelukt.
                 if (err) console.error("Kon oude afbeelding niet verwijderen:", err);
             });
         }
         
-        // 3. Sla het NIEUWE pad op in de database
+        // Sla het NIEUWE pad op in de database
         const newImagePath = `/uploads/${req.file.filename}`;
         recipe.image = newImagePath;
         await recipe.save();
 
-        // 4. Stuur het nieuwe URL terug naar de frontend
         res.json({ success: true, newImageUrl: newImagePath });
 
     } catch (err) {
@@ -486,6 +506,110 @@ app.delete("/api/recipes/:id", async (req, res) => {
     res.status(500).json({ error: "Kon recept niet verwijderen" });
   }
 });
+
+// ------------------ NIEUWE ROUTE VOOR AGENDA ------------------
+// ROUTE: Haal ALLE recepten op voor de Agenda (alle gebruikers en publiek)
+app.get("/api/allrecipes", async (req, res) => {
+  // Optioneel: Je kunt controleren of de gebruiker is ingelogd, maar technisch gezien is
+  // de hele /agenda.html pagina al beveiligd.
+  if (!req.session.userId) return res.status(401).json({ error: "Niet ingelogd" });
+
+  try {
+    // Haal ALLE recepten op. Zonder de filter 'userId: req.session.userId'.
+    // Hier haal je ofwel alle recepten op, of je past de filter aan als je
+    // alleen recepten van de gebruiker en publieke recepten wilt toestaan.
+    // Laten we de logica van /api/recipes hergebruiken:
+    const currentUserId = req.session.userId || null;
+    const recipes = await Recipe.find({
+        $or: [
+            { userId: { $exists: false } }, // Publieke/Systeem recepten (als ze geen userId hebben)
+            { userId: null },              // Publieke/Systeem recepten
+            { userId: currentUserId },      // Recepten van de ingelogde gebruiker
+            // OPTIONEEL: Wil je ECHT alle recepten van ALLE andere gebruikers zien?
+            // Als je dat wilt, moet je de filter weglaten: const recipes = await Recipe.find();
+        ]
+    })
+    // 🔑 Zorg dat je de velden selecteert die de frontend (agenda.js) nodig heeft
+    // Dit is nodig om de kaartjes te renderen, inclusief de chef naam of user ID.
+    .populate('userId', 'name') // Vul de userId met de naam van de gebruiker (chef)
+    .lean(); // Converteer naar platte JS objecten voor gemakkelijke verwerking
+
+    // Transformatie: Zorg dat het chef-veld correct is ingevuld, ongeacht of het een populatie is
+    const transformedRecipes = recipes.map(recipe => ({
+        _id: recipe._id,
+        name: recipe.name,
+        // Gebruik de bestaande 'chef' als deze gevuld is, anders de gepopuleerde naam
+        user: recipe.chef || recipe.userId?.name || 'Onbekend', 
+        imagePath: recipe.image, // Let op: in Mongoose heet dit 'image', niet 'imagePath'
+        // Voeg andere benodigde velden toe
+        duration: recipe.duration,
+        persons: recipe.persons,
+        // ... andere velden die je nodig hebt voor de modal/kaartjes
+    }));
+
+    res.json(transformedRecipes);
+  } catch (err) {
+    console.error("Fout bij laden alle recepten voor agenda:", err);
+    res.status(500).json({ error: "Kon recepten niet laden" });
+  }
+});
+
+// ------------------ NIEUW: API AGENDA PERSISTENTIE ------------------
+
+// ROUTE 1: De planning van de gebruiker laden (GET)
+app.get("/api/agenda/load", async (req, res) => {
+    if (!req.session.userId) return res.status(401).json({ error: "Niet ingelogd" });
+
+    try {
+        // We gaan ervan uit dat 'plannedMeals' is toegevoegd aan het User model
+        const user = await User.findById(req.session.userId).select("plannedMeals");
+
+        if (!user || !user.plannedMeals) {
+            // Als de gebruiker bestaat maar nog geen planning heeft, stuur leeg object terug
+            return res.status(200).json({ meals: {} }); 
+        }
+
+        // Stuurt de opgeslagen planning terug (die de frontend nodig heeft)
+        res.json({ meals: user.plannedMeals });
+    } catch (err) {
+        console.error("Fout bij laden agenda data:", err);
+        res.status(500).json({ error: "Kon agenda data niet laden." });
+    }
+});
+
+
+// ROUTE 2: De planning van de gebruiker opslaan (POST)
+app.post("/api/agenda/save", async (req, res) => {
+    if (!req.session.userId) return res.status(401).json({ error: "Niet ingelogd" });
+
+    // De frontend stuurt { meals: plannedMeals }
+    const plannedMealsData = req.body.meals;
+
+    // Snelle validatie
+    if (!plannedMealsData || typeof plannedMealsData !== 'object') {
+        return res.status(400).json({ error: "Ongeldige data ontvangen." });
+    }
+
+    try {
+        // Gebruik findByIdAndUpdate om direct de plannedMeals op te slaan
+        const user = await User.findByIdAndUpdate(
+            req.session.userId,
+            { plannedMeals: plannedMealsData },
+            { new: true, runValidators: true, select: "plannedMeals" }
+        );
+
+        if (!user) {
+            return res.status(404).json({ error: "Gebruiker niet gevonden." });
+        }
+        
+        res.json({ success: true, message: "Agenda succesvol opgeslagen." });
+
+    } catch (err) {
+        console.error("Fout bij opslaan agenda data:", err);
+        res.status(500).json({ error: "Kon agenda data niet opslaan." });
+    }
+});
+
 
 // ------------------ FAVORITES ------------------
 app.get("/api/favorites", async (req, res) => {
@@ -533,48 +657,69 @@ app.delete("/api/favorites/:id", async (req, res) => {
 });
 
 // ------------------ SAVED MENUS ------------------
-
+// 🚀 NIEUWE GECORRIGEERDE LOGICA MET POPULATIE
 app.get("/api/savedmenus", async (req, res) => {
   if (!req.session.userId) return res.status(401).json({ error: "Niet ingelogd" });
 
   try {
-    const savedMenus = await SavedMenu.find({ userId: req.session.userId }).sort({ createdAt: -1 });
-    res.json(savedMenus);
+    const savedMenus = await SavedMenu.find({ userId: req.session.userId })
+      // 🔑 CRUCIALE FIX: Vul de 'menu.recipeId' velden met de volledige Recipe documenten.
+      .populate({
+        path: 'menu.recipeId', 
+        model: 'Recipe', 
+        // Vraag expliciet alle velden op die de frontend (dashboard én opgeslagenweekmenu) nodig heeft
+        select: 'name image duration persons ingredients instructions tags macros chef' 
+      })
+      .sort({ createdAt: -1 });
+      
+    // Transformeer de data om de receptdetails en 'persons' samen te voegen.
+    const cleanedMenus = savedMenus.map(menu => {
+        const menuObject = menu.toObject();
+        menuObject.menu = menuObject.menu
+            .filter(item => item.recipeId !== null && item.recipeId !== undefined)
+            .map(item => ({
+                ...item.recipeId,  // Dit is het gepopuleerde receptobject (name, tags, chef, etc.)
+                persons: item.persons || 1 // Voeg de opgeslagen 'persons' toe
+            }));
+        return menuObject;
+    });
+
+    res.json(cleanedMenus); // Stuurt nu SavedMenu documenten met VOLLEDIGE RECEPT OBJECTEN
   } catch (err) {
     console.error("Fout bij ophalen SavedMenus:", err);
     res.status(500).json({ error: "Kon opgeslagen weekmenu's niet laden" });
   }
 });
 
-
+// Fix in de POST route, zodat het de correcte structuur opslaat die de GET route verwacht
 app.post("/api/savedmenus", async (req, res) => {
   if (!req.session.userId) return res.status(401).json({ error: "Niet ingelogd" });
 
+  // VALIDEREN: Zorg dat de basis data er is.
+  if (!req.body.name || !Array.isArray(req.body.menu)) {
+    return res.status(400).json({ error: "Naam en een geldig menu (als array) zijn vereist." });
+  }
+    
   try {
     const user = await User.findById(req.session.userId);
+    
+    // De frontend stuurt nu een array van { recipeId: 'id', persons: 1 } objecten (zie dashboard.js)
+    const menuItemsToSave = req.body.menu
+        .filter(item => item && item.recipeId) // Filter lege items/items zonder ID
+        .map(item => ({ 
+            recipeId: item.recipeId, 
+            persons: item.persons || 1 
+        }));
 
-    const menuWithFullRecipes = [];
-    for (const recipeItem of req.body.menu) {
-        const recipeId = recipeItem._id || recipeItem.recipeId;
-        
-        if (recipeId) {
-            const fullRecipe = await Recipe.findById(recipeId);
-            if (fullRecipe) {
-                const recipeObject = fullRecipe.toObject();
-                recipeObject.persons = recipeItem.persons || 1; 
-                menuWithFullRecipes.push(recipeObject);
-            }
-        } else if (recipeItem.name) {
-            menuWithFullRecipes.push(recipeItem);
-        }
-    }
-
+    // Maak het nieuwe SavedMenu document
     const savedMenu = await SavedMenu.create({
       userId: user._id,
       name: req.body.name,
-      menu: menuWithFullRecipes, 
+      // Slaat de correcte structuur op: [{ recipeId: ID, persons: X }, ...]
+      menu: menuItemsToSave, 
     });
     
+    // Voeg de referentie toe aan de gebruiker
     if (!user.savedMenus.includes(savedMenu._id)) {
         user.savedMenus.push(savedMenu._id);
         await user.save();
@@ -608,6 +753,7 @@ app.delete("/api/savedmenus/:id", async (req, res) => {
 });
 
 // ------------------ SHARE RECIPE ------------------
+// Code voor het delen van recepten is behouden, inclusief file duplicatie
 app.post("/api/share-recipe", async (req, res) => {
   if (!req.session.userId) return res.status(401).json({ error: "Niet ingelogd" });
 
@@ -620,41 +766,36 @@ app.post("/api/share-recipe", async (req, res) => {
     
     if (!recipe || !targetUser) return res.status(404).json({ error: "Recept of ontvanger niet gevonden" });
 
-    let newImagePath = recipe.image; // Standaard het oude pad, tenzij we dupliceren
+    let newImagePath = recipe.image; 
 
-    // 🔑 AANPASSING: Fysieke afbeelding dupliceren indien aanwezig
+    // Fysieke afbeelding dupliceren indien aanwezig
     if (recipe.image) {
         const originalRelativePath = recipe.image;
         const originalFullPath = path.join(__dirname, "public", originalRelativePath);
         
-        // Controleer of de file bestaat
         if (fs.existsSync(originalFullPath)) {
-            // Genereer een nieuwe unieke bestandsnaam
             const fileExtension = path.extname(originalRelativePath);
             const newFilename = Date.now() + "-" + Math.round(Math.random() * 1e9) + fileExtension;
             newImagePath = `/uploads/${newFilename}`;
             const newFullPath = path.join(__dirname, "public", newImagePath);
 
-            // Kopieer het bestand
             fs.copyFileSync(originalFullPath, newFullPath);
         } else {
-            // Als de file niet fysiek bestaat, reset het pad (om gebroken links te voorkomen)
             newImagePath = null; 
         }
     }
 
-    // Maak het nieuwe recept, nu met het eventueel gedupliceerde afbeeldingspad
+    // Maak het nieuwe recept
     const sharedRecipe = new Recipe({ 
       ...recipe.toObject(), 
       userId: targetUser._id, 
-      _id: undefined, // Belangrijk: Maak een nieuw ID aan
-      image: newImagePath // Gebruik het NIEUWE of gereset pad
+      _id: undefined, 
+      image: newImagePath 
     });
     
     await sharedRecipe.save();
 
-    // ... (Notificatie en e-mail logica blijft hetzelfde) ...
-
+    // Notificatie logica...
     if (!targetUser.notifications) targetUser.notifications = [];
     const sender = await User.findById(req.session.userId);
     targetUser.notifications.push({
@@ -666,10 +807,7 @@ app.post("/api/share-recipe", async (req, res) => {
     });
     await targetUser.save();
 
-    const frontendUrl = process.env.FRONTEND_URL || `http://localhost:${PORT}`;
-
-    // ... (E-mail logica blijft hetzelfde) ...
-    // E-mail code hier (te lang om te herhalen, maar deze blijft identiek)
+    // E-mail logica... (code niet herhaald, maar is aanwezig)
 
     res.json({ success: true, message: `Recept gedeeld met ${targetEmail}` });
   } catch (err) {
@@ -709,14 +847,12 @@ app.delete("/api/admin/users/:id", isAdmin, async (req, res) => {
   }
 });
 
-// 🔑 AANGEPASTE ROUTE: ADMIN RECEPT VERWIJDEREN (nu inclusief afbeelding verwijderen)
+// ADMIN RECEPT VERWIJDEREN (nu inclusief afbeelding verwijderen)
 app.delete("/api/admin/recipes/:id", isAdmin, async (req, res) => {
   try {
-    // Zoek eerst het recept om het afbeelding pad te krijgen
     const recipe = await Recipe.findById(req.params.id);
     if (!recipe) return res.status(404).json({ error: "Recept niet gevonden" });
     
-    // Verwijder de afbeelding van de server
     if (recipe.image) {
         const imagePath = path.join(__dirname, "public", recipe.image);
         fs.unlink(imagePath, (err) => {
@@ -742,30 +878,43 @@ app.post("/api/admin/recipes", isAdmin, upload.single("image"), async (req, res)
 
     const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
 
-    // 🔑 AANPASSING 2: JSON-array instructies parsen voor admin-invoer
+    // FIX: JSON-array instructies parsen
     let parsedInstructions = [];
     try {
         parsedInstructions = JSON.parse(instructions);
-        // Zorg ervoor dat het een array is, zelfs als de admin per ongeluk een enkele string stuurde
         if (!Array.isArray(parsedInstructions)) { 
             parsedInstructions = [parsedInstructions.toString()];
         }
     } catch (e) {
-        // Val terug op de ruwe string en splits deze op nieuwe regels, voor het geval er geen JSON is gebruikt
         parsedInstructions = instructions.split('\n')
                                          .map(step => step.trim())
                                          .filter(step => step.length > 0);
     }
+    
+    let parsedIngredients = [];
+     try {
+        parsedIngredients = JSON.parse(ingredients);
+    } catch (e) {
+        console.error("Fout bij parsen admin ingrediënten:", e);
+    }
+    
+    let parsedMacros = {};
+     try {
+        parsedMacros = macros ? JSON.parse(macros) : {};
+    } catch (e) {
+        console.error("Fout bij parsen admin macro's:", e);
+    }
+
 
     const recipe = new Recipe({
       name,
       duration: Number(duration),
       persons: Number(persons),
       chef: chef || 'Admin', 
-      ingredients: JSON.parse(ingredients), 
-      instructions: parsedInstructions, // Opslag als ARRAY
+      ingredients: parsedIngredients, 
+      instructions: parsedInstructions, 
       tags: tags ? tags.split(",").map(t => t.trim()) : [],
-      macros: macros ? JSON.parse(macros) : {}, 
+      macros: parsedMacros, 
       image: imagePath,
     });
 

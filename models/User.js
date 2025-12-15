@@ -23,6 +23,15 @@ const userSchema = new mongoose.Schema({
       date: { type: Date, default: Date.now }
     }
   ],
+  
+  // ============================
+  // NIEUW: AGENDA PERSISTENTIE
+  // Slaat de planning op als een object: { 'YYYY-MM-DD': [ {name, type, recipeId}, ... ] }
+  // ============================
+  plannedMeals: {
+      type: Object, // Gebruik Mongoose Object om een dynamische key-value map op te slaan
+      default: {}
+  },
 
   // Wachtwoord reset velden
   resetPasswordToken: { type: String },

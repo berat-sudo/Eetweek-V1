@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   /* ============================
-     GLOBALE HULPDEFINITIES
+     GLOBALE HULPDEFINITIES (Onveranderd)
   ============================ */
   const dummyLogo = "/Fotos/logo_.png";
   const greenGradient = 'linear-gradient(90deg, #32cd32, #7fff00)'; 
@@ -10,10 +10,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const days = ["Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag", "Zondag"];
   
-  // 🔑 Helper om mobiele weergave te bepalen
   const isMobileGlobal = window.innerWidth <= 600; 
 
-  // 🔑 Helper voor toast/meldingen (Nu ALTIJD gecentreerd onderaan)
+  // Helper voor toast/meldingen (Onveranderd)
   function showToast(msg, color = greenGradient) {
     let toast = document.getElementById("toast");
     const isGradient = color.includes('gradient');
@@ -70,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 2500);
   }
   
-  // ===================== Gebruikersnaam laden =====================
+  // Gebruikersnaam laden (Onveranderd)
   const userNameEl = document.getElementById("user-name");
   const userNameSidebarEl = document.getElementById("user-name-sidebar");
   const profileCircleEl = document.getElementById("profile-circle");
@@ -93,9 +92,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   loadUserName();
   
-  // 🔑 NIEUWE TAG FUNCTIE: Overgenomen uit uw werkende zoek/favorieten code
+  // TAG FUNCTIE (Verfijnd om tags als lege array te behandelen indien undefined)
   function getRecipeTagsHtml(recipe) {
-    const tags = recipe.tags?.map(t => t.toLowerCase().trim()) || [];
+    // 🔑 EXTRA VEILIGHEID: Zorg ervoor dat recipe.tags een array is
+    let tags = [];
+    if (Array.isArray(recipe.tags)) {
+        tags = recipe.tags.map(t => t.toLowerCase().trim());
+    }
+    
     const macros = recipe.macros || {};
     const displayedTags = [];
 
@@ -155,15 +159,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("saved-menus-container");
   if (!container) return;
 
+  // loadSavedMenus (Onveranderd, behalve de reverse van de array)
   async function loadSavedMenus() {
     try {
       const res = await fetch("/api/savedmenus", { credentials: "include" });
       if (!res.ok) throw new Error("Kon weekmenu's niet ophalen");
       let savedMenus = await res.json(); 
 
-      // ✅ FIX: Zorg ervoor dat savedMenus een array is, anders is reverse() niet beschikbaar.
       if (!Array.isArray(savedMenus)) {
-        console.warn("API gaf geen array terug. Initieert met lege lijst.");
         savedMenus = [];
       }
 
@@ -173,8 +176,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // Draai de array om om de meest recente bovenaan te plaatsen
-      savedMenus.reverse().forEach((saved) => addSavedMenuToDOM(saved));
+      const menusToDisplay = [...savedMenus].reverse();
+      menusToDisplay.forEach((saved) => addSavedMenuToDOM(saved));
 
     } catch (err) {
       console.error("Fout bij laden weekmenu's:", err);
@@ -182,6 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // 🔑 addSavedMenuToDOM (Weergave van naam is nu de meest robuuste versie)
   function addSavedMenuToDOM(saved) {
     const kaft = document.createElement("div");
     kaft.classList.add("saved-menu-kaft");
@@ -206,11 +210,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     (saved.menu || []).forEach(recipe => {
       
-      const recipeName = recipe?.name || (recipe?.recipeId ? "Recept" : "-"); 
+      // 🔑 MEEST ROBUUSTE FIX voor de naam:
+      // Check of recipe bestaat EN of het een object is, én of name een niet-lege string is.
+      let recipeName = "-";
+      if (recipe && typeof recipe === 'object' && recipe.name && typeof recipe.name === 'string' && recipe.name.trim() !== '') {
+          recipeName = recipe.name;
+      }
       
       if (recipe && recipe.persons === undefined) recipe.persons = 1;
       const span = document.createElement("span");
-      span.textContent = recipeName;
+      span.textContent = recipeName; 
       span.style = `
         background:#f0f0f0; 
         color:rgb(45, 45, 45); 
@@ -222,7 +231,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     kaft.appendChild(preview);
 
-    // Prullenbakje
+    // Prullenbakje (Onveranderd)
     const trash = document.createElement("img");
     trash.src = "/Fotos/prullenbakicon.png";
     trash.alt = "Verwijder weekmenu";
@@ -253,7 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     kaft.appendChild(trash);
 
-    // Boodschappenlijst knop **onder de gerechten**
+    // Boodschappenlijst knop (Onveranderd)
     const listBtn = document.createElement("button");
     listBtn.style = `
       margin-top:10px;
@@ -283,7 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     kaft.appendChild(listBtn);
 
-    // Klik op kaft → weekmenu-popup
+    // Klik op kaft → weekmenu-popup (Onveranderd)
     kaft.addEventListener("click", () => showMenuPopup(saved));
 
     container.appendChild(kaft);
@@ -323,7 +332,7 @@ document.addEventListener("DOMContentLoaded", () => {
         display:flex; flex-direction:column; align-items:center; text-align:center;
         transition: transform 0.2s;
       `;
-      if (recipe) {
+      if (recipe && recipe.name) {
         card.addEventListener("mouseenter", () => card.style.transform = "scale(1.03)");
         card.addEventListener("mouseleave", () => card.style.transform = "scale(1)");
         card.addEventListener("click", e => {
@@ -340,10 +349,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const recipeName = document.createElement("span");
       recipeName.textContent = recipe?.name || "Leeg";
       recipeName.style.fontSize = "0.95rem";
-      recipeName.style.color = recipe ? "#ff7f50" : "#999";
+      recipeName.style.color = recipe?.name ? "#ff7f50" : "#999"; // Pas kleur aan als naam bestaat
       card.appendChild(recipeName);
       
-      if (recipe) {
+      // 🔑 Extra controle bij toevoegen van tags:
+      if (recipe && recipe.name) {
           card.innerHTML += getRecipeTagsHtml(recipe);
       }
 
@@ -375,7 +385,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ==========================================================
   // Recept-popup (showRecipeDetails)
-  // ** GECORRIGEERDE FUNCTIE **
   // ==========================================================
   function showRecipeDetails(recipe) {
     const overlay = document.createElement("div");
@@ -430,23 +439,20 @@ document.addEventListener("DOMContentLoaded", () => {
         return `<li>${i.item} – ${qty}</li>`;
       }).join("");
       
-    // 🚀 AANGEPASTE HELPER: Converteert instructies (Array) naar gescheiden DIV's (zonder nummers)
+    // Converteert instructies (Array) naar gescheiden DIV's (zonder nummers)
     const getInstructionsHTML = () => {
         let instructions = recipe.instructions;
 
         // Controleer of het een array is en niet leeg
         if (Array.isArray(instructions) && instructions.length > 0) {
-            // Maak gescheiden stappen met marges (vervangt <ol> en <li>)
+            // Maak gescheiden stappen met marges
             const stepsHtml = instructions.map(step => 
-                // Gebruik een div voor elke stap met een duidelijke onderlinge marge
                 `<div style="margin-bottom: 12px; padding: 8px 10px; background: #f9f9f9; border-left: 3px solid #ff7f50; border-radius: 4px; line-height: 1.4;">${step}</div>`
             ).join('');
             
-            // Gebruik een container div
             return `<div style="padding: 5px 0;">${stepsHtml}</div>`;
         }
         
-        // Terugval als het geen array is (bv. nog een enkele string)
         if (typeof instructions === 'string' && instructions.trim() !== '') {
              return `<p>${instructions}</p>`;
         }
@@ -502,7 +508,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return html;
     };
     
-    // Stijlen voor de Kopieerknop
+    // Stijlen voor de Kopieerknop (Onveranderd)
     const copyButtonStyle = `
         position: absolute; 
         top: 10px;        
@@ -539,13 +545,20 @@ document.addEventListener("DOMContentLoaded", () => {
         margin-top:20px;
     `;
     
-    // 🔑 Chef-blok HTML (Conditioneel) - DEZE LOGICA IS NU GECORRIGEERD
+    // 🔑 Chef-blok HTML (Extra robuuste controle)
     let chefBlockHTML = '';
+    let validChef = false;
+    let chefName = '';
     
-    // Alleen weergeven als recipe.chef bestaat, na trimmen NIET leeg is, EN NIET 'admin' is
-    const chefValue = recipe.chef ? recipe.chef.trim().toLowerCase() : '';
+    // Check of recipe.chef bestaat en een niet-lege string is, en niet "admin" (case-insensitive)
+    if (recipe.chef && typeof recipe.chef === 'string' && recipe.chef.trim() !== '') {
+        chefName = recipe.chef.trim();
+        if (chefName.toLowerCase() !== 'admin') {
+            validChef = true;
+        }
+    }
 
-    if (chefValue !== "" && chefValue !== "admin") {
+    if (validChef) {
         chefBlockHTML = `
             <div class="info-block chef-block" style="
                 background: #f8f8f8;
@@ -558,7 +571,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 border: 1px solid #eee;
             ">
                 <h4 style="margin:0; font-size:1rem; color:#555;">Chef</h4>
-                <p style="margin:5px 0 0; font-size:1.1rem; font-weight:bold; color:#ff7f50;">${recipe.chef}</p>
+                <p style="margin:5px 0 0; font-size:1.1rem; font-weight:bold; color:#ff7f50;">${chefName}</p>
             </div>
         `;
     }
@@ -613,7 +626,7 @@ document.addEventListener("DOMContentLoaded", () => {
         recipe.persons = persons; 
     };
 
-    // Event Listeners voor de knoppen
+    // Event Listeners voor de knoppen (Onveranderd)
     decrementBtn.addEventListener("click", () => {
         if (persons > 1) {
             persons--;
@@ -643,7 +656,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ===================== Boodschappenlijst-popup (overlay) =====================
+  // Boodschappenlijst-popup (Onveranderd)
   function showShoppingList(saved) {
     document.querySelectorAll(".force-popup-overlay").forEach(el => el.remove());
   
@@ -847,21 +860,20 @@ document.addEventListener("DOMContentLoaded", () => {
   
   
 
-  // ===================== Hamburgermenu (AANGEPAST) =====================
+  // Hamburgermenu (Onveranderd)
   const hamburger = document.getElementById('hamburger-btn');
   const sidebarNav = document.querySelector('.sidebar-nav');
-  const body = document.body; // Referentie naar de body
+  const body = document.body; 
 
   if (hamburger && sidebarNav) {
     hamburger.addEventListener('click', () => {
       hamburger.classList.toggle('active');
       sidebarNav.classList.toggle('open');
-      // 🚀 BELANGRIJKSTE WIJZIGING: Toggle een class op de body
       body.classList.toggle('menu-open'); 
     });
   }
 
-  // ===================== Opslaan nieuw menu (Hulplogica) =====================
+  // Opslaan nieuw menu (Hulplogica)
   async function saveNewMenu(newMenu) {
     try {
       const res = await fetch("/api/savedmenus", {

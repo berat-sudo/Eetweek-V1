@@ -144,8 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!toastContainer) {
         toastContainer = document.createElement('div');
         toastContainer.id = 'toast-container';
-        // 🔑 Belangrijke aanpassing: z-index naar een zeer hoge waarde (e.g., 99999)
-        // De popup overlay heeft waarschijnlijk al 100000 (of vergelijkbaar), dus we gaan hoger.
+        // 🔑 Belangrijke aanpassing: z-index naar een zeer hoge waarde
         toastContainer.style.cssText = `
            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
            max-width: 100%; width: 100%; z-index: 999999; display: flex;
@@ -161,7 +160,6 @@ document.addEventListener("DOMContentLoaded", () => {
         border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         font-weight: bold; opacity: 0; transform: translateY(100%);
         transition: all 0.4s ease;
-        /* Zorg dat de individuele toast ook een hoge z-index heeft */
         z-index: 999999;
     `;
 
@@ -346,6 +344,126 @@ document.addEventListener("DOMContentLoaded", () => {
       container.innerHTML = "<p>Kon nieuws niet laden.</p>";
     }
   }
+
+  // ===================== NIEUW: Agenda Maaltijd van Vandaag =====================
+
+  // Functie om de datum te formatteren naar YYYY-MM-DD
+  function formatDate(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+  }
+
+  async function loadAgendaMealForToday() {
+      const todayMealContent = document.getElementById("today-meal-content");
+      const todayDateDisplay = document.getElementById("today-date-display");
+      
+      if (!todayMealContent || !todayDateDisplay) return;
+
+      const today = new Date();
+      const todayFormatted = formatDate(today);
+      
+      // Weergave van de datum op het dashboard
+      todayDateDisplay.textContent = today.toLocaleDateString('nl-NL', { day: 'numeric', month: 'long' });
+      
+      todayMealContent.innerHTML = `<p>Laden van de planning...</p>`;
+
+      // Controleer of allRecipes al geladen is (zou moeten zijn via de Promise.then)
+      if (allRecipes.length === 0) {
+           todayMealContent.innerHTML = `<p style="color:orange;">Laden van receptdetails...</p>`;
+      }
+
+
+      try {
+          // 1. Haal de opgeslagen planning op van de server
+          const res = await fetch("/api/agenda/load");
+          
+          if (!res.ok) {
+              todayMealContent.innerHTML = `<p style="color:red;">Fout bij het laden van de agenda.</p>`;
+              return;
+          }
+
+          const data = await res.json();
+          const plannedMeals = data.meals || {};
+          
+          // 2. Zoek maaltijden voor vandaag
+          const todayMeals = plannedMeals[todayFormatted] || [];
+
+          todayMealContent.innerHTML = ""; // Maak de container leeg
+          
+          // Als er geen maaltijden zijn of als de dag 'Vrij' is (recipeId: 'none')
+          if (todayMeals.length === 0 || todayMeals.some(m => m.recipeId === 'none')) {
+              const message = todayMeals.some(m => m.recipeId === 'none') 
+                  ? 'Vandaag Vrij Gepland' 
+                  : 'Geen maaltijden gepland in de agenda voor vandaag.';
+                  
+              todayMealContent.innerHTML = `
+                  <div style="text-align:center; padding: 20px; background: #f0f0f0; border-radius: 10px;">
+                      <p style="margin:0;">${message}</p>
+                  </div>
+              `;
+              return;
+          }
+
+          // 3. Render de geplande maaltijden (die geen 'none' zijn)
+          todayMeals.filter(meal => meal.recipeId !== 'none').forEach(meal => {
+              // Zoek het volledige recept in de lokaal geladen allRecipes array
+              const recipe = allRecipes.find(r => r._id === meal.recipeId); 
+              
+              // Fallbacks voor het geval het recept niet gevonden wordt
+              const mealName = recipe ? recipe.name : meal.name;
+              const imageSrc = (recipe && recipe.image?.trim()) ? recipe.image : '/Fotos/placeholder_food.png';
+              const duration = recipe?.duration || '??';
+              
+              const backgroundColor = '#d4edda'; // Lichtgroen
+              const textColor = '#155724';       // Donkergroen
+
+              const mealCardHtml = `
+                  <div class="agenda-meal-card" data-recipe-id="${meal.recipeId}" style="
+                      background: ${backgroundColor}; 
+                      color: ${textColor};
+                      padding: 15px; border-radius: 10px; 
+                      box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+                      display: flex; gap: 15px; align-items: center; 
+                      margin-bottom: 10px;
+                      cursor: pointer; 
+                  ">
+                      <div class="image-wrapper" style="flex-shrink: 0; width: 60px; height: 60px;">
+                          <img src="${imageSrc}" alt="${mealName}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px;">
+                      </div>
+                      
+                      <div class="content" style="flex-grow: 1;">
+                          <h4 style="margin: 0; font-size: 0.9rem; text-transform: uppercase;">${meal.type || 'Maaltijd'}</h4>
+                          <p style="margin: 3px 0 0; font-weight: bold; font-size: 1.1rem;">${mealName}</p>
+                      </div>
+                      
+                      <span style="flex-shrink: 0; font-size: 0.8rem; color: ${textColor};">⏱ ${duration} min</span>
+                  </div>
+              `;
+              todayMealContent.innerHTML += mealCardHtml;
+          });
+          
+          // 4. Voeg event listeners toe aan de kaarten om de details te tonen
+          todayMealContent.querySelectorAll('.agenda-meal-card[data-recipe-id]').forEach(card => {
+              card.addEventListener('click', () => {
+                  const recipeId = card.dataset.recipeId;
+                  const recipe = allRecipes.find(r => r._id === recipeId);
+                  if (recipe) {
+                      showRecipeDetails("Agenda Maaltijd", recipe); 
+                  } else {
+                      showToast("Receptdetails niet gevonden.", "#ff4d4d");
+                  }
+              });
+          });
+
+      } catch (error) {
+          console.error("Fout bij laden Agenda maaltijd:", error);
+          todayMealContent.innerHTML = `<p style="color:red;">Kon de agenda-planning niet laden.</p>`;
+      }
+  }
+  // ===================== EINDE NIEUWE FUNCTIES =====================
+
 
   // ===================== Eigen Recepten =====================
   async function loadOwnRecipes() {
@@ -578,8 +696,12 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       
       renderSearchRecipes(allRecipes);
+      // Return de promise om .then() in de initial load te ondersteunen
+      return allRecipes; 
     } catch (err) {
       console.error("Fout bij laden recepten:", err);
+      // Gooi de fout opnieuw om de ketting te breken als het laden mislukt
+      throw err; 
     }
   }
 
@@ -840,6 +962,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ===================== Opgeslagen Menu's =====================
+  
   function renderSavedMenus() {
     if (!savedMenusContainer) return;
     savedMenusContainer.innerHTML = "";
@@ -851,7 +974,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
     const dayNames = ["Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag","Zondag"];
   
-    // Sorteer de menu's, meest recente eerst (dit stond al correct)
+    // Sorteer de menu's, meest recente eerst
     const sortedMenus = savedMenus.sort((a, b) => new Date(b.savedDate) - new Date(a.savedDate));
     
     sortedMenus.forEach((menuData) => {
@@ -894,6 +1017,7 @@ document.addEventListener("DOMContentLoaded", () => {
       wrapper.style.gap = "1rem";
   
       menuData.menu.forEach((recipe, dayIndex) => {
+        // 'recipe' is nu het volledige receptobject (inclusief name, tags, chef) of null
         const card = document.createElement("div");
         card.classList.add("day-card");
         card.style.minWidth = "180px";
@@ -921,15 +1045,17 @@ document.addEventListener("DOMContentLoaded", () => {
           const durationLabel = document.createElement("span");
           durationLabel.classList.add("duration-label");
           durationLabel.style.cssText = "position:absolute; bottom:5px; left:5px; background: rgba(0,0,0,0.6); color:#fff; padding:2px 5px; font-size:12px; border-radius:3px;";
+          // CONTROLE: Zorg ervoor dat recipe.duration bestaat
           durationLabel.textContent = `⏱ ${recipe.duration || 0} min`;
           
           imgContainer.appendChild(img);
           imgContainer.appendChild(durationLabel);
 
-          // 🔑 NIEUW: HART ICOON MET ACHTERGROND (redundante CSS verwijderd)
+          // 🔑 HART ICOON MET ACHTERGROND
           const isFavorite = favoriteRecipes.some(r => r._id === recipe._id);
           const heartSpan = document.createElement("span");
           heartSpan.classList.add("heart");
+          
           heartSpan.style.cssText = `${iconBackgroundStyle} bottom:5px; right:5px; color:${isFavorite ? "red" : "white"}; font-size:1.2rem;`;
           heartSpan.innerHTML = isFavorite ? "❤️" : "♡";
           
@@ -951,15 +1077,18 @@ document.addEventListener("DOMContentLoaded", () => {
               }
           });
   
-          imgContainer.appendChild(heartSpan); // Voeg het hart toe aan de container
+          imgContainer.appendChild(heartSpan); 
           card.appendChild(imgContainer);
   
           const nameP = document.createElement("p");
           nameP.style.textAlign = "center";
           nameP.style.marginTop = "0.3rem";
+          // CONTROLE: Gebruik recipe.name
           nameP.textContent = recipe.name || "Onbekend gerecht";
           card.appendChild(nameP);
           
+          // 🔑 FIX/CONTROLE: Deze functies moeten nu de receptdata die de server stuurt (met tags en chef) correct verwerken.
+          // Als deze functies in een ander deel van uw JS staan, moeten ze controleren of de data is opgevuld.
           card.innerHTML += getDietTagsHtml(recipe);
           card.innerHTML += getChefHtml(recipe);
   
@@ -990,45 +1119,43 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  async function loadSavedMenu() {
-    try {
-      const res = await fetch("/api/savedmenus");
-      if (!res.ok) return;
-      const menus = await res.json();
-  
-      if (!Array.isArray(menus)) {
-          console.error("API /api/savedmenus retourneerde geen array.");
-          savedMenus = [];
-          renderSavedMenus();
-          return;
-      }
-  
-      savedMenus = menus.map(savedMenuData => {
-        // savedMenuData is een object { _id, name, menu: [{ recipeId, persons }] }
-        return {
-          id: savedMenuData._id,
-          name: savedMenuData.name,
-          menu: savedMenuData.menu.map(menuItem => {
-            if (!menuItem || !menuItem.recipeId) return null;
-            
-            // Zoek het volledige recept in de lokaal geladen allRecipes
-            const fullRecipe = allRecipes.find(r => r._id === menuItem.recipeId);
-            
-            if (fullRecipe) {
-              // Combineer het volledige recept met de opgeslagen 'persons'
-              return { ...fullRecipe, persons: menuItem.persons };
-            }
-            return null; // Recept niet gevonden
-          }),
-          savedDate: savedMenuData._id ? new Date(parseInt(savedMenuData._id.substring(0, 8), 16) * 1000) : new Date(0)
-        };
-      });
-  
-      renderSavedMenus();
-    } catch (err) {
-      console.error("Kon opgeslagen weekmenu niet laden:", err);
+  // ===================== Opgeslagen Menu's Laden (AANGEPAST) =====================
+async function loadSavedMenu() {
+  try {
+    const res = await fetch("/api/savedmenus");
+    if (!res.ok) return;
+    const menus = await res.json();
+
+    if (!Array.isArray(menus)) {
+        console.error("API /api/savedmenus retourneerde geen array.");
+        savedMenus = [];
+        renderSavedMenus();
+        return;
     }
+
+    savedMenus = menus.map(savedMenuData => {
+      // savedMenuData is nu een object {_id, name, menu: [ { _id: recipeId, name: 'ReceptNaam', persons: X, ... } ]}
+      
+      return {
+        id: savedMenuData._id,
+        name: savedMenuData.name,
+        // 🔑 FIX: De menu array bevat nu al de volledige receptobjecten dankzij de server populatie.
+        // We hoeven NIET meer te zoeken in allRecipes, we gebruiken de data direct.
+        menu: savedMenuData.menu.map(fullRecipeObject => {
+            if (!fullRecipeObject || !fullRecipeObject._id) return null;
+            
+            // De server heeft 'persons' al in het receptobject geplaatst (zie server.js)
+            return fullRecipeObject; 
+        }),
+        savedDate: savedMenuData._id ? new Date(parseInt(savedMenuData._id.substring(0, 8), 16) * 1000) : new Date(0)
+      };
+    });
+
+    renderSavedMenus();
+  } catch (err) {
+    console.error("Kon opgeslagen weekmenu niet laden:", err);
   }
+}
 
   // ===================== Popup Functie (Show Recipe Details) =====================
   function showRecipeDetails(day, recipe) {
@@ -1508,8 +1635,17 @@ document.addEventListener("DOMContentLoaded", () => {
   loadUserName();
   loadFavorites(); // Roept loadSavedMenu() en renderFavoriteRecipes() aan
   loadOwnRecipes();
-  loadAllRecipes(); // Roept renderSearchRecipes() aan
   loadNews();
   window.addEventListener("load", checkNotifications);
+  
+  // 🔑 Belangrijk: Wacht tot loadAllRecipes klaar is, roep dan de agenda functie aan
+  loadAllRecipes()
+      .then(() => {
+          loadAgendaMealForToday(); // <-- Agenda-functie nu veilig aangeroepen
+      })
+      .catch(error => {
+          console.error("Fout tijdens de hoofd-initialisatie na recepten:", error);
+          loadAgendaMealForToday(); // Probeer de agenda maaltijd te laden, zelfs bij een fout
+      });
 
 });

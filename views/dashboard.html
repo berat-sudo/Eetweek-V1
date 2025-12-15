@@ -10,8 +10,7 @@
 <body>
   <aside class="sidebar">
 
-    <!-- Hamburger button -->
-<div class="hamburger" id="hamburger-btn">
+    <div class="hamburger" id="hamburger-btn">
   <span></span>
   <span></span>
   <span></span>
@@ -27,12 +26,12 @@
         <li class="active"><a href="/dashboard">Dashboard</a></li>
         <li><a href="/mijnrecepten.html">Mijn Recepten</a></li>
         <li><a href="opgeslagenweekmenu.html">Mijn Weekmenu's</a></li>
+        <li><a href="/agenda.html">Agenda</a></li>
         <li><a href="/nieuws.html">Nieuws</a></li>
         <li><a href="/logout">Uitloggen</a></li>
       </ul>
 
-      <!-- ⬇️ LOGO LINKSONDER ⬇️ -->
-  <div class="sidebar-logo" style="
+      <div class="sidebar-logo" style="
   position: absolute;
   bottom: 20px;
   left: 20px;
@@ -56,7 +55,19 @@
       </div>
     </section>
 
-    <!-- Preferences + Menu -->
+    <section id="today-meal-section" class="today-meal-info">
+      <div class="today-meal-header-wrapper"> 
+        <h3>
+          <img src="/Fotos/agendaicon.png" alt="Vandaag icon">
+          Vandaag op het menu: 
+        </h3>
+        <span id="today-date-display"></span>
+      </div>
+      <div id="today-meal-content">
+        <p>Laden van de planning...</p>
+      </div>
+    </section>
+
     <div class="preferences-menu-wrapper">
       <section class="preferences">
         <h2>Jouw voorkeuren</h2>
@@ -104,10 +115,8 @@
     
     
 
-    <!-- Eigen recepten + favorieten -->
     <div class="custom-recipes-wrapper">
       <section class="own-recipes">
-        <!-- Badge foto linksboven -->
         <img src="/Fotos/mijnreceptenicon.png" alt="Eigen recepten icoon" class="section-badge">
       
         <h2 style="display: flex; justify-content: space-between; align-items: center;">
@@ -130,7 +139,6 @@
       </section>
       
       <section class="favorite-recipes">
-        <!-- Badge foto linksboven -->
         <img src="/Fotos/favoritereceptenicon.png" alt="Favoriete recepten icoon" class="section-badge">
       
         <h2>Favoriete recepten</h2>
@@ -142,22 +150,18 @@
     </div>
 
   
-<!-- Zoekbare recepten sectie -->
 <div class="search-recipes-wrapper">
-  <!-- Badge foto linksboven -->
   <img src="/Fotos/zoekicon.png" alt="Zoek recepten icoon" class="section-badge">
 
   <section class="search-recipes">
     <h2>Zoek recepten</h2>
     <div class="search-recipes-controls" style="display:flex; gap:0.5rem; margin-bottom:1rem; flex-wrap:wrap;">
-      <!-- Zoekbalk -->
       <input
         type="text"
         id="recipe-search-input"
         placeholder="Zoek op naam of tags..."
         style="flex:1; min-width:200px; padding:0.8rem; border-radius:14px; border:1px solid #ccc;"
       />
-      <!-- Dieetvoorkeur select -->
       <select
         id="recipe-diet"
         style="
@@ -187,7 +191,6 @@
 
 
 
-<!-- Nieuws sectie -->
 <section class="news">
     <h2>Laatste Nieuws</h2>
     <div id="news-container" class="grid-news"></div>
