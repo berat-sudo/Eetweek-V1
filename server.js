@@ -580,34 +580,170 @@ app.get("/api/agenda/load", async (req, res) => {
 
 // ROUTE 2: De planning van de gebruiker opslaan (POST)
 app.post("/api/agenda/save", async (req, res) => {
-    if (!req.session.userId) return res.status(401).json({ error: "Niet ingelogd" });
+  if (!req.session.userId) return res.status(401).json({ error: "Niet ingelogd" });
 
-    // De frontend stuurt { meals: plannedMeals }
-    const plannedMealsData = req.body.meals;
+  try {
+      const user = await User.findById(req.session.userId);
+      const { meals } = req.body;
 
-    // Snelle validatie
-    if (!plannedMealsData || typeof plannedMealsData !== 'object') {
-        return res.status(400).json({ error: "Ongeldige data ontvangen." });
-    }
+      if (user.householdId) {
+          // Update IEDEREEN die in hetzelfde huishouden zit
+          await User.updateMany(
+              { householdId: user.householdId },
+              { $set: { plannedMeals: meals } }
+          );
+      } else {
+          user.plannedMeals = meals;
+          await user.save();
+      }
+      res.json({ success: true });
+  } catch (err) {
+      res.status(500).json({ error: "Fout bij live opslaan." });
+  }
+});
 
-    try {
-        // Gebruik findByIdAndUpdate om direct de plannedMeals op te slaan
-        const user = await User.findByIdAndUpdate(
-            req.session.userId,
-            { plannedMeals: plannedMealsData },
-            { new: true, runValidators: true, select: "plannedMeals" }
-        );
+// ------------------ HUISHOUDEN LEDEN OPHALEN ------------------
+app.get("/api/agenda/household-members", async (req, res) => {
+  // Controleer of de gebruiker is ingelogd
+  if (!req.session.userId) {
+      return res.status(401).json({ error: "Niet ingelogd" });
+  }
 
-        if (!user) {
-            return res.status(404).json({ error: "Gebruiker niet gevonden." });
-        }
-        
-        res.json({ success: true, message: "Agenda succesvol opgeslagen." });
+  try {
+      // 1. Zoek de huidige gebruiker op
+      const user = await User.findById(req.session.userId);
+      
+      // 2. Als de gebruiker geen huishouden heeft, geef een lege lijst
+      if (!user || !user.householdId) {
+          return res.json({ members: [] });
+      }
 
-    } catch (err) {
-        console.error("Fout bij opslaan agenda data:", err);
-        res.status(500).json({ error: "Kon agenda data niet opslaan." });
-    }
+      // 3. Zoek alle ANDERE gebruikers met hetzelfde householdId
+      const members = await User.find({ 
+          householdId: user.householdId, 
+          _id: { $ne: user._id } // Sla jezelf over in de lijst
+      }).select("name email"); // Haal alleen naam en email op, geen wachtwoorden
+
+      res.json({ members });
+  } catch (err) {
+      console.error("Fout bij ophalen huishouden:", err);
+      res.status(500).json({ error: "Interne serverfout" });
+  }
+});
+
+// ------------------ AGENDA VERLATEN / ONTKOPPELEN ------------------
+app.post("/api/agenda/leave-household", async (req, res) => {
+  if (!req.session.userId) return res.status(401).json({ error: "Niet ingelogd" });
+
+  try {
+      const user = await User.findById(req.session.userId);
+      if (!user) return res.status(404).json({ error: "Gebruiker niet gevonden" });
+
+      // Verwijder de koppeling
+      user.householdId = null;
+      await user.save();
+
+      res.json({ success: true, message: "Je hebt de gedeelde agenda verlaten." });
+  } catch (err) {
+      console.error("Fout bij verlaten huishouden:", err);
+      res.status(500).json({ error: "Kon de agenda niet verlaten." });
+  }
+});
+
+/* ============================
+   AGENDA DEEL-SYSTEEM (MET ACCEPTEREN/WEIGEREN)
+============================ */
+
+// 1. Een uitnodiging versturen
+app.post("/api/agenda/share-with-user", async (req, res) => {
+  if (!req.session.userId) return res.status(401).json({ error: "Niet ingelogd" });
+  const { targetEmail } = req.body;
+
+  try {
+      const sender = await User.findById(req.session.userId);
+      const targetUser = await User.findOne({ email: targetEmail.toLowerCase() });
+
+      if (!targetUser) {
+          return res.status(404).json({ error: "Gebruiker met dit e-mailadres niet gevonden." });
+      }
+      
+      if (targetUser._id.equals(sender._id)) {
+          return res.status(400).json({ error: "Je kunt jezelf niet uitnodigen." });
+      }
+
+      // Sla de uitnodiging op bij de ontvanger
+      targetUser.pendingInvitationFrom = sender._id;
+      await targetUser.save();
+
+      res.json({ success: true, message: "Uitnodiging succesvol verstuurd!" });
+  } catch (err) {
+      console.error("Fout bij uitnodigen:", err);
+      res.status(500).json({ error: "Er ging iets mis op de server." });
+  }
+});
+
+// 2. Controleren of de ingelogde gebruiker een uitnodiging heeft
+app.get("/api/agenda/check-invitation", async (req, res) => {
+  if (!req.session.userId) return res.status(401).json({ error: "Niet ingelogd" });
+
+  try {
+      // Gebruik .populate om direct de naam van de afzender op te halen
+      const user = await User.findById(req.session.userId).populate("pendingInvitationFrom", "name");
+      
+      if (user && user.pendingInvitationFrom) {
+          return res.json({ 
+              hasInvitation: true, 
+              fromName: user.pendingInvitationFrom.name 
+          });
+      }
+      res.json({ hasInvitation: false });
+  } catch (err) {
+      res.status(500).json({ error: "Fout bij checken van uitnodigingen." });
+  }
+});
+
+// 3. De uitnodiging accepteren of weigeren
+app.post("/api/agenda/respond-invitation", async (req, res) => {
+  if (!req.session.userId) return res.status(401).json({ error: "Niet ingelogd" });
+  const { accept } = req.body;
+
+  try {
+      const user = await User.findById(req.session.userId);
+      if (!user.pendingInvitationFrom) {
+          return res.status(400).json({ error: "Geen openstaande uitnodiging gevonden." });
+      }
+
+      if (accept) {
+          const sender = await User.findById(user.pendingInvitationFrom);
+          if (!sender) {
+              user.pendingInvitationFrom = null;
+              await user.save();
+              return res.status(404).json({ error: "De afzender van de uitnodiging bestaat niet meer." });
+          }
+
+          // Bepaal de gedeelde huishoud-ID
+          // Als de afzender al in een huishouden zit, neem die over. Anders maak een nieuwe.
+          const sharedId = sender.householdId || new mongoose.Types.ObjectId().toString();
+          
+          sender.householdId = sharedId;
+          user.householdId = sharedId;
+          
+          // Synchroniseer de maaltijden (we nemen de planning van de afzender als startpunt)
+          user.plannedMeals = sender.plannedMeals;
+
+          await sender.save();
+          console.log(`[Agenda] Gebruikers ${user.name} en ${sender.name} zijn nu gekoppeld.`);
+      }
+
+      // Wis de uitnodiging na het antwoord (of je nu accepteert of weigert)
+      user.pendingInvitationFrom = null;
+      await user.save();
+
+      res.json({ success: true, message: accept ? "Gekoppeld!" : "Uitnodiging geweigerd." });
+  } catch (err) {
+      console.error("Fout bij verwerken uitnodiging:", err);
+      res.status(500).json({ error: "Serverfout bij het verwerken van je antwoord." });
+  }
 });
 
 
@@ -813,6 +949,36 @@ app.post("/api/share-recipe", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Kon recept niet delen" });
+  }
+});
+
+// ------------------ AGENDA DELEN VIA EMAIL ------------------
+app.post("/api/agenda/share-with-user", async (req, res) => {
+  if (!req.session.userId) return res.status(401).json({ error: "Niet ingelogd" });
+  const { targetEmail } = req.body;
+
+  try {
+      const currentUser = await User.findById(req.session.userId);
+      const targetUser = await User.findOne({ email: targetEmail.toLowerCase().trim() });
+
+      if (!targetUser) return res.status(404).json({ error: "Gebruiker niet gevonden." });
+
+      // Maak een unieke ID voor jullie groep als die er nog niet is
+      const sharedID = currentUser.householdId || `group-${crypto.randomBytes(4).toString('hex')}`;
+
+      // Koppel beide gebruikers aan deze ID
+      currentUser.householdId = sharedID;
+      targetUser.householdId = sharedID;
+
+      // Synchroniseer de huidige planning direct
+      targetUser.plannedMeals = currentUser.plannedMeals;
+
+      await currentUser.save();
+      await targetUser.save();
+
+      res.json({ success: true, message: "Accounts zijn nu live gekoppeld!" });
+  } catch (err) {
+      res.status(500).json({ error: "Serverfout bij koppelen." });
   }
 });
 

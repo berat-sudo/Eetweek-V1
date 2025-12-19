@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
           // Maak gescheiden stappen met marges (vervangt <ol> en <li>)
           const stepsHtml = instructions.map(step => 
               // Gebruik een div voor elke stap met een duidelijke onderlinge marge
-              `<div style="margin-bottom: 12px; padding: 8px 10px; background: #f9f9f9; border-left: 3px solid #ff7f50; border-radius: 4px; line-height: 1.4;">${step}</div>`
+              `<div style="margin-bottom: 12px; padding: 8px 10px; background: #36485b; border-left: 3px solid #ff7f50; border-radius: 4px; line-height: 1.4;">${step}</div>`
           ).join('');
           
           // Gebruik een container div
@@ -1159,35 +1159,70 @@ async function loadSavedMenu() {
 
   // ===================== Popup Functie (Show Recipe Details) =====================
   function showRecipeDetails(day, recipe) {
+    const isMobile = window.innerWidth <= 600; 
+    
+    // 📱 Specifieke formaten voor Desktop vs Mobiel
+    const fadeStart = isMobile ? '350px' : '450px';
+    const fadeEnd = isMobile ? '420px' : '550px';
+    const bgHeight = isMobile ? '600px' : '500px';
+
+    if (!document.getElementById('popup-animation-styles')) {
+        const style = document.createElement('style');
+        style.id = 'popup-animation-styles';
+        style.innerHTML = `
+            @keyframes slideInUp {
+                from { transform: translateY(100%); }
+                to { transform: translateY(0); }
+            }
+            @keyframes slideOutDown {
+                from { transform: translateY(0); }
+                to { transform: translateY(100%); }
+            }
+            .popup-animate-in { animation: slideInUp 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+            .popup-animate-out { animation: slideOutDown 0.3s cubic-bezier(0.5, 0, 0.75, 0) forwards; }
+            .overlay-fade { transition: opacity 0.3s ease; }
+        `;
+        document.head.appendChild(style);
+    }
+
     const overlay = document.createElement("div");
-    overlay.classList.add("overlay");
-
-    // Stel 'persons' in, met voorkeur voor de waarde uit het menu-item (of standaard 1)
+    overlay.classList.add("overlay", "overlay-fade");
+  
+    overlay.style.cssText = `
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        width: 100vw; 
+        height: 100vh;
+        background: rgba(0,0,0,0.8); 
+        display: flex; 
+        justify-content: center;
+        align-items: center; 
+        z-index: 100001; 
+        padding: ${isMobile ? '0' : '20px'};
+        margin: 0;
+        opacity: 0;
+    `;
+  
     let persons = recipe.persons || 1; 
+    const greenGradient = 'linear-gradient(90deg, #32cd32, #7fff00)';
 
-    // --- Helper functies (met veiligheidschecks) ---
     const getIngredientsText = () => {
         if (!recipe.ingredients || !Array.isArray(recipe.ingredients) || recipe.ingredients.length === 0) {
             return `Recept: ${recipe.name}\n\nGeen ingrediënten beschikbaar.`;
         }
-      
         const ingredientsList = recipe.ingredients.map(i => {
-            if (!i.amount) return i.item;
-            
-            const match = i.amount.match(/^([\d.,]+)\s*(.*)$/);
-            let qty = i.amount;
-
+            const amountStr = i.amount || "";
+            const match = amountStr.match(/^([\d.,]+)\s*(.*)$/);
+            let qty = amountStr;
             if (match) {
                 const baseAmount = parseFloat(match[1].replace(",", "."));
                 const unit = match[2] || "";
-                
-                // Bereken de hoeveelheid op basis van het ingestelde aantal personen
                 const calculatedQty = (baseAmount * persons).toFixed(2).replace(/\.00$/, ''); 
                 qty = `${calculatedQty.replace(/\./, ',')} ${unit}`.trim();
             }
             return `${i.item} - ${qty}`;
         }).join("\n"); 
-
         return `Ingrediënten voor ${persons} personen:\n${ingredientsList}`;
     };
     
@@ -1195,223 +1230,197 @@ async function loadSavedMenu() {
         if (!recipe.ingredients || !Array.isArray(recipe.ingredients) || recipe.ingredients.length === 0) {
             return '<li>Geen ingrediënten beschikbaar.</li>';
         }
-
         return recipe.ingredients.map(i => {
-            if (!i.amount) return `<li>${i.item}</li>`;
-            
-            const match = i.amount.match(/^([\d.,]+)\s*(.*)$/);
-            let qty = i.amount;
-
+            const amountStr = i.amount || "";
+            const match = amountStr.match(/^([\d.,]+)\s*(.*)$/);
+            let qty = amountStr;
             if (match) {
                 const baseAmount = parseFloat(match[1].replace(",", "."));
                 const unit = match[2] || "";
-                
-                // Bereken de hoeveelheid op basis van het ingestelde aantal personen
                 const calculatedQty = (baseAmount * persons).toFixed(2).replace(/\.00$/, '');
                 qty = `${calculatedQty.replace(/\./, ',')} ${unit}`.trim();
             }
             return `<li>${i.item} – ${qty}</li>`;
         }).join("");
     };
-
+  
     const getMacrosHTML = () => {
       const macros = recipe.macros || {};
       const time = recipe.duration || 0;
-      
-      let html = '<div class="recipe-info-bar">'; 
-
-      // 1. MACROS 
-      html += `
-          <div class="info-block macros-block">
-              <h4 style="margin-top:0; margin-bottom: 0.5rem; font-size:1rem;">Voedingswaarden p.p.</h4>
-              <div style="display:flex; justify-content:space-between; font-size:0.9rem;">
-                  <span class="protein">Eiwit: <strong>${(macros.protein || 0).toFixed(1)}g</strong></span>
-                  <span class="carbs">Koolh.: <strong>${(macros.carbs || 0).toFixed(1)}g</strong></span>
-                  <span class="fat">Vet: <strong>${(macros.fat || 0).toFixed(1)}g</strong></span>
-              </div>
-          </div>
-      `;
-      
-      // 2. TIJD
-      html += `
-          <div class="info-block time-block">
-              <h4 style="margin-top:0; margin-bottom: 0.5rem; font-size:1rem;">Tijd</h4>
-              <p class="time-value" style="margin:0; font-size:1.1rem; font-weight:bold;">⏱ ${time} min</p>
-          </div>
-      `;
-
-      // 3. PERSONEN
-      html += `
-          <div class="info-block persons-block">
-              <h4 style="margin-top:0; margin-bottom: 0.5rem; font-size:1rem;">Personen</h4>
-              <div class="persons-controls" style="display:flex; justify-content:center; align-items:center; gap:8px;">
-                  <button id="decrement-persons" style="width:30px; height:30px; border-radius:50%; border:1px solid #ccc; background:#f0f0f0; cursor:pointer; font-size:1.2rem; font-weight:bold;">-</button>
-                  <span id="persons-count" style="font-size:1.1rem; font-weight:bold;">${persons}</span>
-                  <button id="increment-persons" style="width:30px; height:30px; border-radius:50%; border:1px solid #ccc; background:#f0f0f0; cursor:pointer; font-size:1.2rem; font-weight:bold;">+</button>
-              </div>
-          </div>
-      `;
-
-      html += '</div>';
-      return html;
+      return `
+        <div class="recipe-info-bar">
+            <div class="info-block macros-block">
+                <h4 style="margin-top:0; margin-bottom: 0.5rem; font-size:1rem; color: #f2f2f2;">Voedingswaarden p.p.</h4>
+                <div style="display:flex; justify-content:space-between; font-size:0.9rem; color: #f2f2f2;">
+                    <span class="protein">Eiwit: <strong>${(macros.protein || 0).toFixed(1)}g</strong></span>
+                    <span class="carbs">Koolh.: <strong>${(macros.carbs || 0).toFixed(1)}g</strong></span>
+                    <span class="fat">Vet: <strong>${(macros.fat || 0).toFixed(1)}g</strong></span>
+                </div>
+            </div>
+            <div class="info-block time-block">
+                <h4 style="margin-top:0; margin-bottom: 0.5rem; font-size:1rem; color: #f2f2f2;">Tijd</h4>
+                <p class="time-value" style="margin:0; font-size:1.1rem; font-weight:bold; color: #f2f2f2;">⏱ ${time} min</p>
+            </div>
+            <div class="info-block persons-block">
+                <h4 style="margin-top:0; margin-bottom: 0.5rem; font-size:1rem; color: #f2f2f2;">Personen</h4>
+                <div class="persons-controls" style="display:flex; justify-content:center; align-items:center; gap:8px;">
+                    <button id="decrement-persons" style="width:30px; height:30px; border-radius:50%; border:1px solid #ccc; background:#f0f0f0; cursor:pointer; font-size:1.2rem; font-weight:bold; color: #333;">-</button>
+                    <span id="persons-count" style="font-size:1.1rem; font-weight:bold; color: #f2f2f2;">${persons}</span>
+                    <button id="increment-persons" style="width:30px; height:30px; border-radius:50%; border:1px solid #ccc; background:#f0f0f0; cursor:pointer; font-size:1.2rem; font-weight:bold; color: #333;">+</button>
+                </div>
+            </div>
+        </div>`;
     };
-    
-    // ---------------------------------------------
-
-    const isMobile = window.innerWidth <= 600;
-    const greenGradient = 'linear-gradient(90deg, #32cd32, #7fff00)';
-    const orangeGradient = 'linear-gradient(90deg,#ff7f50,#ffb347)';
-
-    const greenGradientStyle = `
-    padding: ${isMobile ? '8px 10px' : '10px 15px'}; 
-    border: none; border-radius: 8px; color: white; font-weight: bold;
-    cursor: pointer; font-size: ${isMobile ? '0.8rem' : '1rem'};
-    width: 48%; text-align: center; background: ${greenGradient}; 
-    transition: background 0.3s ease; box-sizing: border-box;
-    `;
-    
-    const orangeGradientStyle = `
-        padding: ${isMobile ? '8px 10px' : '10px 15px'}; 
-        border: none; border-radius: 8px; color: white; font-weight: bold;
-        cursor: pointer; font-size: ${isMobile ? '0.8rem' : '1rem'};
-        width: ${isMobile ? '48%' : '48%'}; text-align: center;
-        background: ${orangeGradient}; transition: background 0.3s ease;
-    `;
-
-    const copyButtonStyle = `
-        position: absolute; top: 10px; right: 10px; padding: 5px 8px; 
-        border-radius: 10px; background: ${greenGradient}; color: white;
-        border: none; cursor: pointer; font-weight: bold; font-size: 15px;
-        display: flex; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.4); 
-        z-index: 10; width: 8rem;
-    `;
-    
-    const iconSize = '25px'; 
-    const copyButtonText = 'Kopieer';
-    const iconMargin = '4px';
-
-    // 🔑 GECORRIGEERDE CHEF-CONTROLE:
-    // De chefHtml wordt alleen gegenereerd als recipe.chef NIET 'admin' is, en niet leeg is.
+  
     const chefName = recipe.chef?.trim().toLowerCase();
-    const chefHtml = chefName && chefName !== "admin" ? `
-        <div style="
-            background: #f8f8f8;
-            padding: 15px 10px;
-            border-radius: 10px;
-            margin-top: 20px;
-            margin-bottom: 20px; 
-            text-align: center;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-            border: 1px solid #eee;
-        ">
-            <h4 style="margin:0; font-size:1rem; color:#555;">Chef</h4>
-            <p style="margin:5px 0 0; font-size:1.1rem; font-weight:bold; color:#ff7f50;">${recipe.chef}</p>
-        </div>
-    ` : '';
-
-
+    const chefHtml = chefName && chefName !== "admin" ? `<div style="background: #f8f8f8; padding: 15px 10px; border-radius: 10px; margin-top: 20px; margin-bottom: 20px; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,0.05); border: 1px solid #eee;"><h4 style="margin:0; font-size:1rem; color:#555;">Chef</h4><p style="margin:5px 0 0; font-size:1.1rem; font-weight:bold; color:#ff7f50;">${recipe.chef}</p></div>` : '';
+  
     overlay.innerHTML = `
-    <div class="popup" style="
-        max-width: 500px; 
-        position:relative; 
-        background:white; 
-        padding:1rem; 
-        border-radius:15px;
-        max-height:85%; overflow-y:auto;
-        box-shadow:0 10px 30px rgba(0,0,0,0.3); font-family:Arial,sans-serif;
-    ">
-        
-        <h2>${recipe.name}</h2>
-        ${day ? `<p class="popup-day">${day}</p>` : ""}
-        
-        <div class="image-container" style="position:relative; width:100%;">
-            <img src="${getRecipeImage(recipe)}" alt="${recipe.name}" style="width:100%; height:auto; display:block; border-radius:10px;">
-            
-            <button id="copy-ingredients-btn" style="${copyButtonStyle}">
-                <img src="/Fotos/copyicon.png" 
-                     alt="Kopieer" 
-                     style="width: ${iconSize}; height: ${iconSize}; margin-right: ${iconMargin};"> 
-                     ${copyButtonText}
-            </button>
+      <div class="popup popup-animate-in" style="
+          width: 100%;
+          max-width: ${isMobile ? '100%' : '500px'}; 
+          height: ${isMobile ? '100%' : 'auto'}; 
+          max-height: ${isMobile ? '100%' : '85%'}; 
+          border-radius: ${isMobile ? '0' : '15px'}; 
+          position: relative; 
+          background: #1f2a36; 
+          color: #f2f2f2;
+          padding: ${isMobile ? '15px 15px 0px' : '1.5rem'}; 
+          overflow-y: auto;
+          overflow-x: hidden;
+          box-shadow: none; 
+          font-family: Arial, sans-serif;
+          box-sizing: border-box;
+          margin: 0;
+      ">
+        <div style="
+            position: absolute;
+            top: 0; left: 0; right: 0; height: ${bgHeight};
+            background-image: url('${getRecipeImage(recipe)}');
+            background-size: cover;
+            background-position: center;
+            filter: blur(18px) brightness(0.35);
+            transform: scale(1.1);
+            z-index: 0;
+        "></div>
+
+        <div style="
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to bottom, 
+                rgba(31, 42, 54, 0.0) 0%, 
+                rgba(31, 42, 54, 0.0) ${fadeStart}, 
+                rgba(31, 42, 54, 1) ${fadeEnd}, 
+                rgba(31, 42, 54, 1) 100%
+            );
+            z-index: 1;
+        "></div>
+
+        <div style="position: relative; z-index: 2;">
+            <div class="top-action-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; width: 100%;">
+                <div id="popup-close-top" style="cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                    <img src="/Fotos/arrow-down-sign-to-navigate.png" style="width: 25px; height: 25px;">
+                </div>
+                ${day ? `<p class="popup-day" style="margin: 0; font-weight: bold; color: #888;">${day}</p>` : "<span></span>"}
+                <div id="popup-menu-top" style="cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                    <img src="/Fotos/more.png" style="width: 25px; height: 25px;">
+                </div>
+            </div>
+            <div class="image-container" style="position:relative; width:100%;">
+                <img src="${getRecipeImage(recipe)}" alt="${recipe.name}" style="width:100%; height:auto; display:block; border-radius: 8px;">
+            </div>
+            <h2 style="margin-top: 15px; margin-bottom: 10px; text-align: center; color: #f2f2f2;">${recipe.name}</h2>
+            ${getMacrosHTML()} 
+            <h4 style="margin: 20px 0 10px; border-bottom:1px solid #ddd; padding-bottom:5px; color: #f2f2f2;">Ingrediënten:</h4>
+            <ul class="ingredients-list" style="margin-bottom:20px; color: #f2f2f2;">${getIngredientsHTML()}</ul>
+            <h4 style="margin-bottom:10px; border-bottom:1px solid #ddd; padding-bottom:5px; color: #f2f2f2;">Bereidingswijze:</h4>
+            <div class="instructions-container" style="margin-bottom:20px; color: #f2f2f2;">
+                 ${getInstructionsHTML(recipe.instructions)} 
+            </div>
+            ${chefHtml} 
         </div>
-        
-        ${getMacrosHTML()} 
-        
-        
-        <h4 style="margin-bottom:10px; border-bottom:1px solid #ddd; padding-bottom:5px;">Ingrediënten:</h4>
-        <ul class="ingredients-list" style="margin-bottom:20px;">${getIngredientsHTML()}</ul>
-        
-        <h4 style="margin-bottom:10px; border-bottom:1px solid #ddd; padding-bottom:5px;">Bereidingswijze:</h4>
-        <div class="instructions-container" style="margin-bottom:20px;">
-             ${getInstructionsHTML(recipe.instructions)} 
-        </div>
-        
-        ${chefHtml} 
-        
-        <div class="popup-buttons" style="display:flex; gap:10px; margin-top:20px; justify-content: center;">
-            <button class="add-to-menu-btn" style="${greenGradientStyle}">+ weekmenu</button> 
-            <button class="close-popup-btn" style="${orangeGradientStyle}">Sluiten</button>
-        </div>
-    </div>
+      </div>
     `;
-
+  
     document.body.appendChild(overlay);
+    setTimeout(() => overlay.style.opacity = "1", 10);
 
-    const ingredientsList = overlay.querySelector(".ingredients-list");
-    
-    const personsCountSpan = overlay.querySelector("#persons-count");
-    const decrementBtn = overlay.querySelector("#decrement-persons");
-    const incrementBtn = overlay.querySelector("#increment-persons");
+    const closePopup = () => {
+        const popup = overlay.querySelector('.popup');
+        overlay.style.opacity = "0";
+        popup.classList.replace('popup-animate-in', 'popup-animate-out');
+        setTimeout(() => overlay.remove(), 350);
+    };
+  
+    overlay.querySelector("#popup-close-top").addEventListener("click", closePopup);
+    overlay.addEventListener("click", e => { if (e.target === overlay) closePopup(); });
 
-    const copyBtn = overlay.querySelector("#copy-ingredients-btn"); 
-    const addToMenuBtn = overlay.querySelector(".add-to-menu-btn"); 
+    const openActionSheet = () => {
+        const sheetOverlay = document.createElement("div");
+        sheetOverlay.classList.add("action-sheet-overlay");
+        sheetOverlay.innerHTML = `
+            <div class="action-sheet">
+                <div style="width: 40px; height: 5px; background: white; border-radius: 5px; margin: 0 auto 15px; opacity: 0.8;"></div>
+                <button class="action-menu-item" id="action-copy"><img src="/Fotos/copyicon.png"> Ingrediënten kopiëren</button>
+                <button class="action-menu-item" id="action-add-menu"><span style="font-size: 1.5rem; width: 24px; text-align: center; margin-right: 0px;">+</span> <span>weekmenu</span></button>
+                <button class="action-menu-item" id="action-add-agenda"><img src="/Fotos/agendaiconwit.png" style="width:18px; height:18px;"> <span>Inplannen in agenda</span></button>
+                <button class="action-menu-item" id="action-close" style="color: #ff7f50; margin-top: 10px; justify-content: center; font-weight: bold; border: none;">Annuleren</button>
+            </div>
+        `;
+        document.body.appendChild(sheetOverlay);
+        setTimeout(() => sheetOverlay.querySelector('.action-sheet').classList.add('open'), 10);
 
-    const updateRecipeDisplay = () => {
-        personsCountSpan.textContent = persons;
-        ingredientsList.innerHTML = getIngredientsHTML();
-        recipe.persons = persons; // Update het recipe object in de DOM/Menu voor boodschappenlijst
+        const closeSheet = () => {
+            sheetOverlay.querySelector('.action-sheet').classList.remove('open');
+            setTimeout(() => sheetOverlay.remove(), 300);
+        };
+
+        sheetOverlay.querySelector("#action-copy").addEventListener("click", async () => {
+            try {
+                await navigator.clipboard.writeText(getIngredientsText()); 
+                showToast("Ingrediënten gekopieerd!", greenGradient);
+                closeSheet();
+            } catch (err) { console.error(err); }
+        });
+
+        sheetOverlay.querySelector("#action-add-menu").addEventListener("click", () => {
+            const emptyIndex = currentMenu.findIndex(r => r === null);
+            if (emptyIndex !== -1) {
+                currentMenu[emptyIndex] = { ...recipe, persons: persons }; 
+                renderMenu();
+                showToast(`${recipe.name} toegevoegd!`, greenGradient);
+                closeSheet();
+                closePopup(); 
+            } else {
+                showToast("Weekmenu is vol.", "#ff4d4d");
+                closeSheet();
+            }
+        });
+
+        sheetOverlay.querySelector("#action-add-agenda").addEventListener("click", () => {
+            const recipeId = recipe._id || recipe.id;
+            const recipeName = encodeURIComponent(recipe.name);
+            window.location.href = `agenda.html?addRecipeId=${recipeId}&recipeName=${recipeName}`;
+        });
+
+        sheetOverlay.querySelector("#action-close").addEventListener("click", closeSheet);
+        sheetOverlay.addEventListener("click", (e) => { if(e.target === sheetOverlay) closeSheet(); });
     };
 
-    decrementBtn.addEventListener("click", () => {
-        if (persons > 1) {
-            persons--;
-            updateRecipeDisplay();
-        }
+    overlay.querySelector("#popup-menu-top").addEventListener("click", (e) => {
+        e.stopPropagation();
+        openActionSheet();
     });
 
-    incrementBtn.addEventListener("click", () => {
-        persons++;
-        updateRecipeDisplay();
-    });
-    
-    copyBtn.addEventListener("click", async () => {
-        try {
-            await navigator.clipboard.writeText(getIngredientsText()); 
-            showToast("Ingrediënten gekopieerd!", "linear-gradient(90deg, #32cd32, #7fff00)");
-        } catch (err) {
-            console.error("Fout bij kopiëren ingrediënten:", err);
-            showToast("Kopiëren mislukt.", "#ff4d4d");
-        }
-    });
-    
-    addToMenuBtn.addEventListener("click", () => {
-        const emptyIndex = currentMenu.findIndex(r => r === null);
-        
-        if (emptyIndex !== -1) {
-            // Maak een kopie van het recept en voeg 'persons' toe
-            currentMenu[emptyIndex] = { ...recipe, persons: persons }; 
-            renderMenu();
-            showToast(`${recipe.name} toegevoegd aan weekmenu!`, "linear-gradient(90deg, #32cd32, #7fff00)");
-            overlay.remove();
-            menuSection.scrollIntoView({ behavior: "smooth" });
-        } else {
-            showToast("Weekmenu is vol. Verwijder eerst een gerecht.", "#ff4d4d");
-        }
-    });
-    
-    overlay.querySelector(".close-popup-btn").addEventListener("click", () => overlay.remove());
-    overlay.addEventListener("click", e => { if (e.target === overlay) overlay.remove(); });
-  }
+    overlay.querySelector("#decrement-persons").onclick = () => { if (persons > 1) { persons--; updateRecipeDisplay(); } };
+    overlay.querySelector("#increment-persons").onclick = () => { persons++; updateRecipeDisplay(); };
+
+    function updateRecipeDisplay() {
+        overlay.querySelector("#persons-count").textContent = persons;
+        overlay.querySelector(".ingredients-list").innerHTML = getIngredientsHTML();
+        recipe.persons = persons;
+    }
+}
 
 
   // ===================== Boodschappenlijst =====================
@@ -1572,10 +1581,16 @@ async function loadSavedMenu() {
     }
   }
 
-  // ===================== Event Listeners =====================
+// ===================== Event Listeners =====================
   // Menu generatie
   form.addEventListener("submit", async e => {
     e.preventDefault();
+    
+    // MAAK DE SECTIE ZICHTBAAR
+    if (menuSection) {
+        menuSection.style.display = "block";
+    }
+
     const favorite = document.getElementById("favorite").value.trim();
     const diet = document.getElementById("diet").value;
     currentMenu = await generateMenu(favorite, diet);
@@ -1584,6 +1599,8 @@ async function loadSavedMenu() {
     currentMenu = currentMenu.map(r => r ? { ...r, persons: 1 } : null); 
     
     renderMenu();
+    
+    // Scroll naar het menu (nu de sectie 'block' is, werkt dit correct)
     menuSection.scrollIntoView({ behavior: "smooth" });
   });
 

@@ -208,7 +208,7 @@ html, body {
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     margin: 2rem; 
     margin-bottom: 0.5rem;
-    
+    box-shadow: 0 10px 30px rgb(0 0 0 / 10%);
     max-width: auto;
     width: auto;
     box-sizing: border-box;
@@ -310,7 +310,7 @@ html, body {
     background: linear-gradient(145deg, #ffffff, #ffffff);
     padding: 2rem;
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     flex: 0 0 300px;
 }
 
@@ -379,6 +379,7 @@ form#preferences-form button:hover {
     box-shadow: var(--card-shadow);
     flex: 1;
     min-width: 350px;
+    display: block;
 }
 
 #menu-container {
@@ -552,6 +553,7 @@ form#preferences-form button:hover {
     margin-bottom: 1rem;
 }
 
+
 #own-recipes-container, #favorite-recipes-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -584,11 +586,11 @@ form#preferences-form button:hover {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 1rem;
-
+    
     /* Scrollbaar na 3 rijen */
     max-height: 420px;      /* ongeveer 3 lagen kaarten */
     overflow-y: auto;
-    padding-right: 5px;     /* voorkomt dat scrollbar over de kaarten valt */
+        /* voorkomt dat scrollbar over de kaarten valt */
 }
   
   /* Badge alleen voor zoek recepten */
@@ -853,7 +855,7 @@ form#preferences-form button:hover {
   .popup h2 {
     margin-top: 0;
     margin-bottom: 0.5rem;
-    color: #2d2d2d;
+    color: #f2f2f2;
   }
   
   .popup img {
@@ -916,6 +918,7 @@ form#preferences-form button:hover {
 
   .popup h4 {
     margin-top: 30px; /* schuift “Ingrediënten:” naar beneden */
+    color: #f2f2f2;
   }
   
   .popup p {
@@ -926,7 +929,7 @@ form#preferences-form button:hover {
 
 .recipe-info-bar .macros-block span {
     /* Zorg dat de basis tekst/labels neutraal is */
-    color: #333 !important; 
+    color: #f2f2f2 !important; 
     font-weight: normal !important;
 }
 
@@ -964,7 +967,7 @@ form#preferences-form button:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #ffffff;
+    background: #36485b;
     margin: 0.2rem 0;
     padding: 0.5rem 0.8rem;
     border-radius: 8px;
@@ -1094,7 +1097,7 @@ form#preferences-form button:hover {
     min-width: 120px; /* Zorgt ervoor dat ze niet te smal worden */
     padding: 0.8rem;
     border-radius: 10px;
-    background: #f4f4f4; 
+    background: #2a4058; 
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
@@ -1106,7 +1109,7 @@ form#preferences-form button:hover {
 
 .recipe-info-bar .info-block h4 {
     font-size: 0.9rem;
-    color: #555;
+    color: #f2f2f2;
     margin-top: 0;
     margin-bottom: 0.5rem;
 }
@@ -1137,6 +1140,59 @@ form#preferences-form button:hover {
 .recipe-info-bar .persons-controls button:hover {
     transform: scale(1.05);
 }
+
+.action-sheet-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 1000002;
+    display: flex;
+    align-items: flex-end;
+    transition: opacity 0.3s ease;
+}
+
+.action-sheet {
+    width: 100%;
+    background: #1f2a36; /* Donkerblauwe achtergrond */
+    border-radius: 25px 25px 0 0;
+    padding: 20px;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    box-sizing: border-box;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.action-sheet.open {
+    transform: translateY(0);
+}
+
+.action-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    background: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: white; /* Witte tekst */
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Subtiel wit lijntje */
+    text-align: left;
+}
+
+.action-menu-item:last-of-type { border-bottom: none; }
+
+/* Zorgt dat iconen wit worden (als ze zwart zijn in de bron) */
+.action-menu-item img { 
+    width: 24px; 
+    height: 24px; 
+    filter: brightness(0) invert(1); 
+}
+
+
 
 
 
@@ -1357,6 +1413,7 @@ form#preferences-form button:hover {
     }
     
     .today-meal-header-wrapper h3 {
+        font-size: 1.5rem;
         display: flex;
         align-items: center; 
         margin-bottom: 0; 
@@ -1377,7 +1434,7 @@ form#preferences-form button:hover {
         
         /* Mobiele positionering: onder de titel, uitgelijnd met de tekst */
         font-size: 1rem;
-        color: #555;
+        color: var(--accent1);
         font-weight: normal;
         margin-left: 30px; 
         margin-top: 5px;
@@ -1433,6 +1490,7 @@ form#preferences-form button:hover {
     .menu {
         background: linear-gradient(145deg, #ff7f50, #ffb347);
         box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        display: none;
     }
     
     #copy-list-btn {
@@ -1449,7 +1507,7 @@ form#preferences-form button:hover {
         justify-content: flex-start;
         align-items: flex-start;
         gap: 1rem;
-        padding: 1.5rem;
+        padding: 0rem;
         margin: 1rem;
         width: auto;
         max-width: 1200px;
@@ -1460,7 +1518,12 @@ form#preferences-form button:hover {
         align-items: stretch;
     }
 
+    .own-recipes {
+        margin-bottom: 1rem;
+    }
+
     .own-recipes, .favorite-recipes {
+        padding: 1.5rem;
         flex: 1 1 100%; /* Maak deze 100% breed op smalle schermen */
         min-width: unset; /* <-- BELANGRIJK: Zorg dat het de 300px negeert */
         max-width: 100%;
@@ -1498,6 +1561,14 @@ form#preferences-form button:hover {
     .grid-recipes .day-card {
         width: 100%;
         height: auto;
+    }
+
+    .own-recipes .section-badge {
+        left: 0;
+    }
+
+    .favorite-recipes .section-badge {
+        left: 0;
     }
 
     .search-recipes-wrapper .section-badge {
@@ -1591,6 +1662,16 @@ form#preferences-form button:hover {
 
     .own-recipes h2 button { 
         font-size: 1rem !important; 
+        background: none !important;    /* Verwijdert de kleur/gradient */
+        filter: brightness(0); 
+    }
+
+    .favorite-recipes h2 {
+        margin-top: 9px;
+    }
+
+    .own-recipes h2 {
+        margin-bottom: 7px;
     }
     
     .popup-buttons {
@@ -1657,6 +1738,7 @@ form#preferences-form button:hover {
 
     .icon-swap-button .button-icon-mobile {
         display: block; /* Mobiel: Toon het icoon */
+        margin-left: 20px;
     }
     
     .recipe-info-bar {
@@ -1688,7 +1770,7 @@ form#preferences-form button:hover {
     .recipe-info-bar .info-block {
         padding: 0.8rem;
         border-radius: 10px;
-        background: #f4f4f4; 
+        background: #36485b; 
         box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
     #today-meal-content p {

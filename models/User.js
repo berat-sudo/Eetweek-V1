@@ -9,7 +9,27 @@ const userSchema = new mongoose.Schema({
   savedMenus: [{ type: mongoose.Schema.Types.ObjectId, ref: "SavedMenu" }],
 
   /* ============================
-     NIEUW: Meldingen / notificaties
+     HUISHOUDEN / GROEP
+     Gebruikers met hetzelfde householdId delen live hun agenda.
+  ============================ */
+  householdId: { 
+    type: String, 
+    default: null, 
+    index: true 
+  },
+
+  /* ============================
+     UITNODIGINGSSYSTEEM (NIEUW)
+     Slaat op van welke gebruiker een openstaande uitnodiging komt.
+  ============================ */
+  pendingInvitationFrom: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "User", 
+    default: null 
+  },
+
+  /* ============================
+     MELDINGEN / NOTIFICATIES
   ============================ */
   notifications: [
     {
@@ -24,12 +44,12 @@ const userSchema = new mongoose.Schema({
     }
   ],
   
-  // ============================
-  // NIEUW: AGENDA PERSISTENTIE
-  // Slaat de planning op als een object: { 'YYYY-MM-DD': [ {name, type, recipeId}, ... ] }
-  // ============================
+  /* ============================
+     AGENDA PERSISTENTIE
+     Slaat de planning op als een object: { 'YYYY-MM-DD': [ {name, type, recipeId}, ... ] }
+  ============================ */
   plannedMeals: {
-      type: Object, // Gebruik Mongoose Object om een dynamische key-value map op te slaan
+      type: Object, 
       default: {}
   },
 
@@ -37,10 +57,22 @@ const userSchema = new mongoose.Schema({
   resetPasswordToken: { type: String },
   resetPasswordExpires: { type: Date },
 
-  // ============================
-  // NIEUW: Admin rechten
-  // ============================
-  isAdmin: { type: Boolean, default: false } // standaard geen admin
+  /* ============================
+     RECHTEN & STATUS
+  ============================ */
+  isAdmin: { type: Boolean, default: false } 
+});
+
+/* ============================
+   MIDDLEWARE
+============================ */
+
+// Zorg dat plannedMeals altijd correct wordt opgeslagen als er wijzigingen zijn in het object
+userSchema.pre('save', function(next) {
+    if (this.isModified('plannedMeals')) {
+        this.markModified('plannedMeals');
+    }
+    next();
 });
 
 export default mongoose.model("User", userSchema);

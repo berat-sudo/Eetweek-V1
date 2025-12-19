@@ -3,20 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agenda</title>
-
+    <title>Agenda - Maaltijdplanner</title>
     <link rel="stylesheet" href="/agenda.css">
     <link rel="icon" href="/Fotos/logo_.png" type="image/x-icon">
 </head>
-
 <body>
 
     <aside class="sidebar">
-
         <div class="hamburger" id="hamburger-btn">
-            <span></span>
-            <span></span>
-            <span></span>
+            <span></span><span></span><span></span>
         </div>
         <a href="/mijnaccount.html" class="profile">
             <div class="profile-circle" id="profile-circle">U</div>
@@ -32,85 +27,76 @@
                 <li><a href="/nieuws.html">Nieuws</a></li>
                 <li><a href="/logout">Uitloggen</a></li>
             </ul>
-
-            <div class="sidebar-logo" style="
-                position: absolute;
-                bottom: 20px;
-                left: 20px;
-            ">
-                <img src="/Fotos/logo_.png" style="
-                    width: 40px;
-                    height: auto;
-                    display: block;
-                " alt="Logo">
-            </div>
         </nav>
     </aside>
 
     <main class="main-content">
-
         <section class="hero">
             <div class="hero-content">
                 <h2>Maaltijdplanner</h2>
-                <p>Plan hier al je recepten in. Je kunt recepten van jouzelf en van andere gebruikers toevoegen.</p>
+                <p>Plan je maaltijden en deel je huidige planning direct met een andere gebruiker.</p>
             </div>
         </section>
 
         <section class="agenda-container planner-container">
-            
             <div class="calendar-header">
                 <button id="prev-month">❮</button>
                 <h3 id="current-month-year"></h3>
                 <button id="next-month">❯</button>
             </div>
             
-            <div class="calendar-grid" id="calendar-grid">
-                <div class="day-name">MA</div>
-                <div class="day-name">DI</div>
-                <div class="day-name">WO</div>
-                <div class="day-name">DO</div>
-                <div class="day-name">VR</div>
-                <div class="day-name">ZA</div>
-                <div class="day-name">ZO</div>
-            </div>
-
-        
-            
+            <div class="calendar-grid" id="calendar-grid"></div>
         </section>
 
+        <section class="share-settings-section" style="margin-top: 30px; padding: 20px; background: #f9f9f9; border-radius: 12px; border: 1px solid #ddd; max-width: 1000px; margin-left: auto; margin-right: auto;">
+            <h3 style="display: flex; align-items: center; gap: 10px;">
+                <img src="/Fotos/group.png" style="width: 24px; height: 24px; object-fit: contain;"> 
+                Planning delen
+            </h3>
+            
+            <div style="display: flex; flex-direction: column; gap: 25px;">
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
+                    <label for="share-email" style="font-weight: bold; min-width: 180px;">Deel met (e-mail):</label>
+                    <input type="email" id="share-email" placeholder="voorbeeld@mail.com" style="padding: 10px; border-radius: 6px; border: 1px solid #ccc; flex: 1; min-width: 250px;">
+                    <button id="share-agenda-btn" class="btn-primary" style="background: #2ecc71; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: background 0.2s;">
+                        Verstuur Uitnodiging
+                    </button>
+                </div>
+
+                <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #eee;">
+                    <h4 style="margin: 0 0 10px 0; font-size: 0.95rem; color: #555;">Deze agenda is live gedeeld met:</h4>
+                    <div id="shared-users-list" style="font-size: 0.9rem; color: #333; display: flex; flex-direction: column; gap: 8px;">
+                        <p style="color: #999; font-style: italic;">Laden...</p>
+                    </div>
+                </div>
+
+                <div style="text-align: right;">
+                    <button id="leave-agenda-btn" style="background: none; border: 1px solid #ff4d4d; color: #ff4d4d; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: bold; transition: all 0.2s;">
+                        Stop met delen / Verlaat groep
+                    </button>
+                </div>
+            </div>
+        </section>
     </main>
 
     <div id="meal-modal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
-            <h4 id="modal-title">Maaltijd Toevoegen voor <span id="modal-date-display"></span></h4>
-            
-            <div id="current-meals-list">
-                </div>
-
+            <h4 id="modal-title">Maaltijd voor <span id="modal-date-display"></span></h4>
+            <div id="current-meals-list"></div>
             <div class="recipe-selection-container">
-                <label for="recipe-search">Zoek of Kies een Recept:</label>
-                <input type="text" id="recipe-search" placeholder="Typ de naam van het recept...">
-
-                <div id="recipe-cards-container">
-                    <p>Laden recepten...</p>
-                </div>
-                
-                <label for="meal-type" style="margin-top: 1.5rem;">Type Maaltijd:</label>
-                <select id="meal-type" required>
+                <input type="text" id="recipe-search" placeholder="Zoek een recept...">
+                <div id="recipe-cards-container"></div>
+                <select id="meal-type">
                     <option value="Diner">Diner</option>
                     <option value="Lunch">Lunch</option>
                     <option value="Ontbijt">Ontbijt</option>
                 </select>
-
-                <button id="add-selected-meal-btn" class="btn-primary submit-btn" disabled>
-                    Selecteer een recept
-                </button>
+                <button id="add-selected-meal-btn" class="btn-primary" disabled>Voeg toe</button>
             </div>
         </div>
     </div>
     
     <script type="module" src="/agenda.js"></script>
-
 </body>
 </html>

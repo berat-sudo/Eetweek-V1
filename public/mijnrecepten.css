@@ -382,7 +382,7 @@ body { background: var(--bg); color: #222; }
 .popup h2 {
   margin-top: 0;
   margin-bottom: 0.5rem;
-  color: #333;
+  color: #f2f2f2;
 }
 
 .popup img {
@@ -401,7 +401,7 @@ body { background: var(--bg); color: #222; }
 .popup h4 {
   font-weight: 700;
   margin-bottom: 0.3rem;
-  color: #414141;
+  color: #f2f2f2;
 }
 
 /* Ingrediënten lijst */
@@ -416,13 +416,13 @@ body { background: var(--bg); color: #222; }
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #ffffff;
+  background: #36485b;
   margin: 0.2rem 0;
   padding: 0.5rem 0.8rem;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   font-weight: 400;
-  color: #444;
+  color: #f2f2f2;
 }
 
 /* Bereidingswijze tekst */
@@ -430,7 +430,7 @@ body { background: var(--bg); color: #222; }
   font-weight: 400;
   line-height: 1.5;
   margin-bottom: 1rem;
-  color: #444;
+  color: #f2f2f2;
 }
 
 /* Sluitknop */
@@ -482,12 +482,13 @@ body { background: var(--bg); color: #222; }
 .recipe-info-bar .macros-block {
     flex: 2; 
     min-width: 250px;
+    background-color: #36485b;
 }
 
 /* --- MACRO KLEUREN FIX --- */
 
 .recipe-info-bar .macros-block span {
-    color: #333 !important; 
+    color: #f2f2f2 !important; 
     font-weight: normal !important;
 }
 
@@ -531,6 +532,64 @@ body { background: var(--bg); color: #222; }
   margin-bottom: 1rem; 
 }
 
+.action-sheet-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 1000002;
+  display: flex;
+  align-items: flex-end;
+  transition: opacity 0.3s ease;
+}
+
+.action-sheet {
+  width: 100%;
+  background: #1f2a36; /* Donkerblauwe achtergrond */
+  border-radius: 25px 25px 0 0;
+  padding: 20px;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  box-sizing: border-box;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.action-sheet.open {
+  transform: translateY(0);
+}
+
+.action-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  background: none;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: white; /* Witte tekst */
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Subtiel wit lijntje */
+  text-align: left;
+}
+
+.action-menu-item:last-of-type { border-bottom: none; }
+
+/* Zorgt dat iconen wit worden (als ze zwart zijn in de bron) */
+.action-menu-item img { 
+  width: 24px; 
+  height: 24px; 
+  filter: brightness(0) invert(1); 
+}
+
+.recipe-info-bar .time-block {
+  background-color: #36485b;
+}
+
+.recipe-info-bar .persons-block {
+  background-color: #36485b;
+}
 /* ============================= */
 /* TABLET & MOBILE RESPONSIVE CSS */
 /* ============================= */
